@@ -5,7 +5,6 @@ import os
 
 app = FastAPI(title="NODO Argentina V12")
 
-# CORS para todos los dispositivos
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,7 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Servir bloques
 app.mount("/bloque1", StaticFiles(directory="bloque1", html=True), name="b1")
 app.mount("/bloque2", StaticFiles(directory="bloque2", html=True), name="b2")
 app.mount("/bloque3", StaticFiles(directory="bloque3", html=True), name="b3")
@@ -22,7 +20,6 @@ app.mount("/bloque3", StaticFiles(directory="bloque3", html=True), name="b3")
 def root():
     return {"status": "NODO V12 107% OK", "bloques": ["/bloque1", "/bloque2", "/bloque3"]}
 
-# Para Render
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
