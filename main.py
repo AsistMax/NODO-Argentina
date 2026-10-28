@@ -1,47 +1,45 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 
-try:
-    from tracking.router import router as tracking_router
-    HAS_TRACKING = True
-except:
-    HAS_TRACKING = False
+app = FastAPI(title="NODO Argentina V12 107% - Final Bueno")
 
-app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 templates = Jinja2Templates(directory="templates")
 
-def render(name, request):
-    tmpl = templates.get_template(name)
-    return HTMLResponse(tmpl.render({"request": request}))
+if os.path.isdir("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+if os.path.isdir("bloque1"):
+    app.mount("/bloque1", StaticFiles(directory="bloque1", html=True), name="bloque1")
+if os.path.isdir("bloque2"):
+    app.mount("/bloque2", StaticFiles(directory="bloque2", html=True), name="bloque2")
+if os.path.isdir("bloque3"):
+    app.mount("/bloque3", StaticFiles(directory="bloque3", html=True), name="bloque3")
+
+def render_template(name, request):
+    template = templates.get_template(name)
+    return HTMLResponse(template.render({"request": request}))
 
 @app.get("/health")
 def health():
-    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_SECRET_KEY")
-    return {"status":"OK","supabase":bool(os.getenv("SUPABASE_URL") and key)}
+    has_supabase = bool(os.getenv("SUPABASE_URL"))
+    return {"status": "OK 107%", "bloques": ["/bloque1", "/bloque2", "/bloque3"], "supabase": has_supabase}
 
 @app.get("/")
 def root():
-    return RedirectResponse(url="/app")
+    return RedirectResponse(url="/bloque1")
 
 @app.get("/app", response_class=HTMLResponse)
-async def app_view(request: Request):
-    return render("index.html", request)
-
-@app.get("/mapa-calles-real", response_class=HTMLResponse)
-async def mapa(request: Request):
-    return render("mapa-calles-real.html", request)
-
-@app.get("/cadete", response_class=HTMLResponse)
-async def cadete(request: Request):
-    return render("cadete.html", request)
-
-@app.get("/qr/{qr_id}", response_class=HTMLResponse)
-async def qr(request: Request, qr_id: str):
-    return render("index.html", request)
-
-if HAS_TRACKING:
-    app.include_router(tracking_router)
+async def app_redirect(request: Request):
+    return RedirectResponse(url="/bloque1")
