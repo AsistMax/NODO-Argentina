@@ -83,221 +83,262 @@ html, body, #root {
 </script>
 <script>
 (function(){
-  console.log('✅ V17 FINAL REAL - AUDITORIA COMPLETA');
-  // ---------- LIMPIEZA TOTAL ----------
+  console.log('📷 V20 CAMARA REAL + LECTOR QR REAL');
   function limpieza(){
-    ['buscador-solo-tienda-v14','buscador-tienda-v15','nodo-buscador-rubro','input-buscador-v14','buscador-tienda-v15','qr-comercio-v14','qr-comercio-v15','btn-camara-qr-v14','btn-camara-unico-v15','btn-descargar-v14','btn-descargar-v15','canvas-qr-v14','canvas-qr-v15','notif-panel','recarga-info-v14','check-cuil-v14','buscador-final-v16','qr-final-v16','nodo-topbar-v16','nodo-global-nav-v14','nodo-global-nav-v15','buscador-tienda-v15','qr-comercio-v16','notif-panel-v16'].forEach(function(id){ var el=document.getElementById(id); if(el) el.remove(); });
-    document.querySelectorAll('.cashback-badge-v14, .badge-v10').forEach(function(el){ if(el.parentElement===document.body || el.getBoundingClientRect().top>window.innerHeight-200) el.remove(); });
+    ['buscador-solo-tienda-v14','buscador-tienda-v15','qr-comercio-v14','qr-comercio-v15','btn-camara-qr-v14','buscador-final-v16','qr-final-v16','nodo-topbar-v16','buscador-v17','qr-v17','nodo-topbar-v17','buscador-tienda-v15','qr-comercio-v16','notif-panel-v16','buscador-v18','qr-v18','nodo-topbar-v18','qrcode-real-v18','check-cuil-v18','buscador-v19','nodo-topbar-v19','qrcode-real-v19','check-cuil-v19','empty-tienda-v19','terminos-v18','terminos-v19'].forEach(function(id){ var el=document.getElementById(id); if(el) el.remove(); });
   }
-  // ---------- DATOS ----------
-  function getComercios(){ try{ var s=localStorage.getItem('nodo_comercios'); if(s){ var l=JSON.parse(s); var r=l.filter(function(c){return !c.is_demo;}); if(r.length>=10){ l=r; localStorage.setItem('nodo_comercios', JSON.stringify(l)); } return l; } }catch(e){} var demo=[{id:'NODO-'+Math.random().toString(36).substring(2,8).toUpperCase(), nombre:'NODO Argentina - Tienda Oficial', rubro:'Almacén', region:'San Fernando del Valle de Catamarca', regionKey:'catamarca', direccion:'Av. Principal 123 - Catamarca', telefono:'+54 9 383 400 0000', horario:'Lun a Dom 8 a 22hs', descuento:20, descripcion:'Productos frescos, atención personalizada, envíos a domicilio.', is_demo:true}]; try{ localStorage.setItem('nodo_comercios', JSON.stringify(demo)); }catch(e){} return demo; }
-  function getSaldo(){ try{ var v=localStorage.getItem('nodo_saldo'); return v?parseInt(v):5000; }catch(e){return 5000;} }
-  function setSaldo(v){ try{ localStorage.setItem('nodo_saldo', v.toString()); }catch(e){} }
-  function addMov(t,m,d){ try{ var a=JSON.parse(localStorage.getItem('nodo_movs')||'[]'); a.unshift({fecha:new Date().toLocaleString('es-AR'), tipo:t, monto:m, detalle:d}); localStorage.setItem('nodo_movs', JSON.stringify(a.slice(0,20))); }catch(e){} }
-  // ---------- TOP BAR DEBAJO DEL LOGO N (NO ARRIBA) ----------
-  function fixTopBarPosition(){
-    // Buscar todas las barras con NODO / NODO MAX / NODO+ pills
-    var barras = [];
-    document.querySelectorAll('div').forEach(function(div){
-      var txt = div.innerText||'';
-      if(txt.indexOf('NODO')!==-1 && txt.indexOf('NODO MAX')!==-1 && txt.indexOf('NODO+')!==-1 && div.children.length>=2 && div.offsetHeight<80 && div.offsetHeight>20){
-        // Verificar que tenga 3 botones pills
-        var pills = div.querySelectorAll('button');
-        if(pills.length>=3) barras.push(div);
-      }
-    });
-    // Buscar header principal NODO MAX con logo N + Inicio + campanita
-    var headerLogo = null;
-    document.querySelectorAll('div').forEach(function(div){
-      if(div.innerText && div.innerText.indexOf('NODO MAX')!==-1 && div.innerText.indexOf('Inicio')!==-1 && div.offsetHeight>40 && div.offsetHeight<120){
-        if(!headerLogo) headerLogo=div;
-      }
-    });
-    if(!headerLogo) return;
-    // Si hay barra arriba del logo, moverla debajo
-    barras.forEach(function(barra){
-      if(barra.compareDocumentPosition(headerLogo) & Node.DOCUMENT_POSITION_FOLLOWING){
-        // Barra está antes que header (arriba) -> mover debajo
-        if(barra.parentNode){
-          headerLogo.parentNode.insertBefore(barra, headerLogo.nextSibling);
-          barra.id='nodo-topbar-v17';
-          barra.style.cssText='background:#FFFFFF;border-bottom:1px solid #eeeeee;display:flex;gap:8px;padding:10px 12px;align-items:center;overflow-x:auto;position:relative;z-index:5;';
-          console.log('✅ Top bar movida debajo del logo NODO MAX');
+  function eliminarDemo(){
+    try{
+      var s=localStorage.getItem('nodo_comercios');
+      if(s){
+        var l=JSON.parse(s);
+        var reales=l.filter(function(c){ return !c.is_demo && c.id!=='demo-nodo' && c.nombre.indexOf('Tienda Oficial')===-1; });
+        if(reales.length!==l.length){
+          if(reales.length===0) localStorage.removeItem('nodo_comercios');
+          else localStorage.setItem('nodo_comercios', JSON.stringify(reales));
+          console.log('🗑️ Demo eliminado - DEMO NO');
         }
-      } else {
-        // Ya está debajo o es nuestra
-        barra.id='nodo-topbar-v17';
+        return reales;
+      }
+    }catch(e){ localStorage.removeItem('nodo_comercios'); }
+    return [];
+  }
+  // ---------- CAMARA REAL PARA LOGO, BANNER, DNI ----------
+  function crearModalCamara(titulo, onCaptura){
+    if(document.getElementById('modal-camara-real-v20')) return;
+    var modal=document.createElement('div');
+    modal.id='modal-camara-real-v20';
+    modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML='<div style=color:#fff;font-weight:700;font-size:14px;margin-bottom:12px;'>'+titulo+'</div><video id=video-real-v20 autoplay playsinline style=width:90%;max-width:400px;border-radius:16px;background:#000;></video><canvas id=canvas-real-v20 style=display:none;></canvas><div style=display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;justify-content:center;><button id=btn-capturar-real style=padding:12px 24px;border-radius:999px;background:#FF6B0A;color:#fff;border:none;cursor:pointer;font-weight:700;font-size:14px;>📸 Capturar</button><button id=btn-galeria-real style=padding:12px 24px;border-radius:999px;background:#333;color:#fff;border:1px solid #555;cursor:pointer;font-size:14px;>🖼️ Galería</button><button id=btn-cerrar-real style=padding:12px 24px;border-radius:999px;background:#fff;color:#111;border:none;cursor:pointer;font-size:14px;>✕ Cerrar</button></div><input type=file id=input-galeria-real accept=image/* style=display:none;><div style=color:#aaa;font-size:10px;margin-top:12px;text-align:center;>Cámara real NODO Argentina • Bóveda segura</div>';
+    document.body.appendChild(modal);
+    var video=modal.querySelector('#video-real-v20');
+    var canvas=modal.querySelector('#canvas-real-v20');
+    var inputGaleria=modal.querySelector('#input-galeria-real');
+    // Abrir cámara trasera si es posible, sino frontal
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false}).then(function(stream){
+      video.srcObject=stream;
+      modal._stream=stream;
+    }).catch(function(){
+      navigator.mediaDevices.getUserMedia({video:true, audio:false}).then(function(stream){
+        video.srcObject=stream;
+        modal._stream=stream;
+      }).catch(function(err){
+        alert('No se pudo abrir cámara: '+err.message+' - Usá Galería');
+      });
+    });
+    modal.querySelector('#btn-cerrar-real').onclick=function(){
+      if(modal._stream) modal._stream.getTracks().forEach(function(t){t.stop();});
+      modal.remove();
+    };
+    modal.querySelector('#btn-galeria-real').onclick=function(){ inputGaleria.click(); };
+    inputGaleria.onchange=function(e){
+      var file=e.target.files[0];
+      if(!file) return;
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        onCaptura(ev.target.result);
+        if(modal._stream) modal._stream.getTracks().forEach(function(t){t.stop();});
+        modal.remove();
+      };
+      reader.readAsDataURL(file);
+    };
+    modal.querySelector('#btn-capturar-real').onclick=function(){
+      canvas.width=video.videoWidth;
+      canvas.height=video.videoHeight;
+      canvas.getContext('2d').drawImage(video,0,0);
+      var dataURL=canvas.toDataURL('image/jpeg', 0.8);
+      onCaptura(dataURL);
+      if(modal._stream) modal._stream.getTracks().forEach(function(t){t.stop();});
+      modal.remove();
+    };
+  }
+  function fixCamarasReales(){
+    // Buscar botones de Logo, Banner, DNI, Selfie
+    document.querySelectorAll('button, label, div').forEach(function(el){
+      if(el.dataset.camRealV20) return;
+      var txt=(el.innerText||'').toLowerCase();
+      var isCamBtn = txt.indexOf('cámara')!==-1 || txt.indexOf('camara')!==-1 || txt.indexOf('tomar foto')!==-1 || txt.indexOf('foto')!==-1 && (txt.indexOf('logo')!==-1 || txt.indexOf('banner')!==-1 || txt.indexOf('dni')!==-1 || txt.indexOf('selfie')!==-1 || txt.length<20);
+      var isUploadArea = el.tagName==='DIV' && (txt.indexOf('arrastrá')!==-1 || txt.indexOf('subir')!==-1 || txt.indexOf('logo')!==-1 || txt.indexOf('banner')!==-1) && el.offsetHeight>60;
+      
+      if((isCamBtn || isUploadArea) && el.offsetParent!==null){
+        // Solo en Mi Comercio o Mi Perfil
+        var inRelevantSection = document.body.innerText.indexOf('Mi Comercio')!==-1 || document.body.innerText.indexOf('Mi Perfil')!==-1;
+        if(!inRelevantSection) return;
+        
+        // Evitar duplicar en cada card
+        if(el.tagName==='BUTTON' && (txt.indexOf('datos')!==-1 || txt.indexOf('banner logo')!==-1)) return;
+        
+        if(txt.indexOf('logo')!==-1 || txt.indexOf('banner')!==-1 || txt.indexOf('dni')!==-1 || txt.indexOf('selfie')!==-1 || txt.indexOf('cámara')!==-1 || txt.indexOf('foto')!==-1){
+          el.dataset.camRealV20='1';
+          el.style.cursor='pointer';
+          // Agregar badge cámara real
+          if(!el.querySelector('.badge-cam-real')){
+            var badge=document.createElement('span');
+            badge.className='badge-cam-real';
+            badge.style.cssText='display:inline-block;margin-left:6px;font-size:10px;background:#FF6B0A;color:#fff;padding:2px 6px;border-radius:999px;';
+            badge.innerText='📷 Real';
+            if(el.tagName==='BUTTON') el.appendChild(badge);
+          }
+          
+          el.addEventListener('click', function(e){
+            var t=(this.innerText||'').toLowerCase();
+            if(t.indexOf('datos')!==-1 || t.indexOf('días')!==-1 || t.indexOf('qr único')!==-1) return; // Tabs, no cámara
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var titulo='Cámara NODO Argentina';
+            if(t.indexOf('logo')!==-1) titulo='📷 Cámara - Logo del comercio';
+            else if(t.indexOf('banner')!==-1) titulo='📷 Cámara - Banner del comercio';
+            else if(t.indexOf('dni')!==-1) titulo='📷 Cámara - DNI Frente/Dorso';
+            else if(t.indexOf('selfie')!==-1) titulo='📷 Cámara - Selfie verificación';
+            else titulo='📷 Cámara real NODO Argentina';
+            
+            crearModalCamara(titulo, function(dataURL){
+              // Mostrar preview y guardar
+              var preview=document.createElement('div');
+              preview.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 20px;border-radius:999px;font-size:12px;z-index:999999;display:flex;align-items:center;gap:10px;';
+              preview.innerHTML='<img src='+dataURL+' style=width:40px;height:40px;border-radius:8px;object-fit:cover;><span>✅ Foto capturada - Guardada localmente</span>';
+              document.body.appendChild(preview);
+              setTimeout(function(){ preview.remove(); },3000);
+              
+              // Guardar en localStorage según tipo
+              try{
+                if(t.indexOf('logo')!==-1){
+                  localStorage.setItem('nodo_logo_comercio', dataURL);
+                } else if(t.indexOf('banner')!==-1){
+                  localStorage.setItem('nodo_banner_comercio', dataURL);
+                } else if(t.indexOf('dni')!==-1 || t.indexOf('selfie')!==-1){
+                  var key = t.indexOf('frente')!==-1 ? 'nodo_dni_frente' : t.indexOf('dorso')!==-1 ? 'nodo_dni_dorso' : 'nodo_selfie';
+                  localStorage.setItem(key, dataURL);
+                }
+                // Intentar mostrar preview en el formulario
+                var imgPreview = el.parentElement ? el.parentElement.querySelector('img') : null;
+                if(imgPreview) imgPreview.src=dataURL;
+                else {
+                  // Buscar img cercana
+                  var container = el.closest('div');
+                  if(container){
+                    var img = container.querySelector('img');
+                    if(img) img.src=dataURL;
+                  }
+                }
+              }catch(e){ console.log('Error guardando foto:', e); }
+            });
+          });
+        }
       }
     });
-    // Si no hay barra, crearla debajo del logo
-    if(barras.length===0){
-      var bar=document.createElement('div');
-      bar.id='nodo-topbar-v17';
-      bar.style.cssText='background:#FFFFFF;border-bottom:1px solid #eeeeee;display:flex;gap:8px;padding:10px 12px;align-items:center;overflow-x:auto;';
-      bar.innerHTML='<button onclick="location.href=\'/bloque1/\'" style="padding:6px 14px;border-radius:999px;border:1px solid #dddddd;background:#ffffff;color:#111111;font-weight:600;font-size:13px;cursor:pointer;">NODO</button><button style="padding:6px 14px;border-radius:999px;border:1px solid #FF6B0A;background:#FF6B0A;color:#ffffff;font-weight:700;font-size:13px;">NODO MAX</button><button onclick="location.href=\'/bloque3/\'" style="padding:6px 14px;border-radius:999px;border:1px solid #dddddd;background:#ffffff;color:#111111;font-weight:600;font-size:13px;cursor:pointer;">NODO+</button>';
-      headerLogo.parentNode.insertBefore(bar, headerLogo.nextSibling);
-    }
   }
-  // ---------- TERMINOS COMPLETOS - FIX MODAL ----------
-  function fixTerminos(){
-    document.querySelectorAll('*').forEach(function(el){
-      if(el.innerText && el.innerText.indexOf('Términos y Condiciones - Ley 25.326')!==-1 && el.children.length>2){
-        // Es el modal de términos
-        if(el.querySelector('#terminos-fix-v17')) return;
-        var modal = el;
-        // Ocultar token •••• 4582 del público
-        modal.innerHTML = modal.innerHTML.replace(/•••• 4582/g, '•••• seguro').replace(/token •••• seguro/g, 'Bóveda tokenizada segura');
-        
-        var fixDiv=document.createElement('div');
-        fixDiv.id='terminos-fix-v17';
-        fixDiv.style.cssText='margin-top:12px;padding:12px;background:#f9f9f9;border:1px solid #eeeeee;border-radius:8px;font-size:11px;line-height:1.4;color:#333333;';
-        fixDiv.innerHTML='<div style=font-weight:700;margin-bottom:6px;>Términos completos NODO Argentina</div>Plataforma NODO actúa como <b>orquestador/intermediario tecnológico</b>, no como vendedor ni empleador (Ley 24.240 art.40, Resolución 424/2020). Comisiones: RECARGAS 7% mínimo 1.000 C$B, CSI 2% + 0.21% IVA, CTCI 12% + IVA NODO+ (cliente paga). Reintegro 10% cliente/comercio/admin. Cláusula comercio 5% descuento diario obligatorio. Bóveda tokenizada segura con tokens MP_ACCESS_TOKEN y FUTURE_BANK_TOKEN (env vars Render). Datos personales protegidos Ley 25.326, derechos ARCO, jurisdicción Catamarca. Contacto: asistmax.cliente@gmail.com<br><br><a href=/bloque1/terminos.html target=_blank style=color:#FF6B0A;text-decoration:underline;font-weight:600;>Ver Términos y Condiciones completos →</a>';
-        
-        var aceptarBtn = Array.from(modal.querySelectorAll('button')).find(function(b){ return b.innerText.trim()==='Aceptar'; });
-        if(aceptarBtn) modal.insertBefore(fixDiv, aceptarBtn);
-        else modal.appendChild(fixDiv);
-        console.log('✅ Términos completos con link a /bloque1/terminos.html');
-      }
-    });
-  }
-  // ---------- BUSCADOR SOLO TIENDA DEBAJO TABS ANTES BANNER ----------
-  function isTienda(){
-    return Array.from(document.querySelectorAll('*')).some(function(el){ return el.innerText && el.innerText.indexOf('Comercios adheridos que aceptan C$B')!==-1 && el.offsetParent!==null; });
-  }
-  function ensureBuscador(){
-    var existe=document.getElementById('buscador-v17');
-    if(!isTienda()){ if(existe) existe.remove(); return; }
-    if(existe) return;
-    var tituloTienda=Array.from(document.querySelectorAll('*')).find(function(el){ return el.innerText==='Tienda' && el.tagName.match(/H1|H2|H3/) && el.offsetParent!==null; });
-    var anchor = tituloTienda ? tituloTienda.parentElement : null;
-    if(!anchor){
-      var bannerImg=Array.from(document.querySelectorAll('img')).find(function(img){ return img.offsetParent!==null && img.width>300; });
-      if(bannerImg) anchor=bannerImg.closest('div').parentElement;
-    }
-    if(!anchor || !anchor.parentNode) return;
-    var buscador=document.createElement('div'); buscador.id='buscador-v17';
-    buscador.style.cssText='background:#ffffff;padding:12px 16px;margin:16px;border:1px solid #eeeeee;border-radius:999px;display:flex;align-items:center;gap:10px;max-width:520px;';
-    buscador.innerHTML='<span style=font-size:14px;color:#999999;>🔍</span><input id=input-buscar-v17 type=text placeholder="Buscar por rubro y comercio" style=flex:1;border:none;outline:none;font-size:13px;color:#333333;background:transparent;>';
-    var next = anchor.nextElementSibling;
-    if(next && next.querySelector && next.querySelector('img')) anchor.parentNode.insertBefore(buscador, next);
-    else anchor.parentNode.insertBefore(buscador, anchor.nextSibling);
-  }
-  // ---------- QR REAL CON QRCODE LIB ----------
-  function loadQR(callback){
-    if(window.QRCode){ callback(); return; }
-    var s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
-    s.onload=callback; s.onerror=function(){ callback(true); };
+  // ---------- LECTOR QR REAL PARA PAGAR QR ----------
+  function loadQRScannerLib(callback){
+    if(window.Html5Qrcode){ callback(); return; }
+    var s=document.createElement('script');
+    s.src='https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    s.onload=callback;
+    s.onerror=function(){ console.log('No se pudo cargar html5-qrcode'); callback(true); };
     document.head.appendChild(s);
   }
-  function ensureQR(){
-    if(document.getElementById('qr-v17')) return;
-    var qrBtn=Array.from(document.querySelectorAll('button')).find(function(b){ return (b.innerText||'').trim()==='QR Único' && b.offsetParent!==null; });
-    if(!qrBtn) return;
-    var coms=getComercios(); var cAct=coms[0];
-    try{ var stored=JSON.parse(localStorage.getItem('nodo_mi_comercio')||'null'); if(stored && stored.nombre) cAct=stored; }catch(e){}
-    if(!cAct) cAct={id:'NODO-'+Date.now(), nombre:'Mi Comercio', descuento:20};
-    var container=document.createElement('div'); container.id='qr-v17';
-    container.style.cssText='background:#ffffff;border:1px solid #eeeeee;border-radius:16px;padding:20px;margin:16px 0;text-align:center;max-width:340px;';
-    container.innerHTML='<div style=font-weight:700;font-size:14px;color:#1A2B5C;margin-bottom:12px;>QR Único de tu comercio</div><div id=qr-canvas-v17 style=display:flex;justify-content:center;margin:12px 0;><div id=qrcode-v17 style=width:120px;height:120px;></div></div><div style=font-size:11px;color:#666666;margin-bottom:12px;>'+cAct.nombre+'<br><span style=background:#FF6B0A;color:#fff;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;>-'+cAct.descuento+'% con C$B</span><br><span style=font-size:10px;color:#999999;margin-top:4px;display:inline-block;>Comercio verificado NODO</span></div><button id=btn-descargar-v17 style=padding:10px 18px;border-radius:999px;background:#1A2B5C;color:#ffffff;border:none;cursor:pointer;font-size:12px;font-weight:600;width:100%;>📥 Descargar QR para imprimir</button><div style=font-size:10px;color:#999999;margin-top:8px;>Al descargar verás el cartel completo NODO Argentina<br>ESCANEÁ Y AHORRÁ • DESCUENTOS DE LOCOS</div>';
-    var buttonsRow=qrBtn.closest('div');
-    if(buttonsRow){
-      var nextDiv=buttonsRow.nextElementSibling;
-      if(nextDiv){ nextDiv.innerHTML=''; nextDiv.appendChild(container); }
-      else buttonsRow.parentElement.appendChild(container);
-    }
-    loadQR(function(isFallback){
-      var payload="https://nodo.com.ar/qr/"+cAct.id;
-      var qrcodeDiv=document.getElementById('qrcode-v17');
-      if(!qrcodeDiv) return;
-      if(isFallback){
-        var canvas=document.createElement('canvas'); canvas.width=120; canvas.height=120;
-        var ctx=canvas.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,120,120);
-        ctx.fillStyle='#1A2B5C'; ctx.fillRect(0,0,120,12); ctx.fillRect(0,108,120,12); ctx.fillRect(0,0,12,120); ctx.fillRect(108,0,12,120);
-        var hash=0; for(var i=0;i<payload.length;i++) hash=(hash*31+payload.charCodeAt(i))%1000000;
-        for(var y=1;y<9;y++) for(var x=1;x<9;x++){ if((hash + x*7 + y*13)%2===0) ctx.fillRect(x*12+2,y*12+2,8,8); }
-        qrcodeDiv.innerHTML=''; qrcodeDiv.appendChild(canvas);
-      } else {
-        qrcodeDiv.innerHTML='';
-        new QRCode(qrcodeDiv, {text: payload, width: 120, height: 120, colorDark: "#1A2B5C", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H});
-      }
-      var btnDown=document.getElementById('btn-descargar-v17');
-      if(btnDown){
-        btnDown.onclick=function(){
-          var bigCanvas=document.createElement('canvas'); bigCanvas.width=600; bigCanvas.height=900;
-          var ctx=bigCanvas.getContext('2d');
-          ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,600,900);
-          ctx.fillStyle='#1A2B5C'; ctx.font='bold 44px Arial'; ctx.textAlign='center';
-          ctx.fillText('NODO Argentina', 300, 70);
-          ctx.font='bold 12px Arial'; ctx.fillText('DESCUENTOS DE LOCOS', 300, 95);
-          var qrCanvas = qrcodeDiv.querySelector('canvas');
-          var qrImg = qrcodeDiv.querySelector('img');
-          if(qrCanvas) ctx.drawImage(qrCanvas, 100, 160, 400, 400);
-          else if(qrImg){ var img=new Image(); img.onload=function(){ ctx.drawImage(img,100,160,400,400); finish(); }; img.src=qrImg.src; return; }
-          finish();
-          function finish(){
-            ctx.fillStyle='#1A2B5C'; ctx.font='bold 26px Arial';
-            ctx.fillText('ESCANEÁ Y', 300, 620); ctx.fillText('AHORRÁ', 300, 655);
-            ctx.font='14px Arial'; ctx.fillText('Descuentos de locos', 300, 685);
-            ctx.font='11px Arial'; ctx.fillStyle='#888888';
-            ctx.fillText(cAct.nombre+' • -'+cAct.descuento+'% con C$B', 300, 710);
-            var a=document.createElement('a'); a.download='QR-NODO-Argentina-'+cAct.nombre.replace(/\s+/g,'-')+'.png'; a.href=bigCanvas.toDataURL('image/png'); a.click();
+  function fixLectorQRReal(){
+    var pagarSection = Array.from(document.querySelectorAll('*')).find(function(el){ return el.innerText && el.innerText.indexOf('Pagar en comercio')!==-1 && el.offsetParent!==null; });
+    if(!pagarSection) return;
+    if(document.getElementById('btn-lector-qr-real-v20')) return;
+    var btn=document.createElement('button');
+    btn.id='btn-lector-qr-real-v20';
+    btn.style.cssText='margin:12px 0;padding:12px 20px;border-radius:999px;background:#1A2B5C;color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;';
+    btn.innerHTML='📷 Lector QR Real - Escanear comercio';
+    btn.onclick=function(){
+      loadQRScannerLib(function(isError){
+        if(isError){
+          // Fallback cámara simple sin decoder
+          crearModalCamara('📷 Lector QR - Apuntá al QR NODO Argentina del comercio', function(dataURL){
+            alert('Foto del QR capturada - En versión completa se decodificaría automáticamente\nDataURL guardado');
+          });
+          return;
+        }
+        // Modal con lector QR real
+        var modal=document.createElement('div');
+        modal.id='modal-lector-qr-real';
+        modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+        modal.innerHTML='<div style=color:#fff;font-weight:700;font-size:14px;margin-bottom:12px;>📷 Lector QR Real NODO Argentina</div><div id=reader-qr-real style=width:90%;max-width:400px;background:#000;border-radius:16px;overflow:hidden;></div><div style=color:#aaa;font-size:11px;margin-top:12px;text-align:center;>Apuntá al QR NODO Argentina del comercio<br>Descuentos de locos - ESCANEÁ Y AHORRÁ</div><button id=btn-cerrar-lector style=margin-top:16px;padding:10px 20px;border-radius:999px;background:#fff;color:#111;border:none;cursor:pointer;>✕ Cerrar lector</button><div id=resultado-qr style=color:#10B981;font-size:12px;margin-top:12px;text-align:center;></div>';
+        document.body.appendChild(modal);
+        var html5QrCode = new Html5Qrcode("reader-qr-real");
+        var config = { fps: 10, qrbox: {width: 250, height: 250} };
+        html5QrCode.start(
+          { facingMode: "environment" },
+          config,
+          function(decodedText, decodedResult){
+            // QR detectado
+            document.getElementById('resultado-qr').innerHTML='✅ QR detectado:<br><b>'+decodedText+'</b><br>Procesando pago...';
+            console.log('QR Real detectado:', decodedText);
+            setTimeout(function(){
+              try{ html5QrCode.stop().then(function(){ modal.remove(); }); }catch(e){ modal.remove(); }
+              // Simular flujo de pago con datos del QR
+              var pagoModal=document.createElement('div');
+              pagoModal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;';
+              pagoModal.innerHTML='<div style=background:#fff;border-radius:16px;padding:24px;max-width:340px;width:100%;text-align:center;><div style=font-size:32px;margin-bottom:12px;>✅</div><div style=font-weight:700;font-size:16px;margin-bottom:8px;>Comercio detectado</div><div style=font-size:12px;color:#666;margin-bottom:12px;word-break:break-all;>'+decodedText+'</div><div style=font-size:11px;color:#999;margin-bottom:16px;>Flujo real: verificar descuento 5% mínimo + % adicional del comercio (no suma, queda mayor)<br>Comisión CSI 2%+0.21% IVA</div><button onclick="this.closest(\'div\').parentElement.remove()" style=padding:10px 20px;border-radius:999px;background:#1A2B5C;color:#fff;border:none;cursor:pointer;width:100%;>Continuar a pagar</button></div>';
+              document.body.appendChild(pagoModal);
+            },800);
+          },
+          function(errorMessage){
+            // Error escaneo, ignorar
           }
+        ).catch(function(err){
+          document.getElementById('resultado-qr').innerHTML='❌ No se pudo iniciar cámara: '+err+'<br>Verificá permisos';
+        });
+        modal.querySelector('#btn-cerrar-lector').onclick=function(){
+          try{ html5QrCode.stop().then(function(){ modal.remove(); }); }catch(e){ modal.remove(); }
         };
-      }
-    });
+      });
+    };
+    pagarSection.parentElement.insertBefore(btn, pagarSection.nextSibling);
+    console.log('✅ Lector QR Real agregado');
   }
-  // ---------- LIMPIEZA TEXTOS INTERNOS ----------
-  function limpiezaTextos(){
+  // ---------- TEXTOS INTERNOS + DEMO ----------
+  function auditarTextos(){
     document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length>0) return;
       var t=(el.innerText||'').trim();
-      if((t==='V8'||t==='V7'||t==='V6'||t==='V10'||t==='V11'||t==='V12'||t==='V13'||t==='V14'||t==='V15'||t==='V16') && el.parentElement && el.parentElement.innerText.indexOf('NODO MAX')!==-1 && el.children.length===0) el.style.display='none';
       if(t==='Banner (galería)') el.innerText='Banner del comercio';
       if(t.indexOf('Logo comercio* galería SÍ')!==-1) el.innerText='Logo del comercio';
-      if(t.indexOf('Borrador local - sin envío externo')!==-1) el.innerText='Datos guardados localmente';
-      if(t.indexOf('Validación en tiempo real')!==-1 && t.length<40) el.style.display='none';
-      if((t.indexOf('Bots NODO MAX activos')!==-1 || t.indexOf('Buscando comercios en tu zona')!==-1) && !el.closest('#notif-panel-v17')) el.style.display='none';
+      if(t.indexOf('Borrador local')!==-1) el.innerText='Datos guardados localmente';
+      if(t==='Validación en tiempo real') el.style.display='none';
+      if(t==='-20% con C$B' && el.closest && el.closest('div').innerText.indexOf('QR Único')!==-1) el.style.display='none';
+      if((t==='V8'||t==='V7'||t==='V6'||t.indexOf('V1')===0 && t.length<=4) && el.parentElement && el.parentElement.innerText.indexOf('NODO MAX')!==-1) el.style.display='none';
+      if(t.indexOf('Bots NODO MAX')!==-1) el.style.display='none';
+      if(t==='ID: demo-nodo' || t==='demo-nodo') el.style.display='none';
     });
   }
   function init(){
     limpieza();
-    getComercios();
-    setTimeout(fixTopBarPosition, 500);
-    setTimeout(fixTopBarPosition, 1500);
-    setTimeout(fixTerminos, 800);
-    setTimeout(ensureBuscador, 1000);
-    setTimeout(ensureQR, 1200);
-    setTimeout(limpiezaTextos, 1500);
+    eliminarDemo();
+    auditarTextos();
+    setTimeout(fixCamarasReales, 1000);
+    setTimeout(fixLectorQRReal, 1500);
+    setTimeout(auditarTextos, 1500);
   }
   document.addEventListener('DOMContentLoaded', init);
   window.addEventListener('load', init);
-  setTimeout(init, 600);
+  setTimeout(init, 800);
   var obs=new MutationObserver(function(m){
     m.forEach(function(r){ r.addedNodes.forEach(function(n){ if(n.innerText){
-      if(n.innerText.indexOf('Comercios adheridos que aceptan C$B')!==-1) setTimeout(ensureBuscador, 300);
-      if(n.innerText.indexOf('QR Único')!==-1) setTimeout(ensureQR, 400);
-      if(n.innerText.indexOf('Términos y Condiciones')!==-1) setTimeout(fixTerminos, 300);
-      if(n.innerText.indexOf('NODO MAX')!==-1 && n.innerText.indexOf('Inicio')!==-1) setTimeout(fixTopBarPosition, 300);
+      if(n.innerText.indexOf('Mi Comercio')!==-1 || n.innerText.indexOf('Mi Perfil')!==-1) setTimeout(fixCamarasReales, 500);
+      if(n.innerText.indexOf('Pagar en comercio')!==-1) setTimeout(fixLectorQRReal, 500);
+      if(n.innerText.indexOf('QR Único')!==-1) setTimeout(auditarTextos, 400);
     } }); });
   });
   obs.observe(document.body,{childList:true,subtree:true});
   setTimeout(function(){
     Array.from(document.querySelectorAll('button')).forEach(function(btn){
       var txt=(btn.innerText||'').trim();
-      if(['Tienda','Mi Wallet','Pagar QR','Mi Comercio','Mi Perfil','QR Único'].indexOf(txt)!==-1){
+      if(['Mi Comercio','Mi Perfil','Pagar QR','Tienda','Datos','Banner Logo','Días Descuentos','QR Único'].indexOf(txt)!==-1){
         btn.addEventListener('click', function(){
-          setTimeout(function(){
-            if(txt==='Tienda') ensureBuscador();
-            else { var b=document.getElementById('buscador-v17'); if(b) b.remove(); }
-            if(txt==='QR Único' || txt==='Mi Comercio') ensureQR();
-            fixTopBarPosition(); fixTerminos(); limpiezaTextos();
-          },600);
+          setTimeout(function(){ fixCamarasReales(); fixLectorQRReal(); auditarTextos(); },700);
         });
       }
     });
   },2000);
   document.documentElement.style.background='#ffffff';
   document.body.style.background='#ffffff';
-  console.log('✅ V17 LISTO - Top bar debajo logo, QR real, términos completos, sin V8, sin demo ID');
 })();
 </script>
 </body>
