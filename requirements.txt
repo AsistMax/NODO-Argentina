@@ -1,12 +1,5 @@
 fastapi
 uvicorn[standard]
 gunicorn
-pydantic
-pydantic-settings
-supabase
-mercadopago
 httpx
-apscheduler
-beautifulsoup4
-lxml
 python-multipart
