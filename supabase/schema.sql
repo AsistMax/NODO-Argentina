@@ -1,0 +1,9 @@
+
+create extension if not exists "uuid-ossp";
+create table empresas (id uuid primary key default uuid_generate_v4(), razon_social text not null, cuit text unique not null, sector text not null, objetivo text, inversion_mensual numeric, zona_operacion text[], descripcion text, archivos_url text[], created_at timestamp default now());
+create table agentes_nodo (id uuid primary key default uuid_generate_v4(), nombre text not null, zona text, estado text default 'operando', leads_hoy int default 0, efectividad numeric, logs jsonb, created_at timestamp default now());
+create table equipo_campo (id uuid primary key default uuid_generate_v4(), nombre text not null, dni text, zona text, telefono text, link_id text unique not null, link_completo text not null, leads_generados int default 0, costo_base numeric default 800000, created_at timestamp default now());
+create table cartera_crm (id uuid primary key default uuid_generate_v4(), empresa_id uuid references empresas(id), fecha timestamp default now(), nombre_cliente text, telefono text, email text, origen text, comprobante_id text unique not null, estado text default 'pendiente', agente_campo_id uuid references equipo_campo(id), link_evidencia text, audio_url text, inversion_operativa numeric, created_at timestamp default now());
+create table calculo_costos (id uuid primary key default uuid_generate_v4(), empresa_id uuid references empresas(id), cantidad_personas int, dias int, urgencia text, factor_urgencia numeric, total_campo numeric, total_digital numeric, total_final numeric, created_at timestamp default now());
+insert into storage.buckets (id, name, public) values ('nodo-docs', 'nodo-docs', false) on conflict do nothing;
+insert into storage.buckets (id, name, public) values ('nodo-audios', 'nodo-audios', false) on conflict do nothing;
