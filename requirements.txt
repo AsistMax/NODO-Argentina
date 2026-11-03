@@ -1,3 +1,7 @@
-fastapi
-uvicorn
-[STRIPPED 73 bytes]
+supabase
+openai
+google-ads
+facebook-business
+twilio
+requests
+python-dotenv
