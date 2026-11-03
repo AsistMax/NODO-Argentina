@@ -1,7 +1,8 @@
+fastapi
+uvicorn
+gunicorn
 supabase
-openai
-google-ads
-facebook-business
-twilio
-requests
 python-dotenv
+firebase-admin
+twilio
+openai
