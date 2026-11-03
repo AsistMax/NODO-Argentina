@@ -1,5 +1,7 @@
-fastapi
-uvicorn[standard]
-gunicorn
-httpx
-python-multipart
+supabase
+openai
+google-ads
+facebook-business
+twilio
+requests
+python-dotenv
