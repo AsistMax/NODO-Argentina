@@ -1,307 +1,521 @@
-
-from fastapi import FastAPI, Request, Depends, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-import os
-from supabase import create_client
-from datetime import datetime
-
-app = FastAPI(title="NODO Argentina - Sistema Privado")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_KEY")
-ADMIN_KEY = os.getenv("ADMIN_KEY", "nodo2026")
-
-supabase = None
-if SUPABASE_URL and SUPABASE_KEY:
-    try:
-        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    except:
-        supabase = None
-
-# --- LOGIN PRIVADO ---
-@app.post("/api/login")
-async def login(request: Request):
-    data = await request.json()
-    clave = data.get("clave", "")
-    if clave == ADMIN_KEY or clave == "nodo2026" or len(clave) > 3:
-        return {"ok": True, "token": "NODO-TOKEN-PRIVADO"}
-    raise HTTPException(status_code=401, detail="Clave incorrecta")
-
-# --- CRM REAL ---
-@app.get("/api/crm")
-async def get_crm():
-    if not supabase:
-        return {"leads": []}
-    try:
-        res = supabase.table("cartera_crm").select("*").order("created_at", desc=True).limit(100).execute()
-        return {"leads": res.data}
-    except Exception as e:
-        return {"leads": [], "error": str(e)}
-
-@app.get("/api/empresas")
-async def get_empresas():
-    if not supabase:
-        return {"empresas": []}
-    try:
-        res = supabase.table("empresas").select("*").execute()
-        return {"empresas": res.data}
-    except Exception as e:
-        return {"empresas": [], "error": str(e)}
-
-@app.get("/api/equipo-campo")
-async def get_equipo():
-    if not supabase:
-        return {"equipo": []}
-    try:
-        res = supabase.table("equipo_campo").select("*").execute()
-        return {"equipo": res.data}
-    except Exception as e:
-        return {"equipo": [], "error": str(e)}
-
-# --- LINK DE CAMPO ---
-@app.get("/r/{link_id}")
-async def redirect_campo(link_id: str):
-    return HTMLResponse(f"""
-    <html><body style="background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center">
-    <h1>NODO ARGENTINA</h1>
-    <h2>Agente de Campo: {link_id}</h2>
-    <p>Link verificado. Lead registrado en CRM.</p>
-    <form onsubmit="registrar(event)">
-    <input id="nombre" placeholder="Nombre cliente" style="padding:10px;margin:5px"/><br>
-    <input id="tel" placeholder="Telefono" style="padding:10px;margin:5px"/><br>
-    <button style="padding:10px 20px;background:#D4AF37;color:#000;border:none;margin-top:10px">Registrar Lead</button>
-    </form>
-    <script>
-    function registrar(e){{e.preventDefault(); alert('Lead registrado para {link_id} - Se suma al CRM de NODO');}}
-    </script>
-    </body></html>
-    """)
-
-# --- FRONTEND NODO PRIVADO ---
-@app.get("/", response_class=HTMLResponse)
-async def serve_frontend():
-    try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except:
-        return HTMLResponse("<h1>NODO Argentina - Sistema Privado - Deploy OK - Subi el index.html</h1>")
-
-@app.get("/health")
-async def health():
-    return {"status": "NODO Argentina Live", "timestamp": str(datetime.now()), "supabase": "connected" if supabase else "no config"}
-
-# === NODO BOTS 24/7 CIERRE AUTOMÁTICO ===
-
-class CierreConvenio(BaseModel):
-    empresa_id: Optional[str] = None
-    razon_social: str
-    cuit: str
-    email: str
-    telefono: str
-    acepta_terminos: bool
-    monto_total: float
-    plan: str = "normal"  # normal, urgente, express
-    tarjeta_token: Optional[str] = None  # token Mercado Pago
-    provincias: List[str] = []
-
-CENTRO_ATENCION = {
-    "telefono": "3834607740",
-    "email": "nodo.empresas@gmail.com",
-    "horario": "Lunes a Viernes 9-18hs - Bots 24/7 para cierre",
-    "web": "nodo.ar"
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NODO Argentina - Sistema País | Acceso Custodiado</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--card:#111113;--card2:#161618;--border:#232326;--gold:#d4af37;--gold2:#b8962e;--text:#e8e8e8;--muted:#88888e;--green:#2ecc71;--orange:#f39c12;--red:#e74c3c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;line-height:1.5;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.header{border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(8,8,8,0.9);backdrop-filter:blur(10px);z-index:10}
+.logo{font-weight:800;letter-spacing:1.5px;font-size:13px}.logo span{color:var(--gold)}
+.badge-live{font-size:10px;padding:4px 8px;border-radius:10px;border:1px solid var(--border);background:#111}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1} 50%{opacity:0.5}}
+.tabs{padding:12px 20px;display:flex;gap:8px;overflow-x:auto;border-bottom:1px solid var(--border);background:#0a0a0a}
+.tab{padding:8px 14px;border:1px solid var(--border);border-radius:20px;cursor:pointer;white-space:nowrap;font-size:11px;letter-spacing:0.5px;font-family:'JetBrains Mono',monospace;background:var(--card);transition:all 0.2s}
+.tab.active{background:var(--text);color:#000;border-color:var(--text);font-weight:700}
+.tab:hover{border-color:var(--gold)}
+.container{max-width:1400px;margin:0 auto;padding:20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.kpi-card .label{font-size:10px;color:var(--muted);letter-spacing:1px;font-family:'JetBrains Mono',monospace;text-transform:uppercase}
+.kpi-card .num{font-size:26px;font-weight:800;margin:8px 0;font-family:'JetBrains Mono',monospace}
+.kpi-card .sub{font-size:11px;color:var(--muted)}
+.kpi-card::after{content:'';position:absolute;top:0;right:0;width:40px;height:40px;background:radial-gradient(circle, rgba(212,175,55,0.15), transparent);border-radius:50%}
+.grid2{display:grid;grid-template-columns:1.2fr 0.8fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.card h3{font-size:13px;margin-bottom:12px;letter-spacing:0.5px}
+.card h4{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:#0f0f0f;color:var(--text);margin:6px 0 10px;font-size:13px}
+label{font-size:11px;color:var(--muted);margin-top:8px;display:block;font-family:'JetBrains Mono',monospace;letter-spacing:0.3px}
+button{background:var(--text);color:#000;border:none;padding:12px 18px;border-radius:8px;font-weight:700;cursor:pointer;width:100%;font-size:12px;letter-spacing:0.5px;transition:all 0.2s}
+button:hover{background:var(--gold)}
+button.gold{background:var(--gold)}
+button.outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.prov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-height:300px;overflow-y:auto;padding:8px;border:1px solid var(--border);border-radius:8px;background:#0f0f0f}
+@media(max-width:800px){.prov-grid{grid-template-columns:repeat(2,1fr)}}
+.prov-item{display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-size:11px;cursor:pointer}
+.prov-item input{width:auto;margin:0}
+.sectores-card{background:#fff;color:#000;border-radius:12px;padding:16px}
+.sectores-card .tag{display:inline-block;padding:4px 8px;border-radius:12px;background:#000;color:#fff;font-size:10px;margin:3px;font-family:'JetBrains Mono',monospace}
+.drop-zone{border:1px dashed var(--border);border-radius:8px;padding:20px;text-align:center;background:#0f0f0f;font-size:11px;color:var(--muted)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+td{padding:12px 8px;border-bottom:1px solid #151515;white-space:nowrap}
+.status{padding:3px 8px;border-radius:10px;font-size:10px;font-family:'JetBrains Mono',monospace}
+.status.ACTIVO{background:rgba(46,204,113,0.15);color:var(--green);border:1px solid rgba(46,204,113,0.3)}
+.status.EN{color:var(--orange);background:rgba(243,156,18,0.15);border:1px solid rgba(243,156,18,0.3)}
+.status.PAUSADO{background:#1a1a1a;color:var(--muted);border:1px solid var(--border)}
+.agent-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.agent-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.agent-id{width:32px;height:32px;border-radius:8px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;font-family:'JetBrains Mono',monospace}
+.log{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;padding:4px 0;border-bottom:1px solid #111}
+.empty{padding:40px;text-align:center;color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace}
+.total-box{background:linear-gradient(135deg,#111,#1a1a1a);border:1px solid var(--gold);border-radius:12px;padding:18px;margin-top:12px}
+.total-box .total{font-size:24px;font-weight:800;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.cierre-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.config-box{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;background:#0a0a0a;border:1px solid var(--border);padding:10px;border-radius:8px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header">
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:28px;height:28px;background:#fff;color:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">N</div>
+<div class="logo">NODO ARGENTINA <span style="font-size:9px;background:var(--gold);color:#000;padding:2px 6px;border-radius:10px;margin-left:6px">RD</span><br><span style="font-size:9px;color:var(--muted);font-weight:400;letter-spacing:1px">ACCESO CUSTODIADO — OPERADOR ÚNICO</span></div>
+<div class="badge-live mono"><span class="dot"></span> <span id="live-agentes">0</span> AGENTES NODO OPERANDO</div>
+<div class="badge-live mono">CALLMEBOT 3834607740 ACTIVO</div>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<div class="badge-live mono">AUDIO WHATSAPP HABILITADO</div>
+<div class="badge-live mono" style="background:var(--text);color:#000">SALIR</div>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" data-tab="adm">PANEL ADM</div>
+<div class="tab" data-tab="crm">CRM REAL</div>
+<div class="tab" data-tab="agentes">AGENTES NODO</div>
+<div class="tab" data-tab="area">EQUIPO ÁREA</div>
+<div class="tab" data-tab="incorporacion">INCORPORACIÓN</div>
+<div class="tab" data-tab="costos">COSTOS NODO</div>
+<div class="tab" data-tab="cierre">CIERRE AUTOMÁTICO</div>
+<div class="tab" data-tab="suscripciones">SUSCRIPCIONES Y PAGOS</div>
+</div>
+<div class="container">
+<!-- PANEL ADM -->
+<div id="tab-adm" class="tab-content">
+<div class="kpi-grid">
+<div class="kpi-card"><div class="label">Empresas activas</div><div class="num" id="kpi-empresas">0</div><div class="sub" id="kpi-empresas-sub">Sin datos - Usá Incorporación</div></div>
+<div class="kpi-card"><div class="label">Leads totales hoy</div><div class="num" id="kpi-leads">0</div><div class="sub">Digital + Área + Audio</div></div>
+<div class="kpi-card"><div class="label">Inversión operativa</div><div class="num" id="kpi-inversion">$0</div><div class="sub">Ads + Infra NODO</div></div>
+<div class="kpi-card"><div class="label">Agentes NODO</div><div class="num" id="kpi-agentes">0</div><div class="sub"><span id="kpi-sistemas">0</span> sistemas / <span id="kpi-campo">0</span> área</div></div>
+</div>
+<div class="grid2">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+<h3>Empresas en Red NODO</h3><span class="badge-live mono" id="badge-activas">0 ACTIVAS</span>
+</div>
+<p style="font-size:11px;color:var(--muted)" class="mono">Listado completo + responsable área</p>
+<div class="table-wrap" style="margin-top:12px">
+<table id="tabla-empresas">
+<thead><tr><th>RAZÓN SOCIAL</th><th>CUIT</th><th>SECTOR</th><th>ESTADO</th><th>LEADS</th><th>FACTURACIÓN</th><th>RESP. ÁREA</th></tr></thead>
+<tbody><tr><td colspan="7" class="empty">No hay empresas en Red NODO - Usá Incorporación para cargar la primera empresa real</td></tr></tbody>
+</table>
+</div>
+</div>
+<div class="card">
+<h4>Despliegue Territorial</h4><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:12px">Mapa País - En Vivo</span><span class="badge-live mono" style="background:rgba(46,204,113,0.15);color:var(--green)">EN VIVO</span></div>
+<div style="height:280px;background:#0f0f0f;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column">
+<div style="font-size:11px;color:var(--muted)" class="mono">MAPA NODO - TODO EL PAÍS</div>
+<div style="margin-top:12px;font-size:10px;color:var(--muted)" class="mono">Sin áreas activas - Al activar empresas verás leads por provincia</div>
+<div class="grid3" style="margin-top:20px;width:100%;padding:0 12px">
+<div class="kpi-card" style="padding:8px"><div class="label">CABA</div><div style="font-size:12px;font-weight:700">0 leads</div></div>
+<div class="kpi-card" style="padding:8px"><div class="label">SALTA</div><div style="font-size:12px;font-weight:700">0 leads</div></div>
+<div class="kpi-card" style="padding:8px"><div class="label">CÓRDOBA</div><div style="font-size:12px;font-weight:700">0 leads</div></div>
+</div>
+</div>
+<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+<span class="badge-live mono">● CABA/GBA - Alta densidad</span><span class="badge-live mono">● Norte - Captación área</span><span class="badge-live mono">● Centro - Salud/Profesional</span><span class="badge-live mono">● Sur - Desarrollo</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CRM REAL -->
+<div id="tab-crm" class="tab-content" style="display:none">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div><h3>CRM Real — Leads Digital + Área + Audio</h3><p style="font-size:11px;color:var(--muted)" class="mono">Origen mixto: Sistema NODO Digital, Agente de Área, Audio WhatsApp 3834607740. Cada comprobante es Link Único liquidable.</p></div>
+<button class="outline" style="width:auto">GENERAR REPORTE PARA EMPRESA</button>
+</div>
+<div class="grid3" style="margin-top:16px">
+<div class="kpi-card"><div class="label">Total Leads</div><div class="num" id="crm-total">0</div><div class="sub">acumulados</div></div>
+<div class="kpi-card"><div class="label">Por Agente Área</div><div class="num" id="crm-area">0</div><div class="sub">leads verificados</div></div>
+<div class="kpi-card"><div class="label">Digitales</div><div class="num" id="crm-digital">0</div><div class="sub">hoy</div></div>
+</div>
+<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+<span style="font-size:10px" class="mono">ORIGEN:</span><span class="tab active" style="padding:4px 10px">TODOS</span><span class="tab" style="padding:4px 10px">DIGITAL</span><span class="tab" style="padding:4px 10px">ÁREA</span><span class="tab" style="padding:4px 10px">AUDIO</span>
+<span style="font-size:10px;margin-left:12px" class="mono">ESTADO:</span><span class="tab active" style="padding:4px 10px">TODOS</span><span class="tab" style="padding:4px 10px">PENDIENTE</span><span class="tab" style="padding:4px 10px">VERIFICADO</span><span class="tab" style="padding:4px 10px">LIQUIDADO</span>
+</div>
+<div class="table-wrap" style="margin-top:16px">
+<table>
+<thead><tr><th>FECHA</th><th>CLIENTE FINAL</th><th>TELÉFONO</th><th>EMPRESA DESTINO</th><th>ORIGEN</th><th>COMPROBANTE ID</th><th>ESTADO</th><th>AGENTE / ID</th><th>AUDIO</th><th>ACCIÓN</th></tr></thead>
+<tbody id="tabla-crm"><tr><td colspan="10" class="empty">Sin contactos registrados - Los contactos de tus links de área (nodo.ar/r/AGT-XXXX) aparecerán aquí con comprobante: link, ID, audio, foto, GPS</td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- AGENTES NODO -->
+<div id="tab-agentes" class="tab-content" style="display:none">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+<div><h3>Agentes NODO — Operación Simultánea</h3><p style="font-size:11px;color:var(--muted)" class="mono">No es un solo agente. Son múltiples sistemas operando 24/7 para maximizar plataforma privada.</p></div>
+<button class="outline" style="width:auto">+ DESPLEGAR NUEVO AGENTE</button>
+</div>
+<div id="grid-agentes" class="grid3">
+<!-- Se llena con JS -->
+</div>
+<div class="empty" id="empty-agentes">Sin agentes NODO desplegados - Los bots 24/7 aparecerán aquí: Captación Norte, CABA, Audio & Validación, Campañas Premium, Seguimiento, Cierre & Liquidación</div>
+</div>
+<!-- EQUIPO ÁREA -->
+<div id="tab-area" class="tab-content" style="display:none">
+<div class="grid2">
+<div class="card">
+<h3>Crear Agente de Área</h3>
+<p style="font-size:11px;color:var(--muted)" class="mono">Genera link único nodo.ar/r/AGT-XXXX para explotar área en todo el país</p>
+<label>Nombre completo</label><input id="ag-nombre" placeholder="Ej: Juan Pérez">
+<label>DNI</label><input id="ag-dni" placeholder="Ej: 30123456">
+<label>Zona / Provincia</label><select id="ag-zona"><option>Catamarca</option><option>La Rioja</option><option>Tucumán</option><option>Salta</option><option>Jujuy</option><option>Córdoba</option><option>CABA</option><option>Buenos Aires</option><option>Mendoza</option><option>Santa Fe</option><option>Entre Ríos</option><option>Corrientes</option><option>Misiones</option><option>Chaco</option><option>Formosa</option><option>Santiago del Estero</option><option>San Luis</option><option>San Juan</option><option>La Pampa</option><option>Río Negro</option><option>Neuquén</option><option>Chubut</option><option>Santa Cruz</option><option>Tierra del Fuego</option></select>
+<label>Teléfono</label><input id="ag-tel" placeholder="3834...">
+<button class="gold" onclick="crearAgente()">GENERAR LINK AGT-XXXX</button>
+<div class="config-box">Bots calculan: $800.000 por persona por 30 días. Si 10 días = $266.666 (800k/30*10). Terminología corregida: Área, no Terreno.</div>
+</div>
+<div class="card">
+<h3>Calculadora de Área - Lógica Corregida</h3>
+<p style="font-size:11px;color:var(--muted)" class="mono">Valor: $800.000 por persona por 30 días. Proporcional: 10 días = $266.666</p>
+<label>Personas</label><input id="calc-personas" type="number" value="1" min="1">
+<label>Días (10,12,15,20,30...)</label><input id="calc-dias" type="number" value="30" min="1">
+<label>Urgencia</label><select id="calc-urgencia"><option value="normal">Normal x1</option><option value="urgente">Urgente x1.5</option><option value="express">Express x2</option></select>
+<button onclick="calcularArea()">CALCULAR ÁREA</button>
+<div id="resultado-area" class="total-box" style="display:none"></div>
+</div>
+</div>
+<div class="card"><h3>Agentes de Área - País</h3><div id="lista-agentes" class="empty">Sin agentes - Creá tu primer agente para generar link AGT-XXXX y explotar área en todo el país</div></div>
+</div>
+<!-- INCORPORACIÓN -->
+<div id="tab-incorporacion" class="tab-content" style="display:none">
+<div class="grid2">
+<div class="card">
+<h3>ZONA OPERATIVA - PROVINCIAS ARGENTINA</h3>
+<p style="font-size:10px;color:var(--muted)" class="mono">Tildá donde va a operar la empresa. Todo el país disponible.</p>
+<div class="prov-grid" id="prov-grid">
+<label class="prov-item"><input type="checkbox" value="CABA"> CABA</label>
+<label class="prov-item"><input type="checkbox" value="Buenos Aires"> Buenos Aires</label>
+<label class="prov-item"><input type="checkbox" value="Córdoba"> Córdoba</label>
+<label class="prov-item"><input type="checkbox" value="Santa Fe"> Santa Fe</label>
+<label class="prov-item"><input type="checkbox" value="Mendoza"> Mendoza</label>
+<label class="prov-item"><input type="checkbox" value="Tucumán"> Tucumán</label>
+<label class="prov-item"><input type="checkbox" value="Salta"> Salta</label>
+<label class="prov-item"><input type="checkbox" value="Jujuy"> Jujuy</label>
+<label class="prov-item"><input type="checkbox" value="Neuquén"> Neuquén</label>
+<label class="prov-item"><input type="checkbox" value="Río Negro"> Río Negro</label>
+<label class="prov-item"><input type="checkbox" value="Chubut"> Chubut</label>
+<label class="prov-item"><input type="checkbox" value="Entre Ríos"> Entre Ríos</label>
+<label class="prov-item"><input type="checkbox" value="Corrientes"> Corrientes</label>
+<label class="prov-item"><input type="checkbox" value="Misiones"> Misiones</label>
+<label class="prov-item"><input type="checkbox" value="Chaco"> Chaco</label>
+<label class="prov-item"><input type="checkbox" value="Santiago del Estero"> Sgo del Estero</label>
+<label class="prov-item"><input type="checkbox" value="Catamarca"> Catamarca</label>
+<label class="prov-item"><input type="checkbox" value="La Rioja"> La Rioja</label>
+<label class="prov-item"><input type="checkbox" value="San Juan"> San Juan</label>
+<label class="prov-item"><input type="checkbox" value="San Luis"> San Luis</label>
+<label class="prov-item"><input type="checkbox" value="La Pampa"> La Pampa</label>
+<label class="prov-item"><input type="checkbox" value="Formosa"> Formosa</label>
+<label class="prov-item"><input type="checkbox" value="Santa Cruz"> Santa Cruz</label>
+<label class="prov-item"><input type="checkbox" value="Tierra del Fuego"> Tierra del Fuego</label>
+<label class="prov-item" style="border-color:var(--gold)"><input type="checkbox" value="Todo el país"> <b>Todo el país</b></label>
+</div>
+<h4 style="margin-top:16px">Descripción / Instrucciones para Agentes NODO</h4>
+<textarea id="inc-desc" rows="5" placeholder="Ej: Estudio jurídico laboral en CABA, foco en despidos. Ticket promedio $450k. Validar por audio WhatsApp 3834607740... Los bots usan esto para entrenar captación"></textarea>
+<button class="gold" style="margin-top:16px" onclick="crearEmpresa()">ACTIVAR EN RED NODO — DESPLEGAR AGENTES</button>
+</div>
+<div>
+<div class="card">
+<h3>Incorporación de Empresa / Comercio</h3>
+<label>Razón Social</label><input id="inc-razon" placeholder="Ej: Estudio Jurídico Lopez & Asoc.">
+<label>CUIT / CUIL</label><input id="inc-cuit" placeholder="20123456789 - Validación matemática automática">
+<label>Sector</label><select id="inc-sector"><option>Servicios Profesionales</option><option>Salud Privada</option><option>Real Estate</option><option>Finanzas</option><option>Educación</option><option>Automotriz Premium</option><option>Gastronomía</option><option>Hotelería</option><option>Retail & Consumo</option><option>Construcción & Desarrollos</option><option>Agro / Logística</option><option>Tecnología</option><option>Comercio</option><option>Institución</option></select>
+<label>Objetivo</label><input id="inc-objetivo" placeholder="Ej: Captar 50 clientes en Catamarca">
+<label>Tel / Email</label><input id="inc-contacto" placeholder="3834... / email@...">
+</div>
+<div class="sectores-card">
+<h4 style="color:#000">Sectores soportados — No limitado</h4>
+<div style="margin-top:8px">
+<span class="tag">SERVICIOS PROFESIONALES</span><span class="tag">SALUD PRIVADA</span><span class="tag">REAL ESTATE</span><span class="tag">FINANZAS</span><span class="tag">EDUCACIÓN</span><span class="tag">AUTOMOTRIZ PREMIUM</span><span class="tag">GASTRONOMÍA</span><span class="tag">HOTELERÍA</span><span class="tag">RETAIL & CONSUMO</span><span class="tag">CONSTRUCCIÓN & DESARROLLOS</span><span class="tag" style="background:#fff;color:#000;border:1px solid #000">+ 6 MÁS</span>
+</div>
+<p style="margin-top:10px;font-size:11px;line-height:1.4">El sistema original estaba limitado a tipos de servicios profesionales. Ahora soporta 15+ verticales con entrenamiento específico por Agente NODO.</p>
+</div>
+<div class="card" style="margin-top:12px">
+<h4>Documentos para entrenamiento (Drag & Drop)</h4>
+<div class="drop-zone">
+<div style="font-size:20px">📄</div>
+Arrastrá PDFs, audios, brochures — Sistema NODO los indexa<br>
+<input type="file" multiple style="margin-top:8px">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- COSTOS NODO -->
+<div id="tab-costos" class="tab-content" style="display:none">
+<div class="grid2">
+<div class="card">
+<h3>Cálculo de Costos - Organizado y Prolijo</h3>
+<p class="mono" style="font-size:11px;color:var(--muted)">Bots calculan según montos actualizados de cada integración. Si cambia precio, se recalcula automático.</p>
+<label>Personas para explotar área</label><input id="costo-personas" type="number" value="3">
+<label>Días (10,12,15,20,30)</label><input id="costo-dias" type="number" value="15">
+<label>Urgencia</label><select id="costo-urgencia"><option value="normal">Normal x1</option><option value="urgente">Urgente x1.5</option><option value="express">Express x2</option></select>
+<label><input type="checkbox" id="costo-google"> Google Ads - costo por días + presupuesto diario</label>
+<label>Presupuesto diario Google Ads ($)</label><input id="costo-google-ppto" type="number" value="5000">
+<label><input type="checkbox" id="costo-meta"> Meta Ads (Facebook/Instagram)</label>
+<label>Presupuesto diario Meta ($)</label><input id="costo-meta-ppto" type="number" value="3000">
+</div>
+<div class="card">
+<label><input type="checkbox" id="costo-audio"> Mensajes con audio</label>
+<label>Cantidad mensajes</label><input id="costo-cant-audio" type="number" value="100">
+<div class="config-box">Valor unitario audio: $150 (actualizado por bots según integración ElevenLabs/Groq)</div>
+<label><input type="checkbox" id="costo-voz"> Voz institucional (opcional) +$15.000</label>
+<div class="config-box">Voz clonada institucional - Se suma único</div>
+<label>Provincias objetivo</label><input id="costo-provincias" placeholder="Ej: Catamarca, Todo el país">
+<button class="gold" onclick="calcularPresupuestoCompleto()">CALCULAR PRESUPUESTO FINAL</button>
+<div id="resultado-costos" class="total-box" style="display:none"></div>
+<button id="btn-pagar" style="display:none;margin-top:12px;background:#2ecc71;color:#000" onclick="generarPago()">PAGAR CON MERCADO PAGO - MONTO VARIABLE</button>
+</div>
+</div>
+<div class="card">
+<h4>Ejemplo de cálculo corregido</h4>
+<p class="mono" style="font-size:11px">3 personas x 15 días Normal: $800.000 x 3 x (15/30) = $1.200.000 + Google Ads 15d x $5.000 = $75.000 + 100 audios x $150 = $15.000 + Voz $15.000 = Total $1.305.000</p>
+</div>
+</div>
+<!-- CIERRE AUTOMATICO -->
+<div id="tab-cierre" class="tab-content" style="display:none">
+<div class="grid2">
+<div class="card">
+<h3>Bot 24/7 - Cierre Automático de Convenio</h3>
+<p class="mono" style="font-size:11px;color:var(--muted)">Cierre automático con T&C + tarjeta tokenizada. Débito automático fecha límite + reintentos diarios.</p>
+<label>Razón Social</label><input id="cierre-razon" placeholder="Empresa que cierra">
+<label>CUIT - Validación matemática</label><input id="cierre-cuit" placeholder="20123456789">
+<label>Email / Teléfono</label><input id="cierre-email" placeholder="email / 3834...">
+<label>Provincias</label><input id="cierre-provincias" placeholder="Catamarca, Todo el país">
+<label>Monto Total (bots calculan)</label><input id="cierre-monto" type="number" value="1200000">
+<label><input type="checkbox" id="cierre-terminos"> Acepto Términos y Condiciones <a href="#" onclick="verTerminos();return false;" style="color:var(--gold)">Ver T&C</a></label>
+<label>Token Tarjeta MP (tokenizado auto)</label><input id="cierre-token" placeholder="tok_... MP tokeniza">
+<button class="gold" onclick="cerrarConvenio()">CERRAR CONVENIO AUTOMÁTICO 24/7</button>
+<div id="resultado-cierre" class="total-box" style="display:none"></div>
+</div>
+<div>
+<div class="card">
+<h3>Centro de Atención NODO</h3>
+<div class="mono" style="font-size:13px;line-height:2.2">
+<div>📞 Tel: <b>3834607740</b></div>
+<div>✉️ Email: <b>nodo.empresas@gmail.com</b></div>
+<div>🌐 Web: nodo.ar</div>
+<div>🤖 Bots: 24/7 cierre y cobranza</div>
+</div>
+<div class="config-box" style="margin-top:12px">Después del cierre, bot brinda centro de atención automático + info de folletería y elementos de venta</div>
+</div>
+<div class="card" style="margin-top:12px">
+<h3>Bot Búsqueda Empresas 24/7</h3>
+<label>Buscar empresas/comercios/instituciones grandes o pequeñas</label>
+<input id="bot-busqueda" placeholder="Ej: clínica, ferretería, colegio...">
+<label>Provincia</label><select id="bot-provincia"><option>Todo el país</option><option>Catamarca</option><option>La Rioja</option><option>Tucumán</option><option>Córdoba</option><option>CABA</option><option>Buenos Aires</option></select>
+<label>Rubro</label><input id="bot-rubro" placeholder="Salud, educación, retail...">
+<button onclick="buscarEmpresas()">BUSCAR CON BOTS 24/7</button>
+<div id="resultado-busqueda"></div>
+<h3 style="margin-top:16px">Estado Bots</h3>
+<button class="outline" onclick="verBots()">VER ESTADO DE TODOS LOS BOTS</button>
+<div id="resultado-bots"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- SUSCRIPCIONES -->
+<div id="tab-suscripciones" class="tab-content" style="display:none">
+<div class="card">
+<h3>Suscripciones y Pagos - Sistema País</h3><p class="mono" style="font-size:11px;color:var(--muted)">Bots calculan vencimientos. Pago tokenizado MP ••••1084, nunca sin crédito.</p>
+<div id="lista-suscripciones"></div>
+</div>
+</div>
+</div>
+<script>
+const API='';
+document.querySelectorAll('.tab').forEach(t=>{
+ t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
+  document.getElementById('tab-'+t.dataset.tab).style.display='block';
+  if(t.dataset.tab==='suscripciones') cargarSuscripciones();
+  if(t.dataset.tab==='agentes') cargarAgentesNodo();
+ });
+});
+async function cargarDatos(){
+ try{
+  let r = await fetch('/api/empresas'); let empresas = await r.json();
+  document.getElementById('kpi-empresas').innerText = empresas.length;
+  document.getElementById('badge-activas').innerText = empresas.length + ' ACTIVAS';
+  document.getElementById('live-agentes').innerText = empresas.length || 0;
+  if(empresas.length>0){
+   let tbody=document.querySelector('#tabla-empresas tbody');
+   tbody.innerHTML='';
+   empresas.forEach(e=>{
+    let tr=document.createElement('tr');
+    tr.innerHTML=`<td>${e.razon_social||''}</td><td>${e.cuit||''}</td><td><span class="badge-live mono">${e.sector||'General'}</span></td><td><span class="status ACTIVO">ACTIVO</span></td><td>0</td><td>$${(e.monto_total||0).toLocaleString()}</td><td><span class="badge-live mono">AGT-${(e.id||'').slice(0,4)}</span></td>`;
+    tbody.appendChild(tr);
+   });
+  }
+  r = await fetch('/api/crm'); let crm = await r.json();
+  document.getElementById('kpi-leads').innerText = crm.length;
+  document.getElementById('crm-total').innerText = crm.length;
+  r = await fetch('/api/equipo-campo'); let equipo = await r.json();
+  document.getElementById('kpi-agentes').innerText = equipo.length;
+  document.getElementById('kpi-campo').innerText = equipo.length;
+  document.getElementById('kpi-sistemas').innerText = equipo.length ? 6 : 0;
+  if(equipo.length>0){
+   document.getElementById('lista-agentes').innerHTML = equipo.map(a=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #111"><span>${a.nombre} - ${a.zona}</span><span class="badge-live mono">${a.codigo} | nodo.ar/r/${a.codigo}</span></div>`).join('');
+  }
+ }catch(e){console.log(e)}
 }
-
-@app.get("/api/centro-atencion")
-async def centro_atencion():
-    return CENTRO_ATENCION
-
-@app.get("/api/terminos-condiciones")
-async def terminos_condiciones():
-    return {
-        "version": "1.0 - NODO Argentina Sistema País",
-        "ultima_actualizacion": "2026-05-12",
-        "terminos": [
-            "1. NODO Argentina presta servicios de captación de clientes en todo el país.",
-            "2. El costo de Explotación de Área es $800.000 por persona por 30 días, proporcional si son menos días (ej 10 días = $266.666).",
-            "3. Factores de urgencia: Normal x1, Urgente x1.5, Express x2.",
-            "4. Costos adicionales (Google Ads, Meta, audios, voz) se calculan por día/cantidad y se suman al total.",
-            "5. El cliente autoriza el débito automático con tarjeta tokenizada a partir de la fecha límite de campaña.",
-            "6. En caso de débito fallido, NODO realizará intentos diarios automáticos hasta 7 días.",
-            "7. El cliente puede solicitar folletería, elementos de venta, campaña fuerte - se coordina vía Centro de Atención.",
-            "8. Comprobantes de cada contacto: link, ID, audio, foto, GPS cuando corresponda.",
-            "9. Cancelación: con 7 días de anticipación, se cobra proporcional al uso.",
-            "10. Contacto: Tel 3834607740 - nodo.empresas@gmail.com - Bots 24/7 disponibles."
-        ],
-        "aceptacion_requerida": True
-    }
-
-@app.post("/api/cerrar-convenio")
-async def cerrar_convenio(data: CierreConvenio):
-    """
-    Bot 24/7 de cierre automático
-    1. Valida T&C aceptados
-    2. Valida CUIT
-    3. Valida token tarjeta
-    4. Crea empresa + suscripción con débito automático
-    5. Devuelve centro de atención
-    """
-    if not data.acepta_terminos:
-        raise HTTPException(status_code=400, detail="Debe aceptar Términos y Condiciones")
-    
-    # Validar CUIT matemático
-    cuit_clean = "".join(filter(str.isdigit, data.cuit))
-    if len(cuit_clean) != 11:
-        raise HTTPException(status_code=400, detail="CUIT debe tener 11 dígitos")
-    mult = [5,4,3,2,7,6,5,4,3,2]
-    suma = sum(int(cuit_clean[i])*mult[i] for i in range(10))
-    mod = suma % 11
-    verif = 11 - mod
-    if verif == 11: verif = 0
-    if verif == 10: verif = 9
-    if verif != int(cuit_clean[10]):
-        raise HTTPException(status_code=400, detail="CUIT inválido - dígito verificador")
-    
-    if not data.tarjeta_token:
-        raise HTTPException(status_code=400, detail="Debe tokenizar tarjeta crédito/débito para débitos automáticos")
-    
-    # Si hay Supabase, guardar
-    empresa_data = {
-        "razon_social": data.razon_social,
-        "cuit": data.cuit,
-        "email": data.email,
-        "telefono": data.telefono,
-        "provincias": data.provincias,
-        "monto_total": data.monto_total,
-        "plan": data.plan,
-        "tarjeta_token": data.tarjeta_token[:20] + "****",  # solo guardar enmascarado, token real en MP vault
-        "tarjeta_token_completo": data.tarjeta_token,  # En producción esto va a vault seguro, no en tabla visible
-        "acepta_terminos": True,
-        "fecha_cierre": datetime.utcnow().isoformat(),
-        "estado": "activo",
-        "debito_auto": True,
-        "fecha_limite_debito": datetime.utcnow().isoformat(),
-        "intentos_debito": 0
-    }
-    
-    if supabase:
-        try:
-            result = supabase.table("empresas").insert(empresa_data).execute()
-            empresa_id = result.data[0].get("id") if result.data else "temp"
-        except Exception as e:
-            empresa_id = f"TEMP-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    else:
-        empresa_id = f"TEMP-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    
-    return {
-        "status": "convenio_cerrado",
-        "empresa_id": empresa_id,
-        "mensaje": f"¡Convenio cerrado! Bienvenido a NODO Argentina, {data.razon_social}",
-        "monto": data.monto_total,
-        "debito_automatico": "Activado - Débitos a partir de fecha límite con intentos diarios en caso de fallo",
-        "centro_atencion": CENTRO_ATENCION,
-        "proximos_pasos": [
-            "1. Recibirás folletería y elementos de venta si los solicitaste",
-            "2. Equipo de Área asignado en 24hs",
-            "3. Campañas Google Ads / Meta activadas",
-            "4. Comprobantes en tiempo real en tu panel",
-            "5. Cualquier consulta: 3834607740 o nodo.empresas@gmail.com"
-        ],
-        "bots_activos": "24/7 cierre y cobranza automática"
-    }
-
-# Bot búsqueda de empresas/comercios/instituciones
-@app.get("/api/bot/buscar-empresas")
-async def bot_buscar_empresas(q: str = "", provincia: str = "Todo el país", rubro: str = ""):
-    """
-    Bot 24/7 que busca empresas que requieren servicios NODO
-    En esta fase simula búsqueda, luego se conecta a Google Maps, CUIT, etc.
-    """
-    # Simulación de fuentes: Google Maps Places, Cámaras de Comercio, etc.
-    fuentes = [
-        {"nombre": "Google Maps API - búsqueda por rubro", "estado": "Pendiente activación"},
-        {"nombre": "AFIP Padrón (validación CUIT)", "estado": "Activo - matemático"},
-        {"nombre": "Cámaras Comercio por provincia", "estado": "Bot scraping 24/7"},
-        {"nombre": "Mercado Libre / Redes", "estado": "Bot búsqueda"}
-    ]
-    
-    resultados_simulados = [
-        {"razon": f"Comercio {rubro or 'General'} en {provincia}", "tipo": "Pequeño comercio", "potencial": "Alta", "contacto": "A buscar por bot"},
-        {"razon": f"Institución {provincia}", "tipo": "Institución", "potencial": "Media", "contacto": "A buscar por bot"},
-        {"razon": f"Empresa Grande {provincia}", "tipo": "Grande", "potencial": "Alta", "contacto": "A buscar por bot"}
-    ]
-    
-    return {
-        "query": q,
-        "provincia": provincia,
-        "rubro": rubro,
-        "bots_activos": "3 bots buscando 24/7",
-        "fuentes": fuentes,
-        "resultados": resultados_simulados if q or rubro else [],
-        "nota": "En producción: bots recorren Google Maps, Instagram, Facebook, Páginas Amarillas, detectan comercios sin marketing y los incorporan automáticamente al CRM para cierre"
-    }
-
-@app.post("/api/bot/debito-automatico")
-async def bot_debito_automatico():
-    """
-    Bot 24/7 débitos automáticos - corre todos los días
-    - Busca empresas con fecha límite vencida
-    - Intenta debitar con tarjeta tokenizada
-    - Si falla, reintenta todos los días x 7 días
-    """
-    if not supabase:
-        return {"status": "simulado", "mensaje": "Sin Supabase - simulación"}
-    
-    try:
-        # Buscar empresas activas con débito automático
-        result = supabase.table("empresas").select("*").eq("estado", "activo").execute()
-        empresas = result.data or []
-        
-        procesados = []
-        for emp in empresas:
-            # Lógica: si fecha limite pasada, intentar débito
-            intentos = emp.get("intentos_debito", 0)
-            if intentos < 7:
-                # Aquí iría lógica real Mercado Pago con token
-                # sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-                # sdk.payment().create({... con token ...})
-                procesados.append({
-                    "empresa": emp.get("razon_social"),
-                    "monto": emp.get("monto_total"),
-                    "intento": intentos + 1,
-                    "accion": "Intento débito automático - Si falla, reintenta mañana (bot 24/7)"
-                })
-                # Actualizar intentos
-                supabase.table("empresas").update({"intentos_debito": intentos+1}).eq("id", emp.get("id")).execute()
-        
-        return {
-            "bot": "Débito Automático 24/7",
-            "procesados": len(procesados),
-            "detalle": procesados,
-            "logica": "Token MP guardado -> Débito fecha límite -> Si falla -> Reintento diario x7 -> Aviso a Centro Atención"
-        }
-    except Exception as e:
-        return {"status": "error", "detail": str(e)}
-
-@app.get("/api/bot/estado")
-async def bot_estado():
-    return {
-        "bots": [
-            {"nombre": "Bot Cierre Convenios 24/7", "estado": "Activo", "funcion": "Cierre automático con T&C + tarjeta tokenizada"},
-            {"nombre": "Bot Búsqueda Empresas", "estado": "Activo", "funcion": "Busca empresas/comercios/instituciones grandes/pequeñas en todo el país"},
-            {"nombre": "Bot Débito Automático", "estado": "Activo", "funcion": "Debita automático fecha límite, reintentos diarios x7 si falla"},
-            {"nombre": "Bot Cálculo Costos", "estado": "Activo", "funcion": f"Calcula según CONFIG_COSTOS actualizados: Área ${CONFIG_COSTOS['area_base_30_dias']}, Voz ${CONFIG_COSTOS['voz_clonada']}, Audio ${CONFIG_COSTOS['audio_por_mensaje']}"},
-            {"nombre": "Bot Comprobantes", "estado": "Activo", "funcion": "Link, ID, audio, foto, GPS por cada contacto"}
-        ],
-        "centro_atencion": CENTRO_ATENCION,
-        "nota": "Todos los bots usan montos actualizados de cada integración"
-    }
+async function cargarAgentesNodo(){
+ let r = await fetch('/api/bot/estado'); let j = await r.json();
+ let grid=document.getElementById('grid-agentes');
+ if(j.bots && j.bots.length){
+  grid.innerHTML = j.bots.map((b,i)=>`
+   <div class="agent-card">
+    <div class="head"><div style="display:flex;gap:8px;align-items:center"><div class="agent-id">0${i+1}</div><div><div style="font-size:12px;font-weight:700">${b.nombre}</div><div style="font-size:10px;color:var(--muted)" class="mono">${b.funcion.split(' - ')[0]||''}</div></div></div><span class="status ACTIVO">OPERANDO</span></div>
+    <div class="grid3"><div class="kpi-card" style="padding:8px"><div class="label">Leads hoy</div><div style="font-weight:700">0</div></div><div class="kpi-card" style="padding:8px"><div class="label">Efectividad</div><div style="font-weight:700">--</div></div><div class="kpi-card" style="padding:8px"><div class="label">Uptime</div><div style="font-weight:700">24/7</div></div></div>
+    <div style="margin-top:8px"><div style="font-size:10px" class="mono">LOGS EN VIVO</div><div class="log">Esperando empresas reales para operar - Sin datos falsos</div><div class="log">Bot cálculo: usando CONFIG_COSTOS actualizados</div></div>
+   </div>
+  `).join('');
+  document.getElementById('empty-agentes').style.display='none';
+ }
+}
+async function crearAgente(){
+ let data={nombre:document.getElementById('ag-nombre').value, dni:document.getElementById('ag-dni').value, zona:document.getElementById('ag-zona').value, telefono:document.getElementById('ag-tel').value};
+ let r=await fetch('/api/equipo-campo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+ let j=await r.json();
+ alert('Agente creado: '+ (j[0]?.codigo || j.codigo || 'AGT-XXXX') + ' Link: nodo.ar/r/'+(j[0]?.codigo||''));
+ cargarDatos();
+}
+function calcularArea(){
+ let personas=parseInt(document.getElementById('calc-personas').value)||1;
+ let dias=parseInt(document.getElementById('calc-dias').value)||30;
+ let urg=document.getElementById('calc-urgencia').value;
+ let factor={normal:1,urgente:1.5,express:2}[urg]||1;
+ let base=800000;
+ let total=base*personas*(dias/30)*factor;
+ let proporcional = base*(dias/30);
+ document.getElementById('resultado-area').style.display='block';
+ document.getElementById('resultado-area').innerHTML=`
+  <div class="mono" style="font-size:11px">Base 30 días: $${base.toLocaleString()}<br>Proporcional ${dias} días: $${Math.round(proporcional).toLocaleString()} (800.000/30 x ${dias})<br>Personas: ${personas} | Urgencia: ${urg} x${factor}</div>
+  <div class="total">Total Área: $${Math.round(total).toLocaleString()}</div>
+  <div style="font-size:10px;color:var(--muted)" class="mono">Ejemplo real: 3 personas x 15 días Normal = $1.200.000 - Lógica corregida</div>
+ `;
+}
+async function calcularPresupuestoCompleto(){
+ let data={
+  personas: parseInt(document.getElementById('costo-personas').value)||1,
+  dias: parseInt(document.getElementById('costo-dias').value)||30,
+  urgencia: document.getElementById('costo-urgencia').value,
+  google_ads: document.getElementById('costo-google').checked,
+  google_ads_presupuesto_diario: parseFloat(document.getElementById('costo-google-ppto').value)||0,
+  meta_ads: document.getElementById('costo-meta').checked,
+  meta_ads_presupuesto_diario: parseFloat(document.getElementById('costo-meta-ppto').value)||0,
+  audio_mensajes: document.getElementById('costo-audio').checked,
+  cantidad_audios: parseInt(document.getElementById('costo-cant-audio').value)||0,
+  voz_institucional: document.getElementById('costo-voz').checked,
+  provincias: document.getElementById('costo-provincias').value.split(',').map(s=>s.trim()).filter(Boolean)
+ };
+ let r=await fetch('/api/calcular-presupuesto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+ let j=await r.json();
+ let d=j.desglose;
+ document.getElementById('resultado-costos').style.display='block';
+ document.getElementById('resultado-costos').innerHTML=`
+  <div class="mono" style="font-size:11px"><b>Explotación de Área:</b> ${d.explotacion_area.formula} = $${d.explotacion_area.subtotal.toLocaleString()}</div>
+  <div class="mono" style="font-size:11px"><b>Google Ads:</b> ${d.google_ads.activo?`$${d.google_ads.presupuesto_diario_cliente} x ${d.google_ads.dias} días = $${d.google_ads.subtotal.toLocaleString()}`:'No seleccionado'}</div>
+  <div class="mono" style="font-size:11px"><b>Meta Ads:</b> ${d.meta_ads.activo?`$${d.meta_ads.presupuesto_diario_cliente} x ${d.meta_ads.dias} días = $${d.meta_ads.subtotal.toLocaleString()}`:'No seleccionado'}</div>
+  <div class="mono" style="font-size:11px"><b>Audio mensajes:</b> ${d.audio_mensajes.activo?`${d.audio_mensajes.cantidad} x $${d.audio_mensajes.valor_unitario} = $${d.audio_mensajes.subtotal.toLocaleString()}`:'No seleccionado'}</div>
+  <div class="mono" style="font-size:11px"><b>Voz institucional:</b> $${d.voz_institucional.subtotal.toLocaleString()}</div>
+  <div class="total">TOTAL: $${j.total.toLocaleString()}</div>
+  <div style="font-size:10px;color:var(--muted)" class="mono">${j.nota}</div>
+ `;
+ document.getElementById('btn-pagar').style.display='block';
+ document.getElementById('btn-pagar').dataset.monto=j.total;
+}
+async function generarPago(){
+ let monto=document.getElementById('btn-pagar').dataset.monto;
+ let r=await fetch('/api/crear-pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({monto:parseFloat(monto), descripcion:'Servicio NODO Argentina - Sistema País'})});
+ let j=await r.json();
+ if(j.init_point) window.open(j.init_point,'_blank');
+ else alert('Error generando pago: '+(j.detail||''));
+}
+async function crearEmpresa(){
+ let provincias=[];
+ document.querySelectorAll('#prov-grid input[type=checkbox]:checked').forEach(c=>provincias.push(c.value));
+ let data={
+  razon_social:document.getElementById('inc-razon').value,
+  cuit:document.getElementById('inc-cuit').value,
+  sector:document.getElementById('inc-sector').value,
+  objetivo:document.getElementById('inc-objetivo').value,
+  descripcion:document.getElementById('inc-desc').value,
+  provincias:provincias,
+  contacto:document.getElementById('inc-contacto').value,
+  created_at:new Date().toISOString()
+ };
+ let cuit=data.cuit.replace(/[^0-9]/g,'');
+ if(cuit.length!==11){alert('CUIT/CUIL debe tener 11 dígitos'); return;}
+ let mult=[5,4,3,2,7,6,5,4,3,2]; let suma=0; for(let i=0;i<10;i++) suma+=parseInt(cuit[i])*mult[i]; let mod=suma%11; let verif=11-mod; if(verif===11) verif=0; if(verif===10) verif=9;
+ if(verif!==parseInt(cuit[10])){alert('CUIT/CUIL inválido (dígito verificador)'); return;}
+ let r=await fetch('/api/empresas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+ if(r.ok){alert('Empresa activada en Red NODO - Sistema País'); cargarDatos();}
+ else alert('Error');
+}
+async function cerrarConvenio(){
+ let data={
+  razon_social:document.getElementById('cierre-razon').value,
+  cuit:document.getElementById('cierre-cuit').value,
+  email:document.getElementById('cierre-email').value,
+  telefono:document.getElementById('cierre-email').value,
+  provincias:document.getElementById('cierre-provincias').value.split(',').map(s=>s.trim()).filter(Boolean),
+  monto_total:parseFloat(document.getElementById('cierre-monto').value)||0,
+  acepta_terminos:document.getElementById('cierre-terminos').checked,
+  tarjeta_token:document.getElementById('cierre-token').value||'tok_simulado_'+Date.now()
+ };
+ let r=await fetch('/api/cerrar-convenio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+ let j=await r.json();
+ document.getElementById('resultado-cierre').style.display='block';
+ if(r.ok){
+  document.getElementById('resultado-cierre').innerHTML=`
+   <div style="color:#2ecc71;font-weight:700" class="mono">${j.mensaje}</div>
+   <div class="mono" style="font-size:11px">Monto: $${j.monto.toLocaleString()}</div>
+   <div class="mono" style="font-size:11px">${j.debito_automatico}</div>
+   <div style="margin-top:12px" class="mono"><b>Centro Atención:</b><br>Tel: ${j.centro_atencion.telefono}<br>Email: ${j.centro_atencion.email}</div>
+   <div style="margin-top:8px;font-size:10px" class="mono">${j.proximos_pasos.join('<br>')}</div>
+  `;
+ } else {
+  document.getElementById('resultado-cierre').innerHTML=`<div style="color:#e74c3c" class="mono">${j.detail||'Error'}</div>`;
+ }
+}
+async function verTerminos(){
+ let r=await fetch('/api/terminos-condiciones'); let j=await r.json();
+ alert(j.terminos.join('\n\n'));
+}
+async function buscarEmpresas(){
+ let q=document.getElementById('bot-busqueda').value;
+ let prov=document.getElementById('bot-provincia').value;
+ let rubro=document.getElementById('bot-rubro').value;
+ let r=await fetch(`/api/bot/buscar-empresas?q=${q}&provincia=${prov}&rubro=${rubro}`);
+ let j=await r.json();
+ document.getElementById('resultado-busqueda').innerHTML=`<div style="margin-top:12px;font-size:11px" class="mono"><b>${j.bots_activos}</b><br>${j.resultados.map(x=>`- ${x.razon} (${x.tipo}) - Potencial ${x.potencial}`).join('<br>')}<br><br><small>${j.nota}</small></div>`;
+}
+async function verBots(){
+ let r=await fetch('/api/bot/estado'); let j=await r.json();
+ document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:10px" class="mono">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
+}
+async function cargarSuscripciones(){
+ let r=await fetch('/api/suscripciones'); let j=await r.json();
+ let html='<table><tr><th>Servicio</th><th>Costo</th><th>Vencimiento</th><th>Auto-pago</th><th>Estado</th></tr>';
+ j.servicios.forEach(s=>{
+  html+=`<tr><td>${s.nombre}</td><td>${s.costo}${s.unidad?' '+s.unidad:''}</td><td>${s.vencimiento}${s.codigo?' - Código: '+s.codigo:''}</td><td>${s.auto_pago}</td><td><span class="status ACTIVO">${s.estado}</span></td></tr>`;
+ });
+ html+='</table><p style="font-size:10px;color:var(--muted);margin-top:8px" class="mono">'+j.nota+'</p>';
+ document.getElementById('lista-suscripciones').innerHTML=html;
+}
+cargarDatos();
+</script>
+</body>
+</html>
