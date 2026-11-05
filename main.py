@@ -112,7 +112,7 @@ async def serve_frontend():
 async def health():
     return {"status": "NODO Argentina Live Completo", "timestamp": str(datetime.now()), "supabase": "connected" if supabase else "no config", "whatsapp": bool(WHATSAPP_CLOUD_TOKEN), "mp": bool(MERCADOPAGO_ACCESS_TOKEN)}
 
-# === MODO BARRIO - COMISION 20% ADENTRO ===
+# === NODO IMPULSO - COMISION 20% ADENTRO ===
 class CampanaRapida(BaseModel):
     tipo: str = "producto"
     titulo: str
@@ -126,7 +126,7 @@ class CampanaRapida(BaseModel):
 
 @app.post("/api/campana-rapida")
 async def campana_rapida(data: CampanaRapida):
-    cpm_por_zona = {"barrio": 80, "catamarca": 120, "ciudad": 150, "provincia": 200, "todo el país": 350, "caba": 400}
+    cpm_por_zona = {"impulso": 80, "barrio": 80, "catamarca": 120, "ciudad": 150, "provincia": 200, "todo el país": 350, "caba": 400}
     zona_key = data.zona.lower()
     cpm = 120
     for k,v in cpm_por_zona.items():
@@ -163,7 +163,7 @@ async def campana_rapida(data: CampanaRapida):
     
     return {
         "status": "calculado",
-        "modo": f"MODO BARRIO - {data.zona}",
+        "modo": f"NODO IMPULSO - {data.zona}",
         "datos": {
             "titulo": data.titulo,
             "zona": data.zona,
@@ -250,7 +250,7 @@ async def publicar_cruzado(data: PublicacionCruzada):
         "titulo": data.titulo,
         "desglose": {"total": total, "ads_real": ads_real, "comision_20_adentro": comision},
         "publicaciones": publicaciones,
-        "nota": "5 lados gratis + 1 pago barrio con 20% adentro"
+        "nota": "5 lados gratis + 1 pago impulso local con 20% adentro"
     }
 
 # === AUDIO QUE HABLA + VOZ CLONADA ===
