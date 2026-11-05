@@ -51,7 +51,7 @@ th{color:var(--muted);font-weight:600}
 <div class="tab" data-tab="incorporacion">INCORPORACIÓN</div>
 <div class="tab" data-tab="costos">CÁLCULO COSTOS</div>
 <div class="tab" data-tab="cierre">CIERRE AUTOMÁTICO</div>
-<div class="tab" data-tab="barrio" style="background:var(--gold);color:#000;font-weight:800">MODO BARRIO - RÁPIDO</div>
+<div class="tab" data-tab="barrio" style="background:var(--gold);color:#000;font-weight:800">NODO IMPULSO - RÁPIDO</div>
 <div class="tab" data-tab="suscripciones">SUSCRIPCIONES Y PAGOS</div>
 </div>
 <!-- PANEL ADM -->
@@ -174,11 +174,11 @@ th{color:var(--muted);font-weight:600}
 </div>
 </div>
 </div>
-<!-- MODO BARRIO - PUBLICACIÓN RÁPIDA -->
+<!-- NODO IMPULSO - PUBLICACIÓN RÁPIDA -->
 <div id="tab-barrio" class="tab-content" style="display:none">
 <div class="grid2">
 <div class="card" style="border:1px solid var(--gold)">
-<h3>🚀 MODO BARRIO - Publicación Rápida (Sin tanto formulario)</h3>
+<h3>🚀 NODO IMPULSO - Publicación Rápida (Sin tanto formulario)</h3>
 <div class="mono" style="font-size:10px;color:var(--muted)">Para el que vende zapatos HOY con $2000. Sin CUIT, sin tanta info. Publica YA en el barrio. Barra tipo Facebook que calcula días y alcance automático.</div>
 <label>¿Qué vendés? (Título)</label><input id="barrio-titulo" placeholder="Ej: Vendo par de zapatos Nike 42 - Nuevos">
 <label>Descripción corta</label><textarea id="barrio-desc" rows="2" placeholder="Ej: Zapatos nuevos, talle 42, $15.000, barrio Centro"></textarea>
@@ -198,9 +198,9 @@ th{color:var(--muted);font-weight:600}
 <span>1 día</span><span id="barra-dias" style="font-weight:800">6 días</span><span>30 días</span>
 </div>
 </div>
-<label>Zona - Barrio / Ciudad</label><select id="barrio-zona" onchange="actualizarBarra()"><option>Barrio - 2km a la redonda</option><option>Catamarca - Ciudad</option><option>Catamarca - Todo</option><option>La Rioja</option><option>Todo el país</option></select>
-<label>WhatsApp destino (donde le llegan interesados directo - AUTOGESTION)</label><input id="barrio-wsp" placeholder="3834...">
-<button class="gold" onclick="publicarBarrio()" style="margin-top:12px">PUBLICAR YA EN EL BARRIO - MODO RÁPIDO</button>
+<label>Zona - Impulso Local / Ciudad</label><select id="barrio-zona" onchange="actualizarBarra()"><option>Impulso Local - 2km a la redonda</option><option>Catamarca - Ciudad</option><option>Catamarca - Todo</option><option>La Rioja</option><option>Todo el país</option></select>
+<label>WhatsApp (para recibir interesados)</label><input id="barrio-wsp" placeholder="3834...">
+<button class="gold" onclick="publicarImpulso Local()" style="margin-top:12px">PUBLICAR YA EN EL BARRIO - MODO RÁPIDO</button>
 <div id="resultado-barrio" class="total-box" style="display:none"></div>
 </div>
 <div>
@@ -384,7 +384,7 @@ async function crearEmpresa(){
   sector:document.getElementById('inc-sector').value,
   objetivo:document.getElementById('inc-objetivo').value,
   descripcion:document.getElementById('inc-desc').value,
-  telefono_destino_leads:document.getElementById('inc-telefono-destino').value, modo_gestion:document.getElementById('inc-modo-gestion').value, whatsapp_destino:document.getElementById('inc-telefono-destino').value, provincias:provincias,
+  provincias:provincias,
   created_at:new Date().toISOString()
  };
  // Validación CUIT/CUIL matemática
@@ -498,7 +498,7 @@ async function verBots(){
 }
 actualizarBarra();
 cargarDatos();
-async function publicarBarrio(){
+async function publicarImpulso Local(){
  let data={
   titulo:document.getElementById('barrio-titulo').value,
   descripcion:document.getElementById('barrio-desc').value,
@@ -513,7 +513,7 @@ async function publicarBarrio(){
  let j=await r.json();
  document.getElementById('resultado-barrio').style.display='block';
  document.getElementById('resultado-barrio').innerHTML=`
-  <div class="mono" style="font-size:11px"><b>${j.modo}</b><br>Título: ${j.datos.titulo}<br>Zona: ${j.datos.zona}<br>Total cliente: $${j.datos.presupuesto_total_cliente} (Ads $${j.datos.ads_real} + Comisión $${j.datos.comision_nodo_20_adentro} 20% adentro) - ${j.datos.dias} días x $${j.datos.presupuesto_diario_total}/día total</div>
+  <div class="mono" style="font-size:11px"><b>${j.modo}</b><br>Título: ${j.datos.titulo}<br>Zona: ${j.datos.zona}<br>Presupuesto: $${j.datos.presupuesto_total} - ${j.datos.dias} días x $${j.datos.presupuesto_diario}/día</div>
   <div style="margin-top:8px"><b>Alcance:</b> ${j.calculo_barra_facebook.alcance_estimado} personas<br><b>Interesados:</b> ${j.calculo_barra_facebook.personas_interesadas}</div>
   <div style="margin-top:8px;font-size:10px" class="mono"><b>Herramientas:</b><br>${j.herramientas_recomendadas.map(h=>`● ${h.nombre} - $${h.costo} - ${h.alcance}`).join('<br>')}</div>
   <div style="margin-top:8px;font-size:10px;background:rgba(212,175,55,0.1);padding:8px;border-radius:6px" class="mono"><b>Diferencial:</b><br>${j.diferencial_nodo.join('<br>')}</div>
@@ -536,19 +536,15 @@ function actualizarBarra(){
  let cpm = 80;
  if(zona.includes('Catamarca')) cpm = 120;
  if(zona.includes('Todo')) cpm = 350;
- let total_cliente = presupuesto; // Presupuesto total ya incluye 20%
- let ads_real = total_cliente / 1.2;
- let comision = total_cliente - ads_real;
- let alcance_min = Math.floor((ads_real / cpm) * 1000 * 0.7);
- let alcance_max = Math.floor((ads_real / cpm) * 1000 * 1.3);
+ let alcance_min = Math.floor((presupuesto / cpm) * 1000 * 0.7);
+ let alcance_max = Math.floor((presupuesto / cpm) * 1000 * 1.3);
  
  document.getElementById('calculo-barrio').innerHTML=`
-  <b>$${presupuesto} total (ya con 20% adentro)</b> en <b>${zona}</b><br>
-  → Ads real: $${Math.round(ads_real)} + Comisión NODO 20%: $${Math.round(comision)} = Total $${presupuesto}<br>
-  → ${dias} días x $${Math.round(presupuesto/dias)}/día total (ads real $${Math.round(ads_real/dias)}/día)<br>
+  <b>$${presupuesto}</b> en <b>${zona}</b><br>
+  → ${dias} días x $${Math.round(presupuesto/dias)}/día<br>
   → Alcance: ${alcance_min.toLocaleString()} - ${alcance_max.toLocaleString()} personas<br>
   → Interesados: ${Math.floor(alcance_min*0.02)} - ${Math.floor(alcance_max*0.04)}<br>
-  → CPM: $${cpm} | Km: según segmentación
+  → CPM: $${cpm}
  `;
 }
 </script>
