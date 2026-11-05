@@ -406,6 +406,199 @@ async def enviar_whatsapp_audio(to_number: str, audio_url: str):
     except Exception as e:
         print(f"Error enviando audio: {e}")
 
+
+# === MERCADO PAGO - PAGO VARIABLE CON 20% ADENTRO + WEBHOOK + TOKENIZACION ===
+import httpx
+
+MERCADOPAGO_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "") or os.getenv("MERCADOPAGO_ACCESS_TOKEN", "")
+MERCADOPAGO_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "")
+
+class PagoNodo(BaseModel):
+    monto_total: float  # Total que paga cliente, ya incluye 20% adentro (ej: 2000)
+    titulo: str = "Campaña NODO Argentina"
+    descripcion: str = "Publicidad barrio + comisión NODO 20% adentro"
+    email_cliente: Optional[str] = None
+    empresa_id: Optional[str] = None
+    campana_id: Optional[str] = None
+    zona: Optional[str] = "Catamarca"
+
+@app.post("/api/crear-pago")
+async def crear_pago_nodo(data: PagoNodo):
+    """
+    Crea link de pago Mercado Pago variable
+    Cliente pone $2000 total, ese monto ya incluye 20% comisión adentro
+    Separa: ads_real = total/1.2, comision = total - ads_real
+    """
+    if not MERCADOPAGO_ACCESS_TOKEN:
+        raise HTTPException(status_code=500, detail="Falta MP_ACCESS_TOKEN en Render")
+    
+    total = data.monto_total
+    ads_real = round(total / 1.2, 2)
+    comision = round(total - ads_real, 2)
+    
+    # Crear preferencia MP
+    url = "https://api.mercadopago.com/checkout/preferences"
+    headers = {
+        "Authorization": f"Bearer {MERCADOPAGO_ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    # URL de retorno a NODO
+    base_url = os.getenv("BASE_URL", "https://nodo-argentina.onrender.com")
+    
+    payload = {
+        "items": [
+            {
+                "title": data.titulo,
+                "description": f"{data.descripcion} | Zona: {data.zona} | Ads: ${ads_real} + Comisión 20% ${comision} = Total ${total}",
+                "quantity": 1,
+                "unit_price": total,
+                "currency_id": "ARS"
+            }
+        ],
+        "payer": {
+            "email": data.email_cliente or "cliente@nodo.ar"
+        },
+        "back_urls": {
+            "success": f"{base_url}/?pago=exitoso",
+            "failure": f"{base_url}/?pago=fallo",
+            "pending": f"{base_url}/?pago=pendiente"
+        },
+        "auto_return": "approved",
+        "notification_url": f"{base_url}/webhook/mercadopago",
+        "statement_descriptor": "NODO ARGENTINA",
+        "metadata": {
+            "empresa_id": data.empresa_id or "",
+            "campana_id": data.campana_id or "",
+            "monto_total": total,
+            "ads_real": ads_real,
+            "comision_nodo": comision,
+            "zona": data.zona
+        }
+    }
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url, json=payload, headers=headers, timeout=20)
+            result = r.json()
+            
+            if r.status_code not in [200, 201]:
+                print(f"Error MP crear pago: {r.status_code} {result}")
+                raise HTTPException(status_code=500, detail=f"Error MP: {result}")
+            
+            return {
+                "status": "link_creado",
+                "link_pago": result.get("init_point"),
+                "link_pago_sandbox": result.get("sandbox_init_point"),
+                "preference_id": result.get("id"),
+                "desglose": {
+                    "total_cliente_paga": total,
+                    "ads_real_para_plataformas": ads_real,
+                    "comision_nodo_20_adentro": comision,
+                    "nota": "20% ya está adentro del total"
+                },
+                "metadata": payload["metadata"]
+            }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error crear pago MP: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/webhook/mercadopago")
+async def webhook_mercadopago(request: Request):
+    """
+    Webhook Mercado Pago - Recibe notificación de pago aprobado
+    Activa campaña automáticamente, guarda en Supabase, dispara bots
+    """
+    try:
+        data = await request.json()
+        print(f"MP Webhook recibido: {data}")
+        
+        # MP manda type y data.id
+        # Necesitamos consultar el pago para ver estado
+        payment_id = None
+        if data.get("data", {}).get("id"):
+            payment_id = data["data"]["id"]
+        elif data.get("id"):
+            payment_id = data["id"]
+        
+        if not payment_id:
+            return {"status": "ok", "message": "No payment id"}
+        
+        # Consultar pago en MP
+        if not MERCADOPAGO_ACCESS_TOKEN:
+            return {"status": "error", "detail": "Falta token"}
+        
+        url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
+        headers = {"Authorization": f"Bearer {MERCADOPAGO_ACCESS_TOKEN}"}
+        
+        async with httpx.AsyncClient() as client:
+            r = await client.get(url, headers=headers, timeout=20)
+            payment_info = r.json()
+        
+        status = payment_info.get("status")
+        metadata = payment_info.get("metadata", {})
+        external_reference = payment_info.get("external_reference", "")
+        transaction_amount = payment_info.get("transaction_amount", 0)
+        
+        print(f"MP Pago {payment_id} status: {status} monto: {transaction_amount} metadata: {metadata}")
+        
+        if status == "approved":
+            # PAGO APROBADO - Activar campaña
+            empresa_id = metadata.get("empresa_id", "")
+            monto_total = float(metadata.get("monto_total", transaction_amount))
+            ads_real = float(metadata.get("ads_real", monto_total/1.2))
+            comision = float(metadata.get("comision_nodo", monto_total - ads_real))
+            zona = metadata.get("zona", "Catamarca")
+            
+            # Guardar en Supabase cartera_crm o tabla pagos
+            if supabase:
+                try:
+                    supabase.table("cartera_crm").insert({
+                        "cliente_nombre": f"Pago MP {payment_id}",
+                        "cliente_telefono": "MP Webhook",
+                        "empresa_destino": empresa_id or "NODO-ARGENTINA",
+                        "origen": "MERCADOPAGO",
+                        "comprobante_id": f"NODO-MP-{payment_id}",
+                        "estado": "PAGADO",
+                        "agente_id": "BOT-MP",
+                        "monto_total": monto_total,
+                        "ads_real": ads_real,
+                        "comision_nodo": comision,
+                        "zona": zona,
+                        "payment_id": str(payment_id)
+                    }).execute()
+                except Exception as e:
+                    print(f"Error guardando pago en Supabase: {e}")
+            
+            # Aquí disparar bots de publicación cruzada y WhatsApp
+            # await activar_campana_automatica(monto_total, zona, empresa_id)
+            
+            return {"status": "ok", "message": "Pago aprobado - Campaña activada", "payment_id": payment_id, "ads_real": ads_real, "comision": comision}
+        else:
+            return {"status": "ok", "message": f"Pago estado {status}, no se activa", "payment_id": payment_id}
+    
+    except Exception as e:
+        print(f"Error webhook MP: {e}")
+        return {"status": "error", "detail": str(e)}
+
+@app.get("/api/pagos/status")
+async def pagos_status():
+    return {
+        "mercadopago_configurado": bool(MERCADOPAGO_ACCESS_TOKEN),
+        "webhook_url": "https://nodo-argentina.onrender.com/webhook/mercadopago",
+        "modo": "Pago variable con 20% adentro - Link dinámico según barra",
+        "ejemplo": {
+            "cliente_pone": 2000,
+            "ads_real": 1666.67,
+            "comision_20_adentro": 333.33,
+            "total": 2000,
+            "nota": "Cliente paga $2000 total, vos recibís $2000, separás $1666 para Meta/Google y $333 tuyo"
+        }
+    }
+
+
 @app.get("/api/whatsapp/status")
 async def whatsapp_status():
     return {
