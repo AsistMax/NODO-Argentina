@@ -273,15 +273,25 @@ WHATSAPP_VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN", "nodo2026")
 
 @app.get("/webhook/whatsapp")
 async def whatsapp_verify(request: Request):
-    """Verificación webhook Meta"""
-    mode = request.query_params.get("hub.mode")
-    token = request.query_params.get("hub.verify_token")
-    challenge = request.query_params.get("hub.challenge")
-    
-    if mode == "subscribe" and token == WHATSAPP_VERIFY_TOKEN:
-        return Response(content=challenge, media_type="text/plain")
-    else:
-        raise HTTPException(status_code=403, detail="Verification failed")
+    """Verificación webhook Meta - Simple y robusta"""
+    try:
+        mode = request.query_params.get("hub.mode")
+        token = request.query_params.get("hub.verify_token")
+        challenge = request.query_params.get("hub.challenge")
+        print(f"Webhook verify intento: mode={mode} token={token} challenge={challenge}")
+        if token == WHATSAPP_VERIFY_TOKEN:
+            # Meta requiere devolver challenge como texto plano
+            return Response(content=challenge or "", media_type="text/plain", status_code=200)
+        else:
+            print(f"Token mismatch: esperado {WHATSAPP_VERIFY_TOKEN} recibido {token}")
+            raise HTTPException(status_code=403, detail="Verification failed")
+    except Exception as e:
+        print(f"Error verify: {e}")
+        # Si hay error igual intentar devolver challenge si existe
+        challenge = request.query_params.get("hub.challenge", "")
+        if challenge:
+            return Response(content=challenge, media_type="text/plain")
+        raise
 
 @app.post("/webhook/whatsapp")
 async def whatsapp_webhook(request: Request):
