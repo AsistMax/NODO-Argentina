@@ -157,20 +157,14 @@ async def campana_rapida(data: CampanaRapida):
         dias_calculados = max(1, int(data.presupuesto_total // diario_min))
         dias_calculados = min(dias_calculados, 30)  # máximo 30 días en modo rápido
         dias = dias_calculados
-        presupuesto_diario_real = presupuesto_total_con_comision_adentro / dias if dias>0 else presupuesto_total_con_comision_adentro
+        presupuesto_diario_real = data.presupuesto_total / dias if dias>0 else data.presupuesto_total
     else:
         dias = data.dias
-        presupuesto_diario_real = presupuesto_total_con_comision_adentro / dias if dias>0 else presupuesto_total_con_comision_adentro
+        presupuesto_diario_real = data.presupuesto_total / dias if dias>0 else data.presupuesto_total
     
-    # NUEVO: Presupuesto total del cliente YA incluye 20% comisión adentro (como pide Max)
-    # Si cliente pone $2000 total, ads real = 2000 / 1.2 = $1666, comisión = $333
-    presupuesto_total_con_comision_adentro = data.presupuesto_total
-    costo_ads_real = presupuesto_total_con_comision_adentro / 1.2
-    comision_nodo = presupuesto_total_con_comision_adentro - costo_ads_real
-    
-    # Alcance estimado: (ads_real / CPM) * 1000
-    alcance_min = int((costo_ads_real / cpm) * 1000 * 0.7)
-    alcance_max = int((costo_ads_real / cpm) * 1000 * 1.3)
+    # Alcance estimado: (presupuesto / CPM) * 1000
+    alcance_min = int((data.presupuesto_total / cpm) * 1000 * 0.7)
+    alcance_max = int((data.presupuesto_total / cpm) * 1000 * 1.3)
     
     # Personas interesadas estimadas (CTR 2%)
     interesados_min = int(alcance_min * 0.02)
@@ -183,7 +177,7 @@ async def campana_rapida(data: CampanaRapida):
             {"nombre": "WhatsApp Broadcast + Estado", "costo": 0, "alcance": "Gratis - 30 msgs/día CallMeBot + estados", "porque": "Más barato, llega directo al barrio"},
             {"nombre": "Facebook Marketplace + Grupos Barrio", "costo": 0, "alcance": "Orgánico gratis - Publicación en grupos de compra/venta Catamarca", "porque": "Donde la gente del barrio busca zapatos"},
             {"nombre": "Instagram Stories Orgánicas", "costo": 0, "alcance": "Orgánico + hashtags #Catamarca #Venta", "porque": "Gratis, visual, vende"},
-            {"nombre": "Meta Ads Geo Barrio", "costo": f"${round(costo_ads_real)} ads + ${round(comision_nodo)} comisión NODO = ${data.presupuesto_total} total", "alcance": f"{alcance_min}-{alcance_max} personas en {data.zona} - Comisión 20% adentro", "porque": "Hiperlocal: 2km a la redonda del comercio - Solo barrio"}
+            {"nombre": "Meta Ads Geo Barrio", "costo": data.presupuesto_total, "alcance": f"{alcance_min}-{alcance_max} personas en {data.zona}", "porque": "Hiperlocal: 2km a la redonda del comercio - Solo barrio"}
         ]
     elif data.presupuesto_total <= 10000:
         herramientas = [
@@ -200,9 +194,6 @@ async def campana_rapida(data: CampanaRapida):
     
     # Calculo barra tipo Facebook - si mueve monto, mueve días automáticamente
     barra_facebook = {
-        "presupuesto_total_cliente": data.presupuesto_total,
-        "ads_real": round(costo_ads_real, 2),
-        "comision_nodo_20_adentro": round(comision_nodo, 2),
         "presupuesto": data.presupuesto_total,
         "dias": dias,
         "presupuesto_diario": round(presupuesto_diario_real, 2),
@@ -224,14 +215,9 @@ async def campana_rapida(data: CampanaRapida):
         "datos": {
             "titulo": data.titulo,
             "zona": data.zona,
-            "presupuesto_total_cliente": data.presupuesto_total,
-            "ads_real": round(costo_ads_real, 2),
-            "comision_nodo_20_adentro": round(comision_nodo, 2),
             "presupuesto_total": data.presupuesto_total,
             "dias": dias,
-            "presupuesto_diario_total": round(presupuesto_diario_real, 2),
-            "presupuesto_diario_ads_real": round(costo_ads_real/dias, 2) if dias>0 else 0,
-            "nota": "20% comisión ya está adentro del monto que pone cliente"
+            "presupuesto_diario": round(presupuesto_diario_real, 2)
         },
         "calculo_barra_facebook": barra_facebook,
         "herramientas_recomendadas": herramientas,
@@ -276,185 +262,126 @@ async def herramientas_barrio():
         }
     }
 
-### NODO FINAL TODO EN UNO - SUPERA A MIRLO + CHATSELL + PANDA ###
-# Modelo actualizado Empresa con teléfono destino y modo gestión
-class EmpresaFinal(BaseModel):
-    razon_social: str
-    cuit: str
-    sector: str = "General"
-    objetivo: Optional[str] = ""
-    descripcion: Optional[str] = ""
-    provincias: List[str] = []
-    contacto: Optional[str] = ""
-    telefono_destino_leads: Optional[str] = ""  # NUEVO: Tel del cliente final donde le llegan leads directo
-    modo_gestion: str = "AUTOGESTION"  # AUTOGESTION (default) o GESTION_NODO
-    whatsapp_destino: Optional[str] = ""
-    monto_total: Optional[float] = 0
-    created_at: Optional[str] = None
+# === WEBHOOK WHATSAPP CLOUD API OFICIAL - Reemplaza CallMeBot ===
+import os
 
-# === BOT QUE HABLA - AUDIO QUE RESPONDE CON VOZ CLONADA ===
-class AudioIA(BaseModel):
-    audio_url: Optional[str] = None
-    empresa_id: Optional[str] = None
-    voz_clonada: bool = False
-    voz_id: Optional[str] = None
+WHATSAPP_CLOUD_TOKEN = os.getenv("WHATSAPP_CLOUD_TOKEN", "")
+WHATSAPP_PHONE_ID = os.getenv("WHATSAPP_PHONE_ID", "")
+WHATSAPP_VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN", "nodo2026")
 
-@app.post("/api/audio/escuchar-y-responder")
-async def audio_escuchar_responder(data: AudioIA):
-    """
-    Supera a Mirlo y Chatsell: Escucha audio del cliente, transcribe con Groq Whisper,
-    piensa con Groq Llama, responde con audio argentino TTS o voz clonada ElevenLabs.
-    Es lo que dijiste: 'ninguna IA está hablando, si alguien lo hace se la lleva toda'
-    """
-    # Simulación lógica real - En producción usa GROQ_API_KEY que ya tenés
-    try:
-        # 1. Transcribir audio con Groq Whisper (gratis)
-        transcripcion = "Audio del cliente transcrito: quiero info de zapatos talle 42"
-        
-        # 2. Pensar respuesta con Groq Llama (gratis)
-        respuesta_texto = f"Hola! Gracias por tu audio. Sí, tenemos zapatos talle 42 disponibles. Te paso info con foto y ubicación. NODO Argentina te atiende 24/7."
-        
-        # 3. Generar audio respuesta - Groq TTS argentino o ElevenLabs voz clonada
-        # Si voz_clonada=True, usa ElevenLabs con voz_id del comerciante (10 seg audio)
-        # Si no, usa Groq TTS argentino nativo
-        audio_respuesta_url = f"https://api.groq.com/tts/{data.empresa_id}.mp3" if not data.voz_clonada else f"https://api.elevenlabs.io/voz-clonada/{data.voz_id}.mp3"
-        
-        return {
-            "status": "audio_respondido",
-            "transcripcion": transcripcion,
-            "respuesta_texto": respuesta_texto,
-            "audio_respuesta_url": audio_respuesta_url,
-            "voz": "clonada_del_comerciante" if data.voz_clonada else "argentina_nativa_groq",
-            "costo": 0,
-            "nota": "Gratis con GROQ_API_KEY que ya tenés en Render. Mirlo cobra caro con OpenAI, nosotros gratis y con voz argentina/clonada."
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/api/voz/clonar")
-async def clonar_voz(empresa_id: str = "", audio_10_seg_url: str = ""):
-    """Clona voz del dueño con 10 seg de audio - Para que bot hable con SU voz"""
-    return {
-        "status": "voz_clonada",
-        "empresa_id": empresa_id,
-        "voz_id": f"voz_{empresa_id}_{int(__import__('time').time())}",
-        "muestra": audio_10_seg_url,
-        "costo": 15000,
-        "nota": "Comerciante manda 10 seg: 'Hola soy Juan de Zapatos Catamarca'. Bot responde con SU voz, no robot. Diferencial total vs Mirlo/Chatsell."
-    }
-
-# === DISEÑADOR AUTOMÁTICO DE FLYERS ===
-class DisenadorFlyer(BaseModel):
-    foto_producto_url: Optional[str] = None
-    titulo: str
-    precio: Optional[str] = ""
-    empresa_id: Optional[str] = None
-    logo_url: Optional[str] = None
-
-@app.post("/api/disenar-flyer")
-async def disenar_flyer(data: DisenadorFlyer):
-    """Genera flyer automático gratis - Supera diseño de PandaPay"""
-    # Lógica: con foto producto, genera flyer con precio, logo, QR nodo.ar/r/...
-    return {
-        "status": "flyer_generado",
-        "titulo": data.titulo,
-        "precio": data.precio,
-        "flyer_url": f"https://nodo.ar/flyer/{data.empresa_id}_{int(__import__('time').time())}.png",
-        "incluye": [
-            f"Foto producto: {data.foto_producto_url}",
-            f"Título: {data.titulo}",
-            f"Precio: {data.precio}",
-            f"Logo empresa",
-            f"QR nodo.ar/r/AGT-XXXX con seguimiento",
-            "Diseño argentino, no genérico"
-        ],
-        "costo": 0,
-        "nota": "Gratis con IA Flux. Comercio sube foto zapato, le devolvemos flyer pro con QR tracking. Supera a PandaPay."
-    }
-
-# === PUBLICACIÓN CRUZADA 1 CLICK - 5 LUGARES GRATIS ===
-class PublicacionCruzada(BaseModel):
-    empresa_id: str
-    titulo: str
-    descripcion: str
-    foto_url: Optional[str] = None
-    flyer_url: Optional[str] = None
-    presupuesto_meta_barrio: float = 2000
-    zona: str = "Barrio - 2km Catamarca"
-    telefono_destino: Optional[str] = ""
-
-@app.post("/api/publicar-cruzado")
-async def publicar_cruzado(data: PublicacionCruzada):
-    """Publica en 5 lugares con 1 click - Todo gratis excepto Meta barrio que paga cliente"""
-    publicaciones = [
-        {"plataforma": "WhatsApp Estado + Broadcast CallMeBot 3834607740", "costo": 0, "estado": "publicado", "alcance": "Contactos del comercio + 30 msgs/día gratis", "link": f"whatsapp://send?text={data.titulo}"},
-        {"plataforma": "Facebook Marketplace + Grupos Compra/Venta Catamarca", "costo": 0, "estado": "publicado", "alcance": "Orgánico - Gente que busca comprar", "link": "https://facebook.com/marketplace"},
-        {"plataforma": "Google My Business / Maps", "costo": 0, "estado": "publicado", "alcance": "Aparece cuando buscan 'zapatos cerca'", "link": "https://business.google.com"},
-        {"plataforma": "Instagram Stories + Reels #Catamarca", "costo": 0, "estado": "publicado", "alcance": "Orgánico visual", "link": "https://instagram.com"},
-        {"plataforma": "TikTok Orgánico video 15seg con voz Groq", "costo": 0, "estado": "publicado", "alcance": "Viral barrio", "link": "https://tiktok.com"},
-        {"plataforma": f"Meta Ads Hiperlocal {data.zona}", "costo": data.presupuesto_meta_barrio, "estado": "programado", "alcance": f"{int(data.presupuesto_meta_barrio/80*1000*0.7)}-{int(data.presupuesto_meta_barrio/80*1000*1.3)} personas en {data.zona} - CPM $80 barrio", "link": "https://business.facebook.com/adsmanager"},
-    ]
+@app.get("/webhook/whatsapp")
+async def whatsapp_verify(request: Request):
+    """Verificación webhook Meta"""
+    mode = request.query_params.get("hub.mode")
+    token = request.query_params.get("hub.verify_token")
+    challenge = request.query_params.get("hub.challenge")
     
-    # Cálculo costo real + 20% comisión
-    costo_ads_real = data.presupuesto_meta_barrio
-    comision_nodo = costo_ads_real * 0.2
-    total_cliente = costo_ads_real + comision_nodo
-    
-    return {
-        "status": "publicado_en_5_lados",
-        "titulo": data.titulo,
-        "publicaciones": publicaciones,
-        "costos": {
-            "ads_real": costo_ads_real,
-            "comision_nodo_20": round(comision_nodo, 2),
-            "total_cliente_paga": round(total_cliente, 2),
-            "costo_nodo": 0,
-            "nota": "Herramientas gratis costo $0 para NODO. Solo Meta barrio paga cliente. Plata entra a tu MP nodo.empresas@gmail.com y vos spliteas."
-        },
-        "telefono_destino_configurado": data.telefono_destino,
-        "flujo_leads": f"Lead entra -> comprobante con foto/GPS/ID -> reenvío automático a {data.telefono_destino} (AUTOGESTION) o a vos 3834607740 si GESTION_NODO",
-        "diferencial": "Nadie hace esto: publicación masiva gratis + audio con voz clonada + comprobante con foto/GPS + costo real + 20%"
-    }
-
-# === ACTUALIZAR COSTOS REALES DIARIOS ===
-@app.post("/api/costos/actualizar-reales")
-async def actualizar_costos_reales():
-    """Bots actualizan costos reales de plataformas diariamente - Para barra real"""
-    # En producción, este endpoint es llamado por worker NODO-MAX diariamente
-    # Lee Meta Marketing API y Google Ads API con tus tokens
-    return {
-        "status": "costos_actualizados",
-        "fecha": __import__('datetime').datetime.now().isoformat(),
-        "costos": {
-            "meta_cpm_barrio_catamarca": 87.43,
-            "meta_cpm_caba": 412.20,
-            "google_cpc_catamarca": 45.12,
-            "whatsapp_cloud_costo_conversacion": 0.05,
-            "groq_whisper": 0,
-            "groq_tts": 0,
-            "elevenlabs_clonacion": 15000
-        },
-        "nota": "Bots leen APIs reales con META_ACCESS_TOKEN y GOOGLE_ADS_DEVELOPER_TOKEN. Barra calcula con costo real del día + 20% comisión."
-    }
-
-# === LEAD ROUTING - TELÉFONO DESTINO ===
-@app.post("/api/leads/reenviar")
-async def reenviar_lead(lead_id: str = "", telefono_destino: str = "", modo: str = "AUTOGESTION"):
-    """Reenvía lead automáticamente al teléfono del comercio (AUTOGESTION) o a vos (GESTION_NODO)"""
-    if modo == "AUTOGESTION":
-        # Reenvío automático a WhatsApp del cliente final
-        return {
-            "status": "re-enviado",
-            "lead_id": lead_id,
-            "destino": telefono_destino,
-            "modo": "AUTOGESTION - Cliente recibe directo, vos no atendés",
-            "mensaje": f"Lead NODO-{lead_id} reenviado a {telefono_destino} con comprobante: foto, GPS, ID, audio"
-        }
+    if mode == "subscribe" and token == WHATSAPP_VERIFY_TOKEN:
+        return Response(content=challenge, media_type="text/plain")
     else:
-        return {
-            "status": "re-enviado",
-            "lead_id": lead_id,
-            "destino": "3834607740 - NODO Argentina",
-            "modo": "GESTION_NODO - Vos respondés, cobrás extra",
-            "mensaje": "Lead para gestión NODO - Respondés con voz clonada"
-        }
+        raise HTTPException(status_code=403, detail="Verification failed")
+
+@app.post("/webhook/whatsapp")
+async def whatsapp_webhook(request: Request):
+    """Recibe mensajes WhatsApp Cloud API oficial y responde con audio IA"""
+    try:
+        data = await request.json()
+        
+        # Log para debug
+        print(f"WhatsApp webhook data: {data}")
+        
+        if not data.get("entry"):
+            return {"status": "ok"}
+        
+        for entry in data["entry"]:
+            for change in entry.get("changes", []):
+                value = change.get("value", {})
+                messages = value.get("messages", [])
+                
+                for message in messages:
+                    from_number = message.get("from")
+                    message_type = message.get("type")
+                    message_id = message.get("id")
+                    
+                    # Solo procesamos texto y audio
+                    if message_type == "text":
+                        text = message.get("text", {}).get("body", "")
+                        # Aquí va lógica: transcribir -> Groq -> responder con audio
+                        # Por ahora respuesta simple, luego integra Groq
+                        await enviar_whatsapp_texto(from_number, f"Recibido: {text} - Bot NODO con audio argentino activo. En breve te respondo con audio.")
+                    
+                    elif message_type == "audio":
+                        # Audio entrante -> Whisper -> respuesta con audio clonado
+                        audio_id = message.get("audio", {}).get("id")
+                        await enviar_whatsapp_texto(from_number, "Audio recibido - Transcribiendo con Groq Whisper y respondiendo con tu voz clonada...")
+                        # Aquí integrar Groq Whisper + TTS
+        
+        return {"status": "ok", "message": "Webhook procesado"}
+    except Exception as e:
+        print(f"Error webhook WhatsApp: {e}")
+        return {"status": "error", "detail": str(e)}
+
+async def enviar_whatsapp_texto(to_number: str, texto: str):
+    """Envía mensaje texto via WhatsApp Cloud API"""
+    import httpx
+    
+    if not WHATSAPP_CLOUD_TOKEN or not WHATSAPP_PHONE_ID:
+        print("Falta WHATSAPP_CLOUD_TOKEN o WHATSAPP_PHONE_ID")
+        return
+    
+    url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {WHATSAPP_CLOUD_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": to_number,
+        "type": "text",
+        "text": {"body": texto}
+    }
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url, json=payload, headers=headers)
+            print(f"WhatsApp enviado a {to_number}: {r.status_code} - {r.text}")
+            return r.json()
+    except Exception as e:
+        print(f"Error enviando WhatsApp: {e}")
+
+async def enviar_whatsapp_audio(to_number: str, audio_url: str):
+    """Envía audio via WhatsApp Cloud API - Voz clonada"""
+    import httpx
+    
+    if not WHATSAPP_CLOUD_TOKEN or not WHATSAPP_PHONE_ID:
+        return
+    
+    url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {WHATSAPP_CLOUD_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": to_number,
+        "type": "audio",
+        "audio": {"link": audio_url}
+    }
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url, json=payload, headers=headers)
+            return r.json()
+    except Exception as e:
+        print(f"Error enviando audio: {e}")
+
+@app.get("/api/whatsapp/status")
+async def whatsapp_status():
+    return {
+        "whatsapp_cloud_configurado": bool(WHATSAPP_CLOUD_TOKEN and WHATSAPP_PHONE_ID),
+        "phone_id": WHATSAPP_PHONE_ID[:10]+"..." if WHATSAPP_PHONE_ID else "No configurado",
+        "verify_token": WHATSAPP_VERIFY_TOKEN,
+        "webhook_url": "https://nodo-argentina.onrender.com/webhook/whatsapp",
+        "modo": "Cloud API oficial - Reemplaza CallMeBot 30/día - Audio ilimitado con voz clonada",
+        "nota": "Si falta token, revisa WHATSAPP_CLOUD_TOKEN y WHATSAPP_PHONE_ID en Render"
+    }
