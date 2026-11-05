@@ -1,4 +1,6 @@
+from typing import Optional, List
 
+from pydantic import BaseModel
 from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
