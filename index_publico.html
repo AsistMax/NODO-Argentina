@@ -1334,11 +1334,5 @@ Código WhatsApp: ${v.codigo}`,"Borrador de Gestión copiado"),children:[s(Bt,{s
 </script>
   <script>(function(){function m(a){var h=a.getAttribute("href");if(!h)return;try{var u=new URL(h,document.baseURI);if(((u.protocol==="http:"||u.protocol==="https:")&&u.host!==location.host)||u.protocol==="mailto:"||u.protocol==="tel:"||u.protocol==="sms:"){a.target="_blank";a.rel="noopener noreferrer";}}catch(e){}}function s(){document.querySelectorAll("a[href]").forEach(m);}if(document.readyState!=="loading"){s();}else{document.addEventListener("DOMContentLoaded",s);}document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href]");if(a){m(a);}},true);})();</script>
   <script type="application/json" data-clippy-inline-media-manifest="1">{"version":1,"slots":[]}</script>
-<script>
-// NODO_CONECTADO_API - Conexión real Público -> /api/campana-rapida -> Supabase
-async function nodoEnviarImpulso(){try{const titulo=document.querySelector('input[placeholder*="campaña"]')?.value||'Campaña NODO IMPULSO';const presupuesto=2000;const r=await fetch('/api/campana-rapida',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,descripcion:titulo,presupuesto_total:presupuesto,zona:'Catamarca'})});const j=await r.json();alert('✅ IMPULSO creado: Total $'+presupuesto+' = Ads $'+(j.datos?.ads_real||'')+' + Comisión adentro. Link campo: '+(j.datos?.link_campo||''));}catch(e){alert('Error conectando NODO: '+e);}}
-async function nodoEnviarEmpresa(){try{const r=await fetch('/api/campana-rapida',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo:'NODO EMPRESAS',descripcion:'Plan EMPRESAS',presupuesto_total:800000,zona:'Todo el país'})});const j=await r.json();alert('✅ EMPRESAS: Base $800.000 / 30 días - Explotación de Área. Link: '+(j.datos?.link_campo||''));}catch(e){alert('Error: '+e);}}
-console.log('NODO Público conectado a /api/campana-rapida');
-</script>
 </body>
 </html>
