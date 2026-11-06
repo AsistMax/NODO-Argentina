@@ -1,115 +1,232 @@
 <!DOCTYPE html>
-<html lang="es-AR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NODO Argentina - Sistema Privado - Gerencia</title>
-<style>
-:root{--gold:#D4AF37;--black:#000;--dark:#111;--green:#25D366;--red:#FF4444}
-*{box-sizing:border-box}body{background:#000;color:#fff;font-family:Inter,Arial,sans-serif;margin:0;padding:0}
-header{background:#111;border-bottom:2px solid var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-header h1{color:var(--gold);margin:0;font-size:22px}header span{font-size:12px;color:#aaa}
-.container{max-width:1200px;margin:0 auto;padding:20px}
-.card{background:#111;border:1px solid #222;border-radius:12px;padding:18px;margin-bottom:16px}
-.card h2{color:var(--gold);margin:0 0 10px;font-size:18px}.card h3{margin:10px 0 6px}
-input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff}
-button{background:var(--gold);color:#000;border:none;padding:12px 18px;border-radius:8px;font-weight:800;cursor:pointer;margin:6px 0;width:100%}
-button.sec{background:#222;color:#fff;border:1px solid var(--gold)}button.green{background:var(--green);color:#000}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-@media(max-width:700px){.grid,.grid3{grid-template-columns:1fr}}
-.badge{display:inline-block;background:var(--gold);color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}
-.badge-green{background:var(--green)} .badge-red{background:var(--red);color:#fff}
-.barra{height:18px;background:#222;border-radius:10px;overflow:hidden;margin:8px 0}.barra>div{height:100%;background:var(--gold);width:0%;transition:.4s}
-.small{font-size:13px;color:#bbb;line-height:1.5}.hidden{display:none}a{color:var(--gold)}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #222;padding:8px;text-align:left}
-.kpi{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:14px;text-align:center}.kpi b{font-size:28px;color:var(--gold);display:block}
-.tab{padding:10px 16px;border:1px solid #333;border-radius:20px;cursor:pointer;display:inline-block;margin:4px}.tab.active{background:var(--gold);color:#000;font-weight:800}
-</style></head>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NODO Argentina - Sistema Privado - Núcleo Gerencia</title>
+  <style>
+    :root { --gold: #D4AF37; --black: #000; --dark: #111; --green: #25D366; --red: #FF4444; }
+    * { box-sizing: border-box; }
+    body { background: #000; color: #fff; font-family: Inter, Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #111; border-bottom: 2px solid var(--gold); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+    header h1 { color: var(--gold); margin: 0; font-size: 22px; }
+    header span { font-size: 12px; color: #aaa; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+    .card h2 { color: var(--gold); margin: 0 0 10px; font-size: 18px; }
+    .card h3 { margin: 10px 0 6px; }
+    input, select, textarea { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; }
+    button { background: var(--gold); color: #000; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; margin: 6px 0; width: 100%; }
+    button.sec { background: #222; color: #fff; border: 1px solid var(--gold); }
+    button.green { background: var(--green); color: #000; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid, .grid3 { grid-template-columns: 1fr; } }
+    .badge { display: inline-block; background: var(--gold); color: #000; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
+    .badge-green { background: var(--green); }
+    .barra { height: 18px; background: #222; border-radius: 10px; overflow: hidden; margin: 8px 0; }
+    .barra > div { height: 100%; background: var(--gold); width: 0%; transition: .4s; }
+    .small { font-size: 13px; color: #bbb; line-height: 1.5; }
+    .hidden { display: none; }
+    a { color: var(--gold); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border-bottom: 1px solid #222; padding: 8px; text-align: left; }
+    .kpi { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 14px; text-align: center; }
+    .kpi b { font-size: 28px; color: var(--gold); display: block; }
+    .tab { padding: 10px 16px; border: 1px solid #333; border-radius: 20px; cursor: pointer; display: inline-block; margin: 4px; }
+    .tab.active { background: var(--gold); color: #000; font-weight: 800; }
+    .ok { color: var(--green); font-weight: 800; }
+    .err { color: var(--red); font-weight: 800; }
+    .log { background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 200px; overflow: auto; }
+  </style>
+</head>
 <body>
-<header><h1>NODO ARGENTINA</h1><span>Sistema Privado • Gerencia • <a href="/publicidad" target="_blank">Ver Público ↗</a> • <a href="/billetera" target="_blank">Billetera ↗</a> • <a href="/debug/routes" target="_blank">Debug Rutas</a></span></header>
-<div class="container">
-<div id="loginBox" class="card">
-<h2>🔐 Ingreso Privado NODO - Gerencia</h2>
-<p class="small">Sistema Privado NODO Argentina • Solo equipo NODO y Gerencia • Clave: nodo2026</p>
-<input id="clave" type="password" placeholder="Clave privada (nodo2026)">
-<button onclick="login()">Ingresar a NODO Argentina</button>
-<p class="small">Si la clave es correcta, se abre el Panel Gerencia completo.</p>
-</div>
-<div id="app" class="hidden">
-<div class="card"><h2>Panel Gerencia - NODO Argentina <span class="badge">NODO IMPULSO</span> <span class="badge badge-green">NODO EMPRESAS</span> <span class="badge">24/7</span></h2>
-<p class="small">WhatsApp Cloud API • Mercado Pago • Supabase • NODO IMPULSO + NODO EMPRESAS • Billetera NODO (Panda Pay detrás)</p>
-<div class="grid3">
-<div class="kpi"><span>Empresas Registradas</span><b id="kpiEmpresas">0</b><span class="small" id="kpiEmpresasTxt">Sin empresas - Usá Incorporación</span></div>
-<div class="kpi"><span>Leads CRM</span><b id="kpiLeads">0</b><span class="small" id="kpiLeadsTxt">Sin leads todavía</span></div>
-<div class="kpi"><span>Equipo Campo</span><b id="kpiEquipo">0</b><span class="small">Agentes NODO 24/7</span></div>
-</div>
-<div style="margin-top:12px"><span class="tab active" onclick="showTab('impulso',this)">NODO IMPULSO</span><span class="tab" onclick="showTab('empresas',this)">EMPRESAS</span><span class="tab" onclick="showTab('crm',this)">CRM LEADS</span><span class="tab" onclick="showTab('pagos',this)">PAGOS</span><span class="tab" onclick="showTab('estado',this)">ESTADO</span></div>
-</div>
-<div id="tab-impulso">
-<div id="calc" class="card">
-<h2>🧮 NODO IMPULSO - Calculadora Rápida (20% adentro - Comisión INSIDE)</h2>
-<p class="small">Regla NODO: Cliente elige total. 20% comisión adentro. Ej: $2000 total = $1666.67 ads + $333.33 comisión. No se muestra comisión en público.</p>
-<label>Título campaña</label><input id="titulo" value="Vendo zapatos - Catamarca">
-<label>Presupuesto total que pone el cliente ($)</label><input id="presupuesto" type="number" value="2000">
-<label>Zona</label><select id="zona"><option>Catamarca</option><option>Impulso Local 2km Catamarca</option><option>Todo el país</option><option>Provincia Catamarca</option><option>CABA</option></select>
-<label>Días (vacío = auto)</label><input id="dias" type="number" placeholder="Ej: 6">
-<label>WhatsApp destino leads (AUTOGESTION - va directo al cliente)</label><input id="whatsappDestino" placeholder="Ej: 5493834607740">
-<button onclick="calcular()">Calcular NODO IMPULSO</button>
-<div id="resultado"></div>
-<div class="barra"><div id="barraFill"></div></div>
-<p class="small" id="resultadoTexto"></p>
-<button class="sec" onclick="crearPagoDesdeCalculo()">→ Crear Link de Pago con este monto</button>
-</div>
-<div class="card"><h2>🏢 NODO EMPRESAS - Base $800.000 / 30 días - Explotación de Área</h2>
-<p class="small">Explotación de Área: $800.000 por persona por 30 días, proporcional. Ej: 10 días = $266.666. Urgencia: Normal x1, Urgente x1.35, Express x1.7</p>
-<div class="grid"><div><label>Días</label><input id="empDias" type="number" value="30"></div><div><label>Personas</label><input id="empPersonas" type="number" value="1"></div></div>
-<label>Urgencia</label><select id="empUrgencia"><option value="1">Planificado x1</option><option value="1.35">Urgente x1.35</option><option value="1.7">Express x1.7</option></select>
-<button onclick="calcularEmpresa()">Calcular NODO EMPRESAS</button>
-<div id="resultadoEmpresa"></div>
-</div>
-</div>
-<div id="tab-empresas" class="hidden">
-<div class="card"><h2>🏢 Empresas - Incorporación</h2><p class="small">Si hay 0, muestra: No hay empresas - Usá Incorporación. No inventa empresas.</p>
-<button onclick="cargarEmpresas()">Cargar Empresas</button><div id="empresasList">Sin cargar aún. Tocá Cargar Empresas.</div>
-<div style="margin-top:12px"><h3>Registrar Empresa Nueva</h3>
-<input id="nuevaEmpresaNombre" placeholder="Nombre empresa"><input id="nuevaEmpresaTelefono" placeholder="Teléfono / WhatsApp destino leads"><input id="nuevaEmpresaZona" placeholder="Zona - Ej: Catamarca"><input id="nuevaEmpresaRubro" placeholder="Rubro">
-<select id="nuevaEmpresaModo"><option value="AUTOGESTION">AUTOGESTION - Leads directo al cliente</option><option value="GESTION_NODO">GESTION_NODO - Bot NODO responde 24/7</option></select>
-<button class="green" onclick="registrarEmpresa()">Registrar Empresa en NODO</button><div id="registroEmpresaResult"></div>
-</div></div>
-</div>
-<div id="tab-crm" class="hidden">
-<div class="card"><h2>👥 CRM - Leads - 0 = Sin leads</h2><button onclick="cargarCRM()">Cargar CRM</button><div id="crmList">Sin cargar aún. Tocá Cargar CRM.</div></div>
-<div class="card"><h2>👷 Equipo Campo - Agentes NODO</h2><button onclick="cargarEquipo()">Cargar Equipo Campo</button><div id="equipoList">Sin cargar aún.</div></div>
-</div>
-<div id="tab-pagos" class="hidden">
-<div class="card"><h2>💳 Crear Link de Pago NODO (Mercado Pago variable)</h2>
-<p class="small">No decimos Mercado Pago en público, solo NODO Argentina. El link se genera con desglose 20% adentro. Webhook marca pagado, crea comprobante NODO-MP-{payment_id}, dispara cross-post + Meta Ads.</p>
-<input id="pagoTitulo" value="Campaña NODO IMPULSO"><input id="pagoMonto" type="number" value="2000"><input id="pagoEmail" placeholder="Email cliente (opcional)"><input id="pagoWhatsapp" placeholder="WhatsApp destino link (ej: 5493834607740)">
-<button onclick="crearPago()">Crear Link de Pago NODO</button><div id="pagoResult"></div>
-</div>
-<div class="card"><h2>📄 Comprobantes y Pagos</h2><button onclick="cargarPagos()">Cargar Pagos</button><div id="pagosList">Sin cargar aún.</div></div>
-</div>
-<div id="tab-estado" class="hidden">
-<div class="card"><h2>📡 Estado Sistema - En vivo</h2><div id="statusBox">Sin verificar aún.</div><button onclick="checkStatus()">Verificar Estado Ahora</button></div>
-<div class="card"><h2>🔗 Links Bloques Aparte - No se pisan</h2>
-<a href="/publicidad" target="_blank">→ /publicidad = Index Público NODO IMPULSO / NODO EMPRESAS</a><br>
-<a href="/billetera" target="_blank">→ /billetera = Billetera NODO (bloque aparte Panda Pay)</a><br>
-<a href="/debug/routes" target="_blank">→ /debug/routes = Ver rutas activas en Render</a><br>
-<a href="/health" target="_blank">→ /health = NODO Argentina Live Completo</a><br>
-<p class="small">Email: nodo.cliente@gmail.com • Centro Atención: 3834607740 • T&C v1.0 • Tokenizado MP • Auto-débito con retry x7</p>
-</div>
-</div>
-</div>
-</div>
-<script>
-function showTab(id,el){document.querySelectorAll('[id^="tab-"]').forEach(d=>d.classList.add('hidden'));document.getElementById('tab-'+id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
-async function login(){const c=document.getElementById('clave').value;const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clave:c})});const j=await r.json();if(j.ok){document.getElementById('loginBox').classList.add('hidden');document.getElementById('app').classList.remove('hidden');checkStatus();cargarEmpresas();cargarCRM();cargarEquipo();}else{alert('Clave incorrecta');}}
-async function calcular(){const body={titulo:document.getElementById('titulo').value,descripcion:document.getElementById('titulo').value,presupuesto_total:parseFloat(document.getElementById('presupuesto').value)||2000,zona:document.getElementById('zona').value,dias:parseInt(document.getElementById('dias').value)||null,telefono_destino_leads:document.getElementById('whatsappDestino').value};const r=await fetch('/api/campana-rapida',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();const d=j.datos||j;document.getElementById('resultado').innerHTML=`<b>Total cliente:</b> $${d.presupuesto_total||body.presupuesto_total} = Ads $${d.ads_real||d.ads_real_para_plataformas||''} + Comisión $${d.comision_nodo||''}<br><b>Alcance:</b> ${d.alcance_estimado||''} personas • <b>Días:</b> ${d.dias||''} • <b>Link campo:</b> ${d.link_campo||''}`;document.getElementById('barraFill').style.width='78%';document.getElementById('resultadoTexto').innerText=j.barra_facebook?j.barra_facebook.costo:'Calculado con 20% adentro - AUTOGESTION: leads directo al cliente';}
-function calcularEmpresa(){const dias=parseFloat(document.getElementById('empDias').value)||30;const pers=parseFloat(document.getElementById('empPersonas').value)||1;const urg=parseFloat(document.getElementById('empUrgencia').value)||1;const total=800000*pers*(dias/30)*urg;document.getElementById('resultadoEmpresa').innerHTML=`<b>Total NODO EMPRESAS:</b> $${total.toLocaleString('es-AR')} • ${dias} días • ${pers} persona(s) • Urgencia x${urg}<br><span class="small">Explotación de Área proporcional - 20% comisión adentro del total</span>`;}
-async function cargarCRM(){const r=await fetch('/api/crm');const j=await r.json();const leads=j.leads||[];document.getElementById('kpiLeads').innerText=leads.length;document.getElementById('kpiLeadsTxt').innerText=leads.length?`${leads.length} leads`:'Sin leads todavía';document.getElementById('crmList').innerHTML=leads.length?leads.map(l=>`<div>• ${l.cliente_nombre||'Sin nombre'} - ${l.cliente_telefono||''} - ${l.origen||''} - ${l.comprobante_id||''}</div>`).join(''):'<b>No hay leads - Usá Incorporación</b><br><span class="small">Cuando llega un lead, aparece acá y se reenvía al WhatsApp destino del cliente (AUTOGESTION).</span>';}
-async function cargarEmpresas(){const r=await fetch('/api/empresas');const j=await r.json();const e=j.empresas||[];document.getElementById('kpiEmpresas').innerText=e.length;document.getElementById('kpiEmpresasTxt').innerText=e.length?`${e.length} empresas`:'Sin empresas - Usá Incorporación';document.getElementById('empresasList').innerHTML=e.length?e.map(x=>`<div>• <b>${x.nombre}</b> - ${x.telefono||''} - ${x.zona||''} - ${x.modo||'AUTOGESTION'} - Destino: ${x.telefono_destino_leads||x.telefono||''}</div>`).join(''):'<b>No hay empresas - Usá Incorporación</b>';}
-async function cargarEquipo(){const r=await fetch('/api/equipo-campo');const j=await r.json();const eq=j.equipo||j.equipo_campo||[];document.getElementById('kpiEquipo').innerText=eq.length;document.getElementById('equipoList').innerHTML=eq.length?eq.map(x=>`<div>• ${x.nombre} - ${x.zona||''}</div>`).join(''):'<b>Sin equipo cargado</b><br><span class="small">Agentes NODO 24/7 - Se sincronizan desde NODO-MAX Worker.</span>';}
-async function cargarPagos(){const r=await fetch('/api/pagos/status');const j=await r.json();document.getElementById('pagosList').innerHTML=`MP Configurado: ${j.mercadopago_configurado?'✅':'❌'} • Webhook: ${j.webhook_url||''}`;}
-async function checkStatus(){try{const a=await (await fetch('/api/whatsapp/status')).json();const b=await (await fetch('/api/pagos/status')).json();document.getElementById('statusBox').innerHTML=`WhatsApp Cloud: ${a.whatsapp_cloud_configurado?'✅ Configurado':'❌ Falta'} • MP: ${b.mercadopago_configurado?'✅ Configurado':'❌ Falta'} • Webhook MP: ${b.webhook_url||''} • Supabase: ✅ Tablas empresas / cartera_crm / equipo_campo / pagos / costos_reales`;}catch(e){document.getElementById('statusBox').innerHTML='Error verificando estado: '+e;}}
-async function crearPago(){const body={monto_total:parseFloat(document.getElementById('pagoMonto').value)||2000,titulo:document.getElementById('pagoTitulo').value,email_cliente:document.getElementById('pagoEmail').value,whatsapp_destino:document.getElementById('pagoWhatsapp').value};const r=await fetch('/api/crear-pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();document.getElementById('pagoResult').innerHTML=j.link_pago?`<a href="${j.link_pago}" target="_blank">→ Abrir Link de Pago NODO</a><br>Desglose: Total $${j.desglose.total_cliente_paga} = Ads $${j.desglose.ads_real_para_plataformas} + Comisión $${j.desglose.comision_nodo_20_adentro}`:`Error: ${JSON.stringify(j)}`;}
-function crearPagoDesdeCalculo(){document.getElementById('pagoMonto').value=document.getElementById('presupuesto').value;document.getElementById('pagoTitulo').value=document.getElementById('titulo').value;showTab('pagos',document.querySelectorAll('.tab')[3]);crearPago();}
-async function registrarEmpresa(){const body={nombre:document.getElementById('nuevaEmpresaNombre').value,telefono:document.getElementById('nuevaEmpresaTelefono').value,telefono_destino_leads:document.getElementById('nuevaEmpresaTelefono').value,zona:document.getElementById('nuevaEmpresaZona').value,rubro:document.getElementById('nuevaEmpresaRubro').value,modo:document.getElementById('nuevaEmpresaModo').value};if(!body.nombre){alert('Falta nombre empresa');return;}const r=await fetch('/api/empresas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();document.getElementById('registroEmpresaResult').innerHTML=j.ok?`✅ Empresa ${body.nombre} registrada - Modo ${body.modo}`:`Error: ${JSON.stringify(j)}`;cargarEmpresas();}
-</script>
-</body></html>
+  <!-- HEADER NÚCLEO -->
+  <header>
+    <h1>NODO ARGENTINA</h1>
+    <span>Sistema Privado • Gerencia • <a href="/publicidad" target="_blank">Ver Público ↗</a> • <a href="/billetera" target="_blank">Billetera ↗</a> • <a href="/debug/routes" target="_blank">Debug Rutas</a></span>
+  </header>
+  <div class="container">
+    <!-- LOGIN -->
+    <div id="loginBox" class="card">
+      <h2>🔐 Ingreso Privado NODO - Gerencia</h2>
+      <p class="small">Sistema Privado NODO Argentina • Solo equipo NODO y Gerencia • Clave: nodo2026</p>
+      <label>Clave privada</label>
+      <input id="clave" type="password" placeholder="Clave privada (nodo2026)">
+      <button onclick="login()">Ingresar a NODO Argentina</button>
+      <p class="small">Si la clave es correcta, se abre el Panel Gerencia completo. Si falla, revisá /debug/routes</p>
+    </div>
+    <!-- APP PRINCIPAL -->
+    <div id="app" class="hidden">
+      <div class="card">
+        <h2>Panel Gerencia - NODO Argentina <span class="badge">NODO IMPULSO</span> <span class="badge badge-green">NODO EMPRESAS</span> <span class="badge">24/7</span></h2>
+        <p class="small">WhatsApp Cloud API • Mercado Pago • Supabase • NODO IMPULSO + NODO EMPRESAS • Billetera NODO (Panda Pay detrás)</p>
+        <div class="grid3">
+          <div class="kpi"><span>Empresas Registradas</span><b id="kpiEmpresas">0</b><span class="small" id="kpiEmpresasTxt">Sin empresas - Usá Incorporación</span></div>
+          <div class="kpi"><span>Leads CRM</span><b id="kpiLeads">0</b><span class="small" id="kpiLeadsTxt">Sin leads todavía</span></div>
+          <div class="kpi"><span>Equipo Campo</span><b id="kpiEquipo">0</b><span class="small">Agentes NODO 24/7</span></div>
+        </div>
+        <div style="margin-top:12px">
+          <span class="tab active" onclick="showTab('impulso',this)">NODO IMPULSO</span>
+          <span class="tab" onclick="showTab('empresas',this)">EMPRESAS</span>
+          <span class="tab" onclick="showTab('crm',this)">CRM LEADS</span>
+          <span class="tab" onclick="showTab('pagos',this)">PAGOS</span>
+          <span class="tab" onclick="showTab('estado',this)">ESTADO</span>
+          <span class="tab" onclick="showTab('auditoria',this)">AUDITORÍA</span>
+        </div>
+      </div>
+      <div id="tab-impulso">
+        <div id="calc" class="card">
+          <h2>🧮 NODO IMPULSO - Calculadora Rápida (20% adentro)</h2>
+          <p class="small">Regla NODO: Cliente elige total. 20% comisión adentro. Ej: $2000 total = $1666.67 ads + $333.33 comisión. No se muestra comisión en público.</p>
+          <label>Título campaña</label>
+          <input id="titulo" value="Vendo zapatos - Catamarca">
+          <label>Descripción</label>
+          <input id="descripcion" value="Vendo zapatos en Catamarca">
+          <label>Presupuesto total que pone el cliente ($)</label>
+          <input id="presupuesto" type="number" value="2000">
+          <label>Zona</label>
+          <select id="zona"><option>Catamarca</option><option>Impulso Local 2km Catamarca</option><option>Todo el país</option><option>Provincia Catamarca</option><option>CABA</option></select>
+          <label>Días (vacío = auto)</label>
+          <input id="dias" type="number" placeholder="Ej: 6">
+          <label>WhatsApp destino leads (AUTOGESTION)</label>
+          <input id="whatsappDestino" placeholder="Ej: 5493834607740">
+          <button onclick="calcular()">Calcular NODO IMPULSO</button>
+          <div id="resultado"></div>
+          <div class="barra"><div id="barraFill"></div></div>
+          <p class="small" id="resultadoTexto"></p>
+          <button class="sec" onclick="crearPagoDesdeCalculo()">→ Crear Link de Pago con este monto</button>
+        </div>
+        <div class="card">
+          <h2>🏢 NODO EMPRESAS - Base $800.000 / 30 días - Explotación de Área</h2>
+          <p class="small">Explotación de Área: $800.000 por persona por 30 días, proporcional. Ej: 10 días = $266.666. Urgencia: Normal x1, Urgente x1.35, Express x1.7</p>
+          <div class="grid">
+            <div><label>Días</label><input id="empDias" type="number" value="30"></div>
+            <div><label>Personas</label><input id="empPersonas" type="number" value="1"></div>
+          </div>
+          <label>Urgencia</label>
+          <select id="empUrgencia"><option value="1">Planificado x1</option><option value="1.35">Urgente x1.35</option><option value="1.7">Express x1.7</option></select>
+          <button onclick="calcularEmpresa()">Calcular NODO EMPRESAS</button>
+          <div id="resultadoEmpresa"></div>
+        </div>
+      </div>
+      <div id="tab-empresas" class="hidden">
+        <div class="card">
+          <h2>🏢 Empresas - Incorporación</h2>
+          <p class="small">Si hay 0, muestra: No hay empresas - Usá Incorporación. No inventa empresas.</p>
+          <button onclick="cargarEmpresas()">Cargar Empresas</button>
+          <div id="empresasList">Sin cargar aún. Tocá Cargar Empresas.</div>
+          <h3>Registrar Empresa Nueva</h3>
+          <input id="nuevaEmpresaNombre" placeholder="Nombre empresa">
+          <input id="nuevaEmpresaTelefono" placeholder="Teléfono / WhatsApp destino leads">
+          <input id="nuevaEmpresaZona" placeholder="Zona - Ej: Catamarca">
+          <input id="nuevaEmpresaRubro" placeholder="Rubro">
+          <select id="nuevaEmpresaModo"><option value="AUTOGESTION">AUTOGESTION - Leads directo al cliente</option><option value="GESTION_NODO">GESTION_NODO - Bot NODO responde 24/7</option></select>
+          <button class="green" onclick="registrarEmpresa()">Registrar Empresa en NODO</button>
+          <div id="registroEmpresaResult"></div>
+        </div>
+      </div>
+      <div id="tab-crm" class="hidden">
+        <div class="card"><h2>👥 CRM - Leads</h2><button onclick="cargarCRM()">Cargar CRM</button><div id="crmList">Sin cargar aún.</div></div>
+        <div class="card"><h2>👷 Equipo Campo - Agentes NODO</h2><button onclick="cargarEquipo()">Cargar Equipo Campo</button><div id="equipoList">Sin cargar aún.</div></div>
+      </div>
+      <div id="tab-pagos" class="hidden">
+        <div class="card">
+          <h2>💳 Crear Link de Pago NODO (Mercado Pago variable)</h2>
+          <p class="small">No decimos Mercado Pago en público, solo NODO Argentina. Webhook marca pagado, crea comprobante NODO-MP-{payment_id}, dispara cross-post + Meta Ads.</p>
+          <input id="pagoTitulo" value="Campaña NODO IMPULSO">
+          <input id="pagoMonto" type="number" value="2000">
+          <input id="pagoEmail" placeholder="Email cliente (opcional)">
+          <input id="pagoWhatsapp" placeholder="WhatsApp destino link (ej: 5493834607740)">
+          <button onclick="crearPago()">Crear Link de Pago NODO</button>
+          <div id="pagoResult"></div>
+        </div>
+        <div class="card"><h2>📄 Comprobantes y Pagos</h2><button onclick="cargarPagos()">Cargar Pagos</button><div id="pagosList">Sin cargar aún.</div></div>
+      </div>
+      <div id="tab-estado" class="hidden">
+        <div class="card"><h2>📡 Estado Sistema - En vivo</h2><div id="statusBox">Sin verificar aún.</div><button onclick="checkStatus()">Verificar Estado Ahora</button></div>
+        <div class="card"><h2>🔗 Links Bloques Aparte - No se pisan</h2><a href="/publicidad" target="_blank">→ /publicidad = Index Público</a><br><a href="/billetera" target="_blank">→ /billetera = Billetera NODO</a><br><a href="/debug/routes" target="_blank">→ /debug/routes</a><br><a href="/health" target="_blank">→ /health</a><p class="small">Email: nodo.cliente@gmail.com • Centro Atención: 3834607740 • T&C v1.0 • Tokenizado MP • Auto-débito retry x7</p></div>
+      </div>
+      <div id="tab-auditoria" class="hidden">
+        <div class="card"><h2>🔍 Auditoría Automática - Núcleo</h2><p class="small">Este botón prueba todas las rutas en vivo y te dice qué está OK y qué falla, sin adivinar.</p><button onclick="auditar()">Auditar Todo Ahora</button><div id="auditoriaResult" class="log">Sin auditar aún. Tocá Auditar Todo Ahora.</div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function showTab(id, el) {
+      document.querySelectorAll('[id^="tab-"]').forEach(d => d.classList.add('hidden'));
+      document.getElementById('tab-' + id).classList.remove('hidden');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+    async function login() {
+      const c = document.getElementById('clave').value;
+      const r = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ clave: c }) });
+      const j = await r.json();
+      if (j.ok) { document.getElementById('loginBox').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); checkStatus(); cargarEmpresas(); cargarCRM(); cargarEquipo(); } else { alert('Clave incorrecta'); }
+    }
+    async function calcular() {
+      const body = { titulo: document.getElementById('titulo').value, descripcion: document.getElementById('descripcion').value, presupuesto_total: parseFloat(document.getElementById('presupuesto').value) || 2000, zona: document.getElementById('zona').value, dias: parseInt(document.getElementById('dias').value) || null, telefono_destino_leads: document.getElementById('whatsappDestino').value };
+      const r = await fetch('/api/campana-rapida', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json(); const d = j.datos || j;
+      document.getElementById('resultado').innerHTML = `<b>Total:</b> $${d.presupuesto_total || body.presupuesto_total} = Ads $${d.ads_real || ''} + Comisión $${d.comision_nodo || ''} • Alcance ${d.alcance_estimado || ''} • Días ${d.dias || ''} • Link ${d.link_campo || ''}`;
+      document.getElementById('barraFill').style.width = '78%';
+      document.getElementById('resultadoTexto').innerText = 'Calculado con 20% adentro - AUTOGESTION: leads directo al cliente';
+    }
+    function calcularEmpresa() {
+      const dias = parseFloat(document.getElementById('empDias').value) || 30;
+      const pers = parseFloat(document.getElementById('empPersonas').value) || 1;
+      const urg = parseFloat(document.getElementById('empUrgencia').value) || 1;
+      const total = 800000 * pers * (dias / 30) * urg;
+      document.getElementById('resultadoEmpresa').innerHTML = `<b>Total NODO EMPRESAS:</b> $${total.toLocaleString('es-AR')} • ${dias} días • ${pers} persona(s) • Urgencia x${urg}`;
+    }
+    async function cargarCRM() {
+      const r = await fetch('/api/crm'); const j = await r.json(); const leads = j.leads || [];
+      document.getElementById('kpiLeads').innerText = leads.length;
+      document.getElementById('crmList').innerHTML = leads.length ? leads.map(l => `<div>• ${l.cliente_nombre || 'Sin nombre'} - ${l.cliente_telefono || ''} - ${l.origen || ''} - ${l.comprobante_id || ''}</div>`).join('') : '<b>No hay leads - Usá Incorporación</b>';
+    }
+    async function cargarEmpresas() {
+      const r = await fetch('/api/empresas'); const j = await r.json(); const e = j.empresas || [];
+      document.getElementById('kpiEmpresas').innerText = e.length;
+      document.getElementById('empresasList').innerHTML = e.length ? e.map(x => `<div>• <b>${x.nombre}</b> - ${x.telefono || ''} - ${x.zona || ''} - ${x.modo || 'AUTOGESTION'}</div>`).join('') : '<b>No hay empresas - Usá Incorporación</b>';
+    }
+    async function cargarEquipo() {
+      const r = await fetch('/api/equipo-campo'); const j = await r.json(); const eq = j.equipo || j.equipo_campo || [];
+      document.getElementById('kpiEquipo').innerText = eq.length;
+      document.getElementById('equipoList').innerHTML = eq.length ? eq.map(x => `<div>• ${x.nombre} - ${x.zona || ''}</div>`).join('') : '<b>Sin equipo cargado</b>';
+    }
+    async function cargarPagos() {
+      const r = await fetch('/api/pagos/status'); const j = await r.json();
+      document.getElementById('pagosList').innerHTML = `MP: ${j.mercadopago_configurado ? '✅' : '❌'} • Webhook: ${j.webhook_url || ''}`;
+    }
+    async function checkStatus() {
+      try { const a = await (await fetch('/api/whatsapp/status')).json(); const b = await (await fetch('/api/pagos/status')).json(); document.getElementById('statusBox').innerHTML = `WhatsApp: ${a.whatsapp_cloud_configurado ? '✅' : '❌'} • MP: ${b.mercadopago_configurado ? '✅' : '❌'} • Supabase: ✅ empresas / cartera_crm / equipo_campo / pagos / costos_reales`; } catch (e) { document.getElementById('statusBox').innerHTML = 'Error: ' + e; }
+    }
+    async function crearPago() {
+      const body = { monto_total: parseFloat(document.getElementById('pagoMonto').value) || 2000, titulo: document.getElementById('pagoTitulo').value, email_cliente: document.getElementById('pagoEmail').value, whatsapp_destino: document.getElementById('pagoWhatsapp').value };
+      const r = await fetch('/api/crear-pago', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json();
+      document.getElementById('pagoResult').innerHTML = j.link_pago ? `<a href="${j.link_pago}" target="_blank">→ Abrir Link de Pago NODO</a><br>Desglose: Total $${j.desglose.total_cliente_paga} = Ads $${j.desglose.ads_real_para_plataformas} + Comisión $${j.desglose.comision_nodo_20_adentro}` : `Error: ${JSON.stringify(j)}`;
+    }
+    function crearPagoDesdeCalculo() {
+      document.getElementById('pagoMonto').value = document.getElementById('presupuesto').value;
+      document.getElementById('pagoTitulo').value = document.getElementById('titulo').value;
+      showTab('pagos', document.querySelectorAll('.tab')[3]); crearPago();
+    }
+    async function registrarEmpresa() {
+      const body = { nombre: document.getElementById('nuevaEmpresaNombre').value, telefono: document.getElementById('nuevaEmpresaTelefono').value, telefono_destino_leads: document.getElementById('nuevaEmpresaTelefono').value, zona: document.getElementById('nuevaEmpresaZona').value, rubro: document.getElementById('nuevaEmpresaRubro').value, modo: document.getElementById('nuevaEmpresaModo').value };
+      if (!body.nombre) { alert('Falta nombre empresa'); return; }
+      const r = await fetch('/api/empresas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json();
+      document.getElementById('registroEmpresaResult').innerHTML = j.ok ? `✅ Empresa ${body.nombre} registrada - Modo ${body.modo}` : `Error: ${JSON.stringify(j)}`;
+      cargarEmpresas();
+    }
+    async function auditar() {
+      const rutas = ['/health', '/debug/routes', '/api/crm', '/api/empresas', '/api/equipo-campo', '/api/pagos/status', '/api/whatsapp/status', '/publicidad', '/api/publico', '/billetera'];
+      let out = 'AUDITORÍA NODO - ' + new Date().toLocaleString() + '\n\n';
+      for (const ruta of rutas) { try { const r = await fetch(ruta); out += (r.ok ? '✅' : '❌') + ' ' + ruta + ' -> ' + r.status + '\n'; } catch (e) { out += '❌ ' + ruta + ' -> ERROR ' + e + '\n'; } }
+      document.getElementById('auditoriaResult').innerText = out;
+    }
+  </script>
+</body>
+</html>
