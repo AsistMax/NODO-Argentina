@@ -154,6 +154,37 @@ async def debug_routes():
 async def serve_billetera():
     return HTMLResponse("<h1 style='background:#000;color:#D4AF37;text-align:center;padding:40px'>NODO Argentina - Billetera NODO - Próximamente - Bloque aparte Panda Pay</h1>")
 
+
+@app.post("/api/colaborador/venta")
+async def colaborador_venta(data: dict):
+    # NODO COLABORADOR: gerente crea venta, pone precio propio, NODO se queda comisión (10% default, configurable)
+    # data: colaborador_id, vendedor_id, empresa, producto, precio_pactado, comision_nodo_pct (default 10)
+    precio = float(data.get("precio_pactado", 0))
+    pct = float(data.get("comision_nodo_pct", 10)) / 100
+    comision = round(precio * pct, 2)
+    neto_colaborador = round(precio - comision, 2)
+    # Guardar en cartera_crm con trazabilidad vendedor
+    try:
+        if supabase:
+            supabase.table("cartera_crm").insert({"cliente_nombre": data.get("empresa"), "cliente_telefono": data.get("telefono", ""), "origen": f"COLABORADOR {data.get('colaborador_id')} / VENDEDOR {data.get('vendedor_id')} / {data.get('producto')}", "comprobante_id": f"NODO-COLAB-{data.get('colaborador_id')}-{int(precio)}", "estado": "pendiente"}).execute()
+    except Exception as e:
+        pass
+    return {"ok": True, "precio_pactado": precio, "comision_nodo": comision, "neto_colaborador": neto_colaborador, "pct": pct*100, "vendedor": data.get("vendedor_id"), "colaborador": data.get("colaborador_id")}
+
+@app.post("/api/empresas/precio-dinamico")
+async def precio_dinamico(data: dict):
+    # NODO EMPRESAS PRECIO DINAMICO: no fijo 800k, depende de personas, dias, sueldo base por persona, horas, complejidad
+    # data: personas, dias, sueldo_base_por_persona (ej 600k-1.2M), factor_complejidad (1.0 normal, 1.2 complejo), costo_publicidad (ej 2000)
+    personas = float(data.get("personas", 1))
+    dias = float(data.get("dias", 30))
+    sueldo = float(data.get("sueldo_base_por_persona", 800000))
+    factor = float(data.get("factor_complejidad", 1.0))
+    costo_pub = float(data.get("costo_publicidad", 0))
+    total_campo = personas * sueldo * (dias/30) * factor
+    total = total_campo + costo_pub
+    comision = round(total * 0.20, 2)
+    return {"ok": True, "total_campo": total_campo, "costo_publicidad": costo_pub, "total": total, "comision_nodo_20_adentro": comision, "nota": "800k era ejemplo, ahora precio dinámico por convenio"}
+
 @app.get("/health")
 async def health():
     return {"status": "NODO Argentina Live Completo", "timestamp": str(datetime.now()), "supabase": "connected" if supabase else "no config", "whatsapp": bool(WHATSAPP_CLOUD_TOKEN), "mp": bool(MERCADOPAGO_ACCESS_TOKEN)}
