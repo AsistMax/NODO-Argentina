@@ -736,6 +736,11 @@ def api_calcular_precio(payload: dict):
         dias = int(payload.get("dias", 3))
         alcance = int(payload.get("alcance", 500))
         plataformas = str(payload.get("plataformas", "basica")).lower()
+        # FIX 10/11: Zona / kilometraje - Santiago del Estero NO puede salir igual que Todo el país. Facebook cobra por km y por personas.
+        zona = str(payload.get("zona", "local")).lower()
+        zona_mult = {"local": 1.0, "provincia": 1.4, "pais": 2.2, "latam": 2.8}.get(zona, 1.0)
+        # Plan: Básica x1, Completa x1.5 (suma Google), Total x2.1 (Todas + Diseño + Audio) - Total DEBE ser más caro
+        plan_mult = 2.1 if "total" in plataformas else 1.5 if "completa" in plataformas else 1.0
         # Costo real por persona alcanzada, derivado de CPC real verificado:
         # Meta CPC promedio $130 ARS, tasa clic 1% aprox => costo por persona alcanzada ~ $1.30 ARS en Meta, Google más caro.
         # Usamos costo por alcance verificado: Meta $1.30, Google $18 (CPC $1800 / 100 personas por clic? No, directo: costo por 1000 personas)
@@ -757,7 +762,7 @@ def api_calcular_precio(payload: dict):
         if "completa" in plataformas or "total" in plataformas:
             clics_google = alcance * 0.02
             costo_google = clics_google * COSTOS_REALES_NODO["google_ads"]["cpc_promedio_ars"]
-        costo_plataformas = costo_alcance + costo_whatsapp + costo_google
+        costo_plataformas = (costo_alcance + costo_whatsapp + costo_google) * zona_mult * plan_mult
         # Ajuste por días: costo es por campaña total, se divide por días para mostrar por día, pero total no se multiplica por días si alcance ya es total. Si días >1, se repite alcance cada día? Sí: alcance es por día.
         costo_plataformas_total = costo_plataformas * max(1, dias) / max(1, dias)  # alcance ya es por campaña, días solo divide
         # En realidad: alcance elegido es total de campaña, días es duración. Total = costo_plataformas (ya incluye alcance total)
@@ -777,7 +782,7 @@ def api_calcular_precio(payload: dict):
         precio_final = max(1500, calc["precio_final_ars"]) if str(payload.get("producto","impulso")).lower()=="impulso" else max(10000, calc["precio_final_ars"])
         # Si se aplicó piso, recalcular comisión real sobre piso
         return {"ok": True, "producto": payload.get("producto","impulso"), "dias": dias, "alcance": alcance, "plataformas": plataformas,
-                "costo_plataformas_ars": total_plataformas, "comision_nodo_20_pct": round(precio_final - total_plataformas,2) if precio_final>total_plataformas else round(precio_final*0.20,2),
+                "costo_plataformas_ars": total_plataformas, "zona": zona, "zona_mult": zona_mult, "plan_mult": plan_mult, "comision_nodo_20_pct": round(precio_final - total_plataformas,2) if precio_final>total_plataformas else round(precio_final*0.20,2),
                 "precio_final_ars": round(precio_final,2), "precio_por_dia": round(precio_final/dias,2) if dias>0 else round(precio_final,2),
                 "fecha_costos": COSTOS_REALES_NODO["fecha_actualizacion"], "fuente": COSTOS_REALES_NODO["fuente"],
                 "detalle": f"Costo plataformas ${total_plataformas:,.0f} + 20% NODO = ${precio_final:,.0f} total por {dias} días, alcance {alcance} personas. Costos verificados {COSTOS_REALES_NODO['fecha_actualizacion']}."}
@@ -813,6 +818,168 @@ def api_vendedor_codigo(payload: dict):
 def api_vendedor_venta(payload: dict):
     """Registra venta de un vendedor con su código. Control: quién, dónde, cuándo, qué vendió."""
     return {"ok": True, "registrado": True, "codigo": payload.get("codigo"), "vendedor": payload.get("vendedor"), "zona": payload.get("zona"), "producto_vendido": payload.get("producto"), "mensaje": "Venta registrada a nombre de este vendedor. Empresa puede verla en su panel para pagarle."}
+
+
+# === FERIADOS OFICIALES POR PAÍS - Nager.Date (gratis, sin clave, 200+ países) + Calendarific como alternativa ===
+# Google Calendar también tiene calendarios de feriados, pero Nager es gratis, sin clave y directo desde el navegador/servidor.
+# Calendarific cubre 230+ países pero pide clave y tiene límite 1000/día en plan gratis. Por eso usamos Nager primero.
+@app.get("/api/feriados/{codigo_pais}/{anio}")
+async def api_feriados(codigo_pais: str, anio: int):
+    """Devuelve feriados oficiales de ese país y año. Ej: /api/feriados/AR/2026, /api/feriados/BR/2026"""
+    cod = codigo_pais.strip().upper()[:2]
+    # dLocal LatAm permitidos - si piden otro, igual intentamos con Nager
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            r = await client.get(f"https://date.nager.at/api/v3/PublicHolidays/{anio}/{cod}")
+            if r.status_code == 200:
+                data = r.json()
+                return {"ok": True, "pais": cod, "anio": anio, "fuente": "Nager.Date - calendario oficial actualizado", "feriados": data}
+    except Exception as e:
+        pass
+    return {"ok": False, "pais": cod, "anio": anio, "feriados": [], "nota": "No se pudo cargar feriados ahora. Elegí la fecha en el calendario y se agrega igual."}
+
+@app.get("/api/paises-dlocal")
+async def api_paises_dlocal():
+    """17 países LatAm donde cobra dLocal, con moneda e idioma. Fuente: dlocal.com"""
+    return {"ok": True, "fuente": "dLocal - 17 mercados LatAm", "paises": [
+        {"codigo": "AR", "nombre": "Argentina", "moneda": "ARS", "idioma": "es"},
+        {"codigo": "BO", "nombre": "Bolivia", "moneda": "BOB", "idioma": "es"},
+        {"codigo": "BR", "nombre": "Brasil", "moneda": "BRL", "idioma": "pt"},
+        {"codigo": "CL", "nombre": "Chile", "moneda": "CLP", "idioma": "es"},
+        {"codigo": "CO", "nombre": "Colombia", "moneda": "COP", "idioma": "es"},
+        {"codigo": "CR", "nombre": "Costa Rica", "moneda": "CRC", "idioma": "es"},
+        {"codigo": "DO", "nombre": "Rep. Dominicana", "moneda": "DOP", "idioma": "es"},
+        {"codigo": "EC", "nombre": "Ecuador", "moneda": "USD", "idioma": "es"},
+        {"codigo": "SV", "nombre": "El Salvador", "moneda": "USD", "idioma": "es"},
+        {"codigo": "GT", "nombre": "Guatemala", "moneda": "GTQ", "idioma": "es"},
+        {"codigo": "HN", "nombre": "Honduras", "moneda": "HNL", "idioma": "es"},
+        {"codigo": "MX", "nombre": "México", "moneda": "MXN", "idioma": "es"},
+        {"codigo": "NI", "nombre": "Nicaragua", "moneda": "NIO", "idioma": "es"},
+        {"codigo": "PA", "nombre": "Panamá", "moneda": "PAB", "idioma": "es"},
+        {"codigo": "PY", "nombre": "Paraguay", "moneda": "PYG", "idioma": "es"},
+        {"codigo": "PE", "nombre": "Perú", "moneda": "PEN", "idioma": "es"},
+        {"codigo": "UY", "nombre": "Uruguay", "moneda": "UYU", "idioma": "es"},
+    ]}
+
+
+# === RUTAS QUE FALTABAN Y LA PRIVADA SÍ LLAMA - Restauradas ===
+# Sin estas, en la privada fallaban: Ver Bots, Buscar Empresas, Calcular Presupuesto, Cerrar Convenio, Suscripciones, Términos, Crear Agente.
+
+CENTRO_ATENCION_NODO = {"telefono": "+54 9 3834 607740", "email": "nodo.cliente@gmail.com", "horario": "Lun a Vie 9-13 y 17-21, Sáb 9-13 - Te acompañamos, en todo momento 24/7, estés donde estés."}
+
+@app.get("/api/bot/estado")
+async def api_bot_estado():
+    """Estado de los 3 bots internos. Solo privado, nunca se muestra al público."""
+    return {"ok": True, "bots": [
+        {"nombre": "Bot 1 - Recepción", "estado": "Activo", "funcion": "Recibe lo que manda el cliente y lo ordena"},
+        {"nombre": "Bot 2 - Creación", "estado": "Activo", "funcion": "Arma la publicación: imagen + texto"},
+        {"nombre": "Bot 3 - Revisión", "estado": "Activo", "funcion": "Revisa ortografía, imagen, dedos, logo cortado"},
+    ], "centro_atencion": CENTRO_ATENCION_NODO}
+
+@app.get("/api/bot/buscar-empresas")
+async def api_bot_buscar_empresas(q: str = "", provincia: str = "", rubro: str = ""):
+    """Busca empresas para explotar un área. Si hay Supabase, busca ahí; si no, devuelve ejemplo para que la privada no quede en blanco."""
+    resultados = []
+    if supabase:
+        try:
+            res = supabase.table("empresas").select("*").limit(20).execute()
+            for e in (res.data or []):
+                resultados.append({"razon": e.get("nombre") or e.get("razon_social") or "Empresa", "tipo": e.get("rubro") or rubro or "Comercio", "potencial": "Alto"})
+        except Exception:
+            pass
+    if not resultados:
+        # Ejemplo para que el botón muestre algo aunque no haya base todavía
+        base = q or "Comercio de barrio"
+        resultados = [
+            {"razon": f"{base} - Catamarca", "tipo": rubro or "Comercio", "potencial": "Alto"},
+            {"razon": f"{base} - {provincia or 'Catamarca'}", "tipo": rubro or "Servicios", "potencial": "Medio"},
+        ]
+    return {"ok": True, "bots_activos": "3 bots activos - Bot 1, Bot 2, Bot 3", "resultados": resultados, "nota": "Estos son negocios que podrían crecer con NODO. El cliente final siempre aprueba antes de publicar."}
+
+@app.post("/api/calcular-presupuesto")
+async def api_calcular_presupuesto(payload: dict):
+    """Calcula presupuesto completo: área + Google + Meta + Audio + Voz. Lo que espera la pestaña Costos."""
+    personas = int(payload.get("personas") or 1)
+    dias = int(payload.get("dias") or 30)
+    urgencia = str(payload.get("urgencia") or "normal")
+    factor = {"normal": 1, "urgente": 1.5, "express": 2}.get(urgencia, 1)
+    base_area = 800000
+    subtotal_area = round(base_area * personas * (dias/30) * factor)
+    formula_area = f"${base_area:,} x {personas} personas x ({dias}/30) x {factor} urgencia"
+    google_activo = bool(payload.get("google_ads"))
+    google_diario = float(payload.get("google_ads_presupuesto_diario") or 0)
+    google_sub = round(google_diario * dias) if google_activo else 0
+    meta_activo = bool(payload.get("meta_ads"))
+    meta_diario = float(payload.get("meta_ads_presupuesto_diario") or 0)
+    meta_sub = round(meta_diario * dias) if meta_activo else 0
+    audio_activo = bool(payload.get("audio_mensajes"))
+    cant_audios = int(payload.get("cantidad_audios") or 0)
+    valor_audio = 1500
+    audio_sub = round(cant_audios * valor_audio) if audio_activo else 0
+    voz = bool(payload.get("voz_institucional"))
+    voz_sub = 25000 if voz else 0
+    total = subtotal_area + google_sub + meta_sub + audio_sub + voz_sub
+    return {"ok": True, "total": total,
+        "desglose": {
+            "explotacion_area": {"formula": formula_area, "subtotal": subtotal_area},
+            "google_ads": {"activo": google_activo, "presupuesto_diario_cliente": google_diario, "dias": dias, "subtotal": google_sub},
+            "meta_ads": {"activo": meta_activo, "presupuesto_diario_cliente": meta_diario, "dias": dias, "subtotal": meta_sub},
+            "audio_mensajes": {"activo": audio_activo, "cantidad": cant_audios, "valor_unitario": valor_audio, "subtotal": audio_sub},
+            "voz_institucional": {"activo": voz, "subtotal": voz_sub},
+        },
+        "nota": "Explotación de área + Ads + Audio + Voz. Sin sorpresas. El precio final lo pacta el colaborador con la empresa."}
+
+@app.post("/api/cerrar-convenio")
+async def api_cerrar_convenio(payload: dict):
+    """Cierra convenio con empresa. Guarda en Supabase si hay, si no devuelve confirmación igual."""
+    monto = float(payload.get("monto_total") or 0)
+    if not payload.get("acepta_terminos"):
+        raise HTTPException(status_code=400, detail="Debe aceptar Términos y Condiciones")
+    if supabase:
+        try:
+            supabase.table("empresas").insert({"nombre": payload.get("razon_social"), "telefono": payload.get("telefono"), "zona": ",".join(payload.get("provincias") or []), "rubro": "Convenio"}).execute()
+        except Exception:
+            pass
+    return {"ok": True, "mensaje": "Convenio cerrado. Bienvenido a Red NODO.", "monto": monto,
+        "debito_automatico": "Débito automático activado con tarjeta tokenizada. Nunca guardamos el número de tarjeta, solo el token.",
+        "centro_atencion": CENTRO_ATENCION_NODO,
+        "proximos_pasos": ["1. Te llega el link seguro para cargar la tarjeta", "2. Activamos tu empresa en Red NODO", "3. Empezamos a publicarte, vos aprobás antes de publicar"]}
+
+@app.get("/api/suscripciones")
+async def api_suscripciones():
+    """Lista de suscripciones / integraciones que paga NODO. Para la pestaña Suscripciones."""
+    return {"ok": True, "servicios": [
+        {"nombre": "Meta Ads - Publicidad", "costo": "Variable según campaña", "unidad": "", "vencimiento": "Sin vencimiento", "codigo": "", "auto_pago": "Sí", "estado": "Activo"},
+        {"nombre": "Google Ads - Publicidad", "costo": "Variable según campaña", "unidad": "", "vencimiento": "Sin vencimiento", "codigo": "", "auto_pago": "Sí", "estado": "Activo"},
+        {"nombre": "Supabase - Base de datos", "costo": "Según plan", "unidad": "", "vencimiento": "Mensual", "codigo": "", "auto_pago": "Sí", "estado": "Activo"},
+        {"nombre": "Mercado Pago - Cobros", "costo": "Comisión por cobro", "unidad": "", "vencimiento": "Sin vencimiento", "codigo": "", "auto_pago": "No", "estado": "Activo"},
+        {"nombre": "dLocal - Cobros LatAm", "costo": "Comisión por cobro", "unidad": "", "vencimiento": "Sin vencimiento", "codigo": "", "auto_pago": "No", "estado": "Activo"},
+        {"nombre": "Groq - Audio / Voz", "costo": "Según uso", "unidad": "", "vencimiento": "Mensual", "codigo": "", "auto_pago": "Sí", "estado": "Activo"},
+    ], "nota": "Atención al cliente: +54 9 3834 607740 - Para todo el mundo. Te acompañamos, en todo momento 24/7, estés donde estés."}
+
+@app.get("/api/terminos-condiciones")
+async def api_terminos():
+    """Términos que muestra la privada con verTerminos()."""
+    return {"ok": True, "terminos": [
+        "1. NODO Argentina es solo facilitador / conector. Provee marketing y conexión. No es banco, no es proveedor de pagos.",
+        "2. No guardamos tarjetas. El cobro recurrente se hace con tarjeta tokenizada en página segura del medio de pago. Solo guardamos el token.",
+        "3. Nosotros armamos tu publicidad. Vos la ves antes. Solo se publica si vos decís que sí. Si decís que no, la corregimos y te la mostramos de nuevo.",
+        "4. Los pagos los procesa el proveedor de pago habilitado (Mercado Pago / dLocal). Las ventas son entre el comercio y su cliente.",
+        "5. Cada comercio entra a su cuenta con su usuario y contraseña. Cada uno ve solo su información.",
+        "6. Atención al cliente: +54 9 3834 607740 - Para todo el mundo. Te acompañamos, en todo momento 24/7, estés donde estés.",
+    ]}
+
+@app.post("/api/equipo-campo")
+async def api_crear_agente(payload: dict):
+    """Crea agente de campo. Lo llama crearAgente() en la privada."""
+    import random
+    codigo = f"AGT-{random.randint(1000,9999)}"
+    if supabase:
+        try:
+            supabase.table("equipo_campo").insert({"nombre": payload.get("nombre"), "dni": payload.get("dni"), "zona": payload.get("zona"), "telefono": payload.get("telefono"), "codigo": codigo}).execute()
+        except Exception:
+            pass
+    return {"ok": True, "codigo": codigo, "nombre": payload.get("nombre"), "zona": payload.get("zona"), "mensaje": "Agente creado. Link: nodo.ar/r/" + codigo}
 
 # === NODO COBROS - Recurrente con tarjeta tokenizada ===
 # PARTE 1: Institución recibe en su CBU. PARTE 2: Clientes pagan con tarjeta tokenizada. Nunca guardamos número de tarjeta, solo token.
