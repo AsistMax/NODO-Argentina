@@ -28,7 +28,9 @@ label{font-size:12px;color:var(--muted);margin-top:8px;display:block}
 button{background:var(--gold);color:#000;border:none;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;width:100%}
 button:hover{background:var(--gold2)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:800px){.grid2{grid-template-columns:1fr}}
+@media(max-width:1024px){.container{padding:16px}.kpi{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.header{flex-wrap:wrap;gap:10px;padding:12px}.header a{width:100%;text-align:center}.container{padding:12px}.kpi{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px}.tab{flex-shrink:0}table{display:block;overflow-x:auto}button{padding:14px;font-size:16px}input,select,textarea{font-size:16px;padding:12px}}
+@media(max-width:420px){.kpi{grid-template-columns:1fr}.logo{font-size:14px}}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;background:#1a1a1a;border:1px solid var(--border);font-size:11px;color:var(--muted)}
 .total-box{background:linear-gradient(135deg,#111,#1a1a1a);border:1px solid var(--gold);border-radius:12px;padding:20px;margin-top:16px}
 .total-box .total{font-size:28px;font-weight:800;color:var(--gold)}
@@ -123,6 +125,8 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <label>CUIT / CUIL</label><input id="inc-cuit" placeholder="Ej: 20123456789 - Validación matemática automática">
 <label>Sector</label><select id="inc-sector"><option>Servicios Profesionales</option><option>Salud Privada</option><option>Real Estate</option><option>Finanzas</option><option>Educación</option><option>Automotriz</option><option>Gastronomía</option><option>Hotelería</option><option>Retail</option><option>Construcción</option><option>Agro</option><option>Tecnología</option><option>Energía</option><option>Logística</option><option>Industrial</option><option>Comercio</option><option>Institución</option></select>
 <label>Objetivo</label><input id="inc-objetivo" placeholder="Ej: Captar 50 clientes en Catamarca">
+<label>WhatsApp donde le llegan los leads</label><input id="inc-telefono-destino" placeholder="Ej: 3834607740 - Ahí le llegan los interesados directo">
+<label>Modo de gestión</label><select id="inc-modo-gestion"><option>AUTOGESTION</option><option>GESTION NODO</option></select>
 </div>
 <div>
 <label>Zona Operativa - Provincias donde operar</label>
@@ -424,52 +428,6 @@ async function crearEmpresa(){
  if(verif!==parseInt(cuit[10])){alert('CUIT/CUIL inválido (dígito verificador)'); return;}
  let r=await fetch('/api/empresas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
  if(r.ok){alert('Empresa activada en Red NODO'); 
-async function cerrarConvenio(){
- let data={
-  razon_social:document.getElementById('cierre-razon').value,
-  cuit:document.getElementById('cierre-cuit').value,
-  email:document.getElementById('cierre-email').value,
-  telefono:document.getElementById('cierre-telefono').value,
-  provincias:document.getElementById('cierre-provincias').value.split(',').map(s=>s.trim()).filter(Boolean),
-  monto_total:parseFloat(document.getElementById('cierre-monto').value)||0,
-  acepta_terminos:document.getElementById('cierre-terminos').checked,
-  tarjeta_token:document.getElementById('cierre-token').value||'tok_simulado_'+Date.now()
- };
- let r=await fetch('/api/cerrar-convenio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- document.getElementById('resultado-cierre').style.display='block';
- if(r.ok){
-  document.getElementById('resultado-cierre').innerHTML=`
-   <div style="color:#2ecc71;font-weight:700">${j.mensaje}</div>
-   <div>Monto: $${j.monto.toLocaleString()}</div>
-   <div>${j.debito_automatico}</div>
-   <div style="margin-top:12px"><b>Centro Atención:</b><br>Tel: ${j.centro_atencion.telefono}<br>Email: ${j.centro_atencion.email}</div>
-   <div style="margin-top:8px;font-size:11px">${j.proximos_pasos.join('<br>')}</div>
-  `;
- } else {
-  document.getElementById('resultado-cierre').innerHTML=`<div style="color:#e74c3c">${j.detail||'Error'}</div>`;
- }
-}
-async function verTerminos(){
- let r=await fetch('/api/terminos-condiciones'); let j=await r.json();
- alert(j.terminos.join('\n\n'));
-}
-async function buscarEmpresas(){
- let q=document.getElementById('bot-busqueda').value;
- let prov=document.getElementById('bot-provincia').value;
- let rubro=document.getElementById('bot-rubro').value;
- let r=await fetch(`/api/bot/buscar-empresas?q=${q}&provincia=${prov}&rubro=${rubro}`);
- let j=await r.json();
- document.getElementById('resultado-busqueda').innerHTML=`<div style="margin-top:12px;font-size:12px"><b>${j.bots_activos}</b><br>${j.resultados.map(x=>`- ${x.razon} (${x.tipo}) - Potencial ${x.potencial}`).join('<br>')}<br><br><small>${j.nota}</small></div>`;
-}
-async function verBots(){
- let r=await fetch('/api/bot/estado'); let j=await r.json();
- document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
-}
-actualizarBarra();
-cargarDatos();}
- else alert('Error');
-}
 async function cargarSuscripciones(){
  let r=await fetch('/api/suscripciones'); let j=await r.json();
  let html='<table><tr><th>Servicio</th><th>Costo</th><th>Vencimiento</th><th>Auto-pago</th><th>Estado</th></tr>';
@@ -479,50 +437,6 @@ async function cargarSuscripciones(){
  html+='</table><p style="font-size:11px;color:#888;margin-top:8px">'+j.nota+'</p>';
  document.getElementById('lista-suscripciones').innerHTML=html;
 }
-async function cerrarConvenio(){
- let data={
-  razon_social:document.getElementById('cierre-razon').value,
-  cuit:document.getElementById('cierre-cuit').value,
-  email:document.getElementById('cierre-email').value,
-  telefono:document.getElementById('cierre-telefono').value,
-  provincias:document.getElementById('cierre-provincias').value.split(',').map(s=>s.trim()).filter(Boolean),
-  monto_total:parseFloat(document.getElementById('cierre-monto').value)||0,
-  acepta_terminos:document.getElementById('cierre-terminos').checked,
-  tarjeta_token:document.getElementById('cierre-token').value||'tok_simulado_'+Date.now()
- };
- let r=await fetch('/api/cerrar-convenio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- document.getElementById('resultado-cierre').style.display='block';
- if(r.ok){
-  document.getElementById('resultado-cierre').innerHTML=`
-   <div style="color:#2ecc71;font-weight:700">${j.mensaje}</div>
-   <div>Monto: $${j.monto.toLocaleString()}</div>
-   <div>${j.debito_automatico}</div>
-   <div style="margin-top:12px"><b>Centro Atención:</b><br>Tel: ${j.centro_atencion.telefono}<br>Email: ${j.centro_atencion.email}</div>
-   <div style="margin-top:8px;font-size:11px">${j.proximos_pasos.join('<br>')}</div>
-  `;
- } else {
-  document.getElementById('resultado-cierre').innerHTML=`<div style="color:#e74c3c">${j.detail||'Error'}</div>`;
- }
-}
-async function verTerminos(){
- let r=await fetch('/api/terminos-condiciones'); let j=await r.json();
- alert(j.terminos.join('\n\n'));
-}
-async function buscarEmpresas(){
- let q=document.getElementById('bot-busqueda').value;
- let prov=document.getElementById('bot-provincia').value;
- let rubro=document.getElementById('bot-rubro').value;
- let r=await fetch(`/api/bot/buscar-empresas?q=${q}&provincia=${prov}&rubro=${rubro}`);
- let j=await r.json();
- document.getElementById('resultado-busqueda').innerHTML=`<div style="margin-top:12px;font-size:12px"><b>${j.bots_activos}</b><br>${j.resultados.map(x=>`- ${x.razon} (${x.tipo}) - Potencial ${x.potencial}`).join('<br>')}<br><br><small>${j.nota}</small></div>`;
-}
-async function verBots(){
- let r=await fetch('/api/bot/estado'); let j=await r.json();
- document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
-}
-actualizarBarra();
-cargarDatos();
 async function publicarBarrio(){
  let data={
   titulo:document.getElementById('barrio-titulo').value,
