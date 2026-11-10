@@ -79,7 +79,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px
 <input type="range" id="diasImpulso" min="1" max="30" value="3" oninput="calcImpulso()">
 <div><b id="diasImpVal">3 días</b> — <span id="alcanceImpVal">Alcance: 1.500 personas</span> — <b id="precioFinalVal" style="color:#D4AF37">Total: $2.340</b></div>
 <p id="alcanceCalcImp" class="small">1 día = 500 personas. 15 días = 7.500 personas. A más días, más personas y más precio. Precio real según zona, días y plan.</p>
-<div class="grid"><div><label data-i18n="pais">País — Solo países donde cobramos con dLocal</label>
+<div class="grid"><div><label data-i18n="pais">País</label>
 <select id="paisPubli" onchange="cambiarPais()">
 <option value="AR" data-moneda="ARS" data-idioma="es" selected>Argentina — ARS</option>
 <option value="BO" data-moneda="BOB" data-idioma="es">Bolivia — BOB</option>
@@ -99,33 +99,33 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px
 <option value="PE" data-moneda="PEN" data-idioma="es">Perú — PEN</option>
 <option value="UY" data-moneda="UYU" data-idioma="es">Uruguay — UYU</option>
 </select>
-<p class="small" id="paisInfo">Cobro local con dLocal en tu moneda. Si cambiás de país, cambia el idioma, la moneda y los feriados automáticamente.</p>
+<p class="small" id="paisInfo">Te acompañamos, en todo momento 24/7, estés donde estés. Elegí tu país y seguimos. Cobro en tu moneda. Si cambiás de país, cambia el idioma, la moneda y los feriados automáticamente.</p>
 <label>Idioma</label><select id="idiomaPubli" onchange="aplicarIdioma(this.value)"><option value="es" selected>Español</option><option value="pt">Português (Brasil)</option><option value="en">English</option></select>
 </div><div><label data-i18n="provincia">Provincia / Estado / Departamento — según tu país</label><select id="provinciaPubli" onchange="calcImpulso()"></select>
-<p class="small">Elegí primero el país. Después te mostramos solo las provincias de ese país.</p></div></div>
-<div class="grid"><div><label>¿Dónde querés publicar? — El precio cambia por kilometraje / zona</label>
+<p class="small">Elegí tu país y después tu provincia.</p></div></div>
+<div class="grid"><div><label>¿Dónde querés publicar?</label>
 <select id="zonaPubli" onchange="calcImpulso()">
-<option value="local" data-mult="1">Mi localidad / mi barrio — x1</option>
-<option value="provincia" data-mult="1.4">Mi provincia / estado — x1,4</option>
-<option value="pais" data-mult="2.2">Todo el país — x2,2</option>
-<option value="latam" data-mult="2.8">Latinoamérica — x2,8</option>
+<option value="local" data-mult="1">Mi localidad / mi barrio</option>
+<option value="provincia" data-mult="1.4">Mi provincia / estado</option>
+<option value="pais" data-mult="2.2">Todo el país</option>
+<option value="latam" data-mult="2.8">Latinoamérica</option>
 </select>
-<p class="small" id="zonaExplica">Mi localidad: mismo precio base. Provincia: más km, más gente, sube. Todo el país: mucho más alcance, sube más. Facebook cobra por kilometraje y por cantidad de personas.</p>
+<p class="small" id="zonaExplica">Empezás en tu barrio y llegás hasta donde quieras. Te acompañamos, en todo momento 24/7, estés donde estés.</p>
 </div><div><label>Localidad</label><input id="localidadPubli" placeholder="Ej: San Fernando del Valle"><label>Código Postal</label><input placeholder="Ej: 4700"></div></div>
 <div class="grid"><div><label>Localidad</label><input id="localidadPubli" placeholder="Ej: San Fernando del Valle"></div><div><label>Código Postal</label><input placeholder="Ej: 4700"></div></div>
 <div><label>Plan — Elegí qué querés que incluya</label>
 <select id="plats" onchange="calcImpulso()">
-<option value="basica">Básica — WhatsApp + Facebook — x1</option>
-<option value="completa">Completa — WhatsApp + Facebook + Google — x1,5</option>
-<option value="total">Total — Todas + Diseño + Audio — x2,1</option>
+<option value="basica">Básica — WhatsApp + Facebook</option>
+<option value="completa">Completa — WhatsApp + Facebook + Google</option>
+<option value="total">Total — Todas + Diseño + Audio</option>
 </select>
-<p class="small">Básica es la más barata. Completa suma Google, sale más cara porque pagás más leads. Total suma todas + diseño + audio, es la más cara porque lleva más trabajo y más plataformas. Si elegís Total, el precio sube, como tiene que ser.</p></div>
-<p><b>Desglose:</b> <span id="calcTxt">Costo plataformas + 20% NODO = Total final. Sin sorpresas.</span></p>
+<p class="small">Básica: WhatsApp + Facebook. Completa: suma Google para llegar a más gente. Total: todas + diseño + audio, para que tu negocio se vea completo.</p></div>
+<p><b>Tu precio final:</b> <span id="calcTxt">Todo incluido. Sin sorpresas.</span></p>
 <p id="ejemploPrecio" class="small" style="background:#000;border:1px solid #333;border-radius:8px;padding:10px">Ejemplo: 15 días en tu localidad con Básica = 7.500 personas. Si cambiás a Provincia o a Todo el país, el mismo 15 días sale más caro, porque es más km y más personas. Si cambiás a Total, también sube.</p>
 <h3 data-i18n="calendario">Programá tu calendario</h3>
 <p class="small">Elegí cuándo querés que salga. Podés marcar varias opciones juntas. Si marcás Lunes a Viernes + Fin de semana, es todos los días. Si sumás Feriados, también sale los feriados.</p>
 <div id="chipsCalendario"><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Lunes a Viernes</span><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Fin de semana</span><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Feriados</span></div>
-<div style="background:#000;border:1px solid #333;border-radius:12px;padding:12px;margin-top:10px"><b>Feriados en <span id="nombrePaisFeriado">Argentina</span> — <span id="anioFeriado">2026</span></b><p class="small">Calendario oficial actualizado. Tocá un feriado para agregarlo a tu campaña.</p><div id="listaFeriados"><p class="small">Cargando feriados...</p></div><p class="small" id="feriadosSeleccionados"></p></div>
+<div style="background:#000;border:1px solid #333;border-radius:12px;padding:12px;margin-top:10px"><b>Feriados en <span id="nombrePaisFeriado">Argentina</span> — <span id="anioFeriado">2026</span></b><p class="small">Tocá un feriado para agregarlo a tu campaña.</p><div id="listaFeriados"><p class="small">Cargando feriados...</p></div><p class="small" id="feriadosSeleccionados"></p></div>
 <label>Fecha de inicio</label><input type="date" id="fechaInicio">
 <label>Elegí días específicos en el calendario</label><input type="date" id="fechaEspecifica"><p class="small">Elegí en el calendario el día que querés — por ejemplo Día del Niño, Reyes, Día de la Madre — y se agrega a tu campaña. Podés agregar varios días.</p>
 <label>Días específicos (separados por coma)</label><input id="diasEspecificos" placeholder="Ej: 12/05, 13/05, 20/05">
@@ -142,24 +142,24 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px
 <label>Mail</label><input placeholder="mail@ejemplo.com">
 <button class="btn" onclick="alert('Listo. Tu publicación quedó registrada. Te contactamos para activarla.')">Publicar ahora</button></div>
 <div class="card" id="form-cobros"><h2>NODO COBROS - Cobro recurrente</h2>
-<p class="small">Por CBU solo NO se puede cobrar. Por eso el cobro recurrente se hace con tarjeta tokenizada. Nosotros nunca vemos ni guardamos el número de la tarjeta. La tarjeta se carga en página segura del medio de pago y se guarda solo un token.</p>
+<p class="small">El cobro se hace con tarjeta, en una página segura. Nosotros nunca vemos ni guardamos el número de tu tarjeta.</p>
 <h3 style="color:#D4AF37">PARTE 1 - El que recibe: tu institución / comercio</h3>
-<p class="small">Acá van tus datos para que te llegue la plata. Tu CBU es para RECIBIR, no para cobrarle a nadie.</p>
+<p class="small">Acá van tus datos para que te llegue la plata. Tu CBU es para que te llegue la plata.</p>
 <div class="grid"><div><label>CUIT</label><input placeholder="Ej: 20-12345678-9"></div><div><label>Nombre institución / comercio</label><input placeholder="Ej: Club, Colegio, Gremio"></div></div>
 <div class="grid"><div><label>Representante</label><input placeholder="Nombre y apellido"></div><div><label>DNI Representante</label><input placeholder="DNI"></div></div>
-<div class="grid"><div><label>CBU para que te llegue la plata (recibir)</label><input placeholder="CBU - 22 dígitos"></div><div><label>Mail</label><input placeholder="mail@ejemplo.com"></div></div>
+<div class="grid"><div><label>CBU para que te llegue la plata</label><input placeholder="CBU - 22 dígitos"></div><div><label>Mail</label><input placeholder="mail@ejemplo.com"></div></div>
 <div class="grid"><div><label>Teléfono</label><input placeholder="383..."></div><div><label>¿Qué cobrás?</label><input placeholder="Ej: Cuota socios"></div></div>
 <div class="grid"><div><label>Monto por cuota</label><input placeholder="Ej: 10000"></div><div><label>Frecuencia</label><select><option>Mensual</option><option>Quincenal</option><option>Semanal</option></select></div></div>
 <div class="grid"><div><label>Día de cobro</label><select><option>Día 5 de cada mes</option><option>Día 1 de cada mes</option><option>Día 10 de cada mes</option></select></div><div><label>¿Cómo querés cargar a tus clientes?</label><select><option>Yo cargo la lista de mis clientes</option><option>Que les llegue un link para que cada uno ponga su tarjeta</option></select></div></div>
 <h3 style="color:#D4AF37;margin-top:16px">PARTE 2 - Los que pagan: tus clientes / alumnos / socios</h3>
-<p class="small">Cada cliente / alumno / socio pone SUS datos y SU tarjeta en página segura del medio de pago. Nosotros nunca vemos el número. Se guarda solo un token y se cobra solo todos los meses.</p>
+<p class="small">Cada cliente / alumno / Cada socio pone sus datos y su tarjeta en una página segura. Nosotros nunca vemos el número. Se cobra solo todos los meses.</p>
 <div class="grid"><div><label>Nombre completo como figura en la tarjeta</label><input placeholder="Ej: Juan Pérez"></div><div><label>DNI del titular de la tarjeta</label><input placeholder="DNI"></div></div>
 <div class="grid"><div><label>Mail del cliente</label><input placeholder="mail@ejemplo.com"></div><div><label>WhatsApp del cliente</label><input placeholder="383..."></div></div>
 <div class="grid"><div><label>Tarjeta - Número (se carga en página segura, no la vemos)</label><input placeholder="**** **** **** ****" disabled></div><div><label>Vencimiento / Código</label><input placeholder="MM/AA - CVV" disabled></div></div>
-<p class="small">⚠️ La tarjeta se carga en página segura del medio de pago (Mercado Pago / Pago TIC). Nosotros no vemos ni guardamos el número. Solo guardamos el token para cobrar todos los meses. El cliente acepta: "Autorizo que me debiten todos los meses."</p>
+<p class="small">⚠️ Tu tarjeta se carga en una página segura. Nosotros nunca vemos ni guardamos el número de tu tarjeta. El cliente acepta: "Autorizo que me debiten todos los meses."</p>
 <label><input type="checkbox" style="width:auto"> Acepto que me debiten todos los meses el monto de la cuota.</label><br><br>
-<button class="btn" onclick="alert('Listo. Tu solicitud de NODO COBROS quedó registrada. Le mandamos el link seguro a cada cliente para que ponga su tarjeta tokenizada.')">Quiero Cobro Recurrente</button>
-<p class="small">Ejemplo: Gremio de Catamarca cobra $10.000 por mes a 50 socios. Cada socio pone su tarjeta una vez con token. El 5 de cada mes se cobra solo. Lo que no paga, se reintenta y se avisa.</p></div>
+<button class="btn" onclick="alert('Listo. Tu solicitud de NODO COBROS quedó registrada. Le mandamos el link seguro a cada cliente para que ponga su tarjeta.')">Quiero Cobro Recurrente</button>
+<p class="small">Ejemplo: Gremio de Catamarca cobra $10.000 por mes a 50 socios. Cada socio pone su tarjeta una vez. El 5 de cada mes se cobra solo. Lo que no paga, se reintenta y se avisa.</p></div>
 <div class="card" id="mis-resultados"><h2>Ver mis resultados</h2><p>Entrá con tu usuario y contraseña y mirá cómo va tu campaña, en vivo. Cada uno ve solo lo suyo.</p><p class="small">Acá ves: cuántas personas vieron tu publicación, cuántas hicieron clic, cuántos mensajes te llegaron a WhatsApp, cuántos leads (personas que preguntaron) y cuántas ventas registraste. Todo en un solo lugar.</p>
 <button class="btn" onclick="abrirLogin()">Ingresar a mis resultados</button>
 <div id="panelUsuario" style="display:none;margin-top:16px">
@@ -221,7 +221,7 @@ PE: ["Lima","Callao","Arequipa","Cusco","Piura","La Libertad","Lambayeque","Jun�
 UY: ["Montevideo","Canelones","Maldonado","Colonia","Salto","Paysandú","Rivera","Tacuarembó","Durazno","Florida","Rocha","Soriano","Artigas","Cerro Largo","Flores","Lavalleja","Río Negro","San José","Treinta y Tres"]
 };
 const TRAD = {
-es: {pais:"País — Solo países donde cobramos con dLocal", provincia:"Provincia / Estado / Departamento — según tu país", calendario:"Programá tu calendario"},
+es: {pais:"País", provincia:"Provincia / Estado / Departamento — según tu país", calendario:"Programá tu calendario"},
 pt: {pais:"País — Só países onde cobramos com dLocal", provincia:"Província / Estado / Departamento — conforme seu país", calendario:"Programe seu calendário"},
 en: {pais:"Country — Only countries where we charge with dLocal", provincia:"Province / State / Department — by your country", calendario:"Schedule your calendar"}
 };
@@ -233,7 +233,7 @@ function cambiarPais(){
   const selId=document.getElementById('idiomaPubli'); if(selId) selId.value=idioma;
   aplicarIdioma(idioma);
   const prov=document.getElementById('provinciaPubli'); if(prov){ prov.innerHTML=''; (PROVINCIAS_POR_PAIS[cod]||[]).forEach(p=>{ const o=document.createElement('option'); o.text=p; prov.appendChild(o); }); }
-  const info=document.getElementById('paisInfo'); if(info) info.innerText='Cobro local con dLocal en '+moneda+' ('+nombre+'). Idioma, moneda y feriados se ajustan solos a tu país.';
+  const info=document.getElementById('paisInfo'); if(info) info.innerText='Te acompañamos, en todo momento 24/7, estés donde estés. Elegí tu país y seguimos. Cobro en '+moneda+' ('+nombre+'). ';
   const np=document.getElementById('nombrePaisFeriado'); if(np) np.innerText=nombre;
   cargarFeriados(cod);
   calcImpulso();
@@ -303,8 +303,8 @@ function calcImpulso(){
   const pEl=document.getElementById('precioFinalVal'); if(pEl) pEl.innerText='Total: $'+totalFinal.toLocaleString('es-AR');
   const aCalc=document.getElementById('alcanceCalcImp'); if(aCalc) aCalc.innerText=dias+' días = '+alcance.toLocaleString('es-AR')+' personas ('+alcancePorDia.toLocaleString('es-AR')+' por día en '+(prod==='impulso'?'Impulso':'Expansión')+'). A más días, más personas y más precio.';
   const mEl=document.getElementById('montoVal'); if(mEl) mEl.innerText='$'+totalFinal.toLocaleString('es-AR');
-  const calc=document.getElementById('calcTxt'); if(calc) calc.innerText='Producto '+(prod==='impulso'?'Impulso':'Expansión')+' — Zona '+zonaTxt+' — Plan '+planTxt+' — Costo plataformas $'+costoPlat.toLocaleString('es-AR')+' + 20% NODO = Total $'+totalFinal.toLocaleString('es-AR')+' por '+dias+' días. Alcance '+alcance.toLocaleString('es-AR')+' personas. Facebook cobra por km y por personas: por eso Provincia y Todo el país salen más que tu localidad, y Total sale más que Básica.';
-  const ej=document.getElementById('ejemploPrecio'); if(ej) ej.innerText='Ejemplo: '+dias+' días en '+zonaTxt+' con '+planTxt+' = '+alcance.toLocaleString('es-AR')+' personas, Total $'+totalFinal.toLocaleString('es-AR')+'. Si cambiás a Todo el país o a Total, el precio sube, como tiene que ser.';
+  const calc=document.getElementById('calcTxt'); if(calc) calc.innerText='Tu precio final por '+dias+' días. Alcance '+alcance.toLocaleString('es-AR')+' personas.';
+  const ej=document.getElementById('ejemploPrecio'); if(ej) ej.innerText='Ejemplo: '+dias+' días en '+ (prod==='impulso'?'Impulso':'Expansión') + ' — Total $'+totalFinal.toLocaleString('es-AR')+'.';
 }
 function hacerLogin(){
   const u=document.getElementById('loginUser').value.trim();
