@@ -39,11 +39,36 @@ th{color:var(--muted);font-weight:600}
 </style>
 </head>
 <body>
+<!-- LOGIN NODO - Panel Admin Oculto - Clave segura, no se muestra contraseña -->
+<div id="loginOverlay" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#111;border:2px solid #D4AF37;border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center;">
+    <h1 style="color:#D4AF37;margin:0;">NODO ARGENTINA</h1>
+    <p style="color:#aaa;font-size:13px;">Panel Administrador - Solo equipo NODO</p>
+    <input id="claveAdmin" type="password" placeholder="Clave privada" style="width:100%;padding:12px;margin:12px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff;">
+    <button onclick="loginAdmin()" style="width:100%;background:#D4AF37;color:#000;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer;">Ingresar</button>
+    <p style="font-size:12px;color:#888;margin-top:10px;">Si no tenés clave, volvé a <a href="/" style="color:#D4AF37;">nodo-argentina.onrender.com</a> (público)</p>
+    <p id="loginError" style="color:#FF4444;font-size:12px;"></p>
+  </div>
+</div>
+<script>
+async function loginAdmin(){
+  const c = document.getElementById('claveAdmin').value;
+  try{
+    const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clave:c})});
+    const j = await r.json();
+    if(j.ok){ document.getElementById('loginOverlay').style.display='none'; }
+    else{ document.getElementById('loginError').innerText='Clave incorrecta'; }
+  }catch(e){ document.getElementById('loginError').innerText='Error: '+e; }
+}
+document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key==='Enter') loginAdmin(); });
+</script>
 <div class="header">
 <div class="logo">NODO <span>ARGENTINA</span> - SISTEMA PAÍS</div>
+<a href="/" style="background:#D4AF37;color:#000;padding:8px 14px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px;white-space:nowrap">← Volver a Página Pública</a>
 <div class="status">Groq <b>Activo</b> | Meta <b>Activo</b> | Google Ads <b>Pendiente RapiPago</b></div>
 </div>
 <div class="container">
+<div style="margin-bottom:12px"><a id="btn-volver-publico" href="/" style="display:inline-block;background:#D4AF37;color:#000;padding:10px 16px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px">← Volver a Página Pública (lo que ve la gente)</a> <span style="font-size:12px;color:#888">Estás en la parte privada. El público entra por / y ve otra página.</span></div>
 <div class="tabs">
 <div class="tab active" data-tab="adm">PANEL ADM</div>
 <div class="tab" data-tab="crm">CRM</div>
@@ -51,6 +76,7 @@ th{color:var(--muted);font-weight:600}
 <div class="tab" data-tab="incorporacion">INCORPORACIÓN</div>
 <div class="tab" data-tab="costos">CÁLCULO COSTOS</div>
 <div class="tab" data-tab="cierre">CIERRE AUTOMÁTICO</div>
+<div class="tab" data-tab="barrio" style="background:var(--gold);color:#000;font-weight:800">MODO BARRIO - RÁPIDO</div>
 <div class="tab" data-tab="suscripciones">SUSCRIPCIONES Y PAGOS</div>
 </div>
 <!-- PANEL ADM -->
@@ -173,6 +199,69 @@ th{color:var(--muted);font-weight:600}
 </div>
 </div>
 </div>
+<!-- MODO BARRIO - PUBLICACIÓN RÁPIDA -->
+<div id="tab-barrio" class="tab-content" style="display:none">
+<div class="grid2">
+<div class="card" style="border:1px solid var(--gold)">
+<h3>🚀 MODO BARRIO - Publicación Rápida (Sin tanto formulario)</h3>
+<div class="mono" style="font-size:10px;color:var(--muted)">Para el que vende zapatos HOY con $2000. Sin CUIT, sin tanta info. Publica YA en el barrio. Barra tipo Facebook que calcula días y alcance automático.</div>
+<label>¿Qué vendés? (Título)</label><input id="barrio-titulo" placeholder="Ej: Vendo par de zapatos Nike 42 - Nuevos">
+<label>Descripción corta</label><textarea id="barrio-desc" rows="2" placeholder="Ej: Zapatos nuevos, talle 42, $15.000, barrio Centro"></textarea>
+<label>Presupuesto total que tenés ($)</label>
+<input type="range" id="barrio-presupuesto-range" min="500" max="20000" step="500" value="2000" oninput="actualizarBarra()">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+<span class="badge">$500</span>
+<input id="barrio-presupuesto" type="number" value="2000" style="width:100px;text-align:center;font-weight:800" oninput="document.getElementById('barrio-presupuesto-range').value=this.value; actualizarBarra()">
+<span class="badge">$20.000</span>
+</div>
+<div style="margin-top:12px">
+<label>Barra Facebook - Días calculados automáticamente según monto</label>
+<div style="height:8px;background:#111;border-radius:4px;overflow:hidden;border:1px solid var(--border)">
+<div id="barra-progreso" style="height:100%;background:var(--gold);width:20%;transition:width 0.3s"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:9px;margin-top:4px" class="mono">
+<span>1 día</span><span id="barra-dias" style="font-weight:800">6 días</span><span>30 días</span>
+</div>
+</div>
+<label>Zona - Barrio / Ciudad</label><select id="barrio-zona" onchange="actualizarBarra()"><option>Barrio - 2km a la redonda</option><option>Catamarca - Ciudad</option><option>Catamarca - Todo</option><option>La Rioja</option><option>Todo el país</option></select>
+<label>WhatsApp destino (donde le llegan interesados directo - AUTOGESTION)</label><input id="barrio-wsp" placeholder="3834...">
+<button class="gold" onclick="publicarBarrio()" style="margin-top:12px">PUBLICAR YA EN EL BARRIO - MODO RÁPIDO</button>
+<div id="resultado-barrio" class="total-box" style="display:none"></div>
+</div>
+<div>
+<div class="card">
+<h3>📊 Cálculo Barra Tipo Facebook - En Tiempo Real</h3>
+<div id="calculo-barrio" class="config">
+Mueve la barra de presupuesto y ve cómo cambia automáticamente días y alcance.<br><br>
+Ejemplo $2000 en barrio: 6 días x $333/día = 15.000-25.000 personas ven tu publicación, 300-600 interesados.
+</div>
+<div id="detalle-barrio" style="margin-top:10px"></div>
+</div>
+<div class="card" style="margin-top:10px">
+<h3>🛠️ Herramientas que usamos para no gastar fortuna</h3>
+<div style="font-size:10px" class="mono">
+<div style="padding:6px;border-bottom:1px solid #111"><b>WhatsApp 3834607740</b> - Gratis 30/día + estados - Audio voz argentina Groq (no texto frío)</div>
+<div style="padding:6px;border-bottom:1px solid #111"><b>Facebook Marketplace + Grupos</b> - Gratis - Publica en grupos compra/venta Catamarca</div>
+<div style="padding:6px;border-bottom:1px solid #111"><b>Google My Business</b> - Gratis - Aparece en Maps cuando buscan "zapatos cerca"</div>
+<div style="padding:6px;border-bottom:1px solid #111"><b>Instagram Orgánico</b> - Gratis - Stories con #Catamarca</div>
+<div style="padding:6px;border-bottom:1px solid #111"><b>TikTok Orgánico</b> - Gratis - Video 15seg con audio Groq</div>
+<div style="padding:6px;background:rgba(212,175,55,0.1);border:1px solid var(--gold);border-radius:6px;margin-top:6px"><b>Meta Ads Hiperlocal</b> - Desde $300/día - Solo 2km barrio - CPM $80 barrio vs $400 CABA - Muy barato</div>
+</div>
+<div class="config" style="margin-top:8px">Estrategia: 80% herramientas gratis + 20% Meta barato. No pagas TikTok Ads caro. Costo NODO casi $0, solo lo que paga cliente en Meta.</div>
+</div>
+<div class="card" style="margin-top:10px;border:1px solid var(--gold)">
+<h3>⭐ Diferencial NODO - Por qué no somos uno más</h3>
+<div class="mono" style="font-size:10px;line-height:1.6">
+● No solo publicación: damos comprobante con link, ID, foto, GPS del interesado<br>
+● Audio WhatsApp con voz argentina, no texto frío<br>
+● Hiperlocal real 2km, no toda la provincia<br>
+● Si vende, escala a MODO TOP programable por provincia/país con calendario<br>
+● Publica en 5 lugares a la vez sin costo extra
+</div>
+</div>
+</div>
+</div>
+</div>
 <!-- SUSCRIPCIONES -->
 <div id="tab-suscripciones" class="tab-content" style="display:none">
 <div class="card"><h3>Suscripciones y Pagos - Sistema País</h3><p style="font-size:12px;color:var(--muted)">Bots calculan vencimientos automáticamente. Pago tokenizado con MP, nunca sin crédito.</p><div id="lista-suscripciones"></div></div>
@@ -192,19 +281,19 @@ document.querySelectorAll('.tab').forEach(t=>{
 });
 async function cargarDatos(){
  try{
-  let r = await fetch('/api/empresas'); let empresas = await r.json();
-  document.getElementById('kpi-empresas').innerText = empresas.length;
+  let r = await fetch('/api/empresas'); let _e = await r.json(); let empresas = Array.isArray(_e) ? _e : (_e.empresas || []);
+  document.getElementById('kpi-empresas').innerText = empresas.length || 0;
   if(empresas.length>0){
    let html='<table><tr><th>Razón Social</th><th>CUIT</th><th>Zona</th></tr>';
    empresas.forEach(e=>{html+=`<tr><td>${e.razon_social||e.nombre||''}</td><td>${e.cuit||''}</td><td>${(e.provincias||[]).join(', ')}</td></tr>`});
    html+='</table>'; document.getElementById('lista-empresas').innerHTML=html;
   }
-  r = await fetch('/api/crm'); let crm = await r.json();
-  document.getElementById('kpi-leads').innerText = crm.length;
-  r = await fetch('/api/equipo-campo'); let equipo = await r.json();
-  document.getElementById('kpi-agentes').innerText = equipo.length;
-  document.getElementById('kpi-area').innerText = equipo.length;
- }catch(e){console.log(e)}
+  r = await fetch('/api/crm'); let _c = await r.json(); let crm = Array.isArray(_c) ? _c : (_c.leads || []);
+  document.getElementById('kpi-leads').innerText = crm.length || 0;
+  r = await fetch('/api/equipo-campo'); let _q = await r.json(); let equipo = Array.isArray(_q) ? _q : (_q.equipo || []);
+  document.getElementById('kpi-agentes').innerText = equipo.length || 0;
+  document.getElementById('kpi-area').innerText = equipo.length || 0;
+ }catch(e){console.log(e); ['kpi-empresas','kpi-leads','kpi-area','kpi-agentes'].forEach(id=>{let el=document.getElementById(id); if(el && (el.innerText==='undefined'||!el.innerText)) el.innerText='0';});}
 }
 async function crearAgente(){
  let data={nombre:document.getElementById('ag-nombre').value, dni:document.getElementById('ag-dni').value, zona:document.getElementById('ag-zona').value, telefono:document.getElementById('ag-tel').value};
@@ -254,6 +343,7 @@ async function verBots(){
  let r=await fetch('/api/bot/estado'); let j=await r.json();
  document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
 }
+actualizarBarra();
 cargarDatos();
 }
 function calcularArea(){
@@ -319,7 +409,7 @@ async function crearEmpresa(){
   sector:document.getElementById('inc-sector').value,
   objetivo:document.getElementById('inc-objetivo').value,
   descripcion:document.getElementById('inc-desc').value,
-  provincias:provincias,
+  telefono_destino_leads:document.getElementById('inc-telefono-destino').value, modo_gestion:document.getElementById('inc-modo-gestion').value, whatsapp_destino:document.getElementById('inc-telefono-destino').value, provincias:provincias,
   created_at:new Date().toISOString()
  };
  // Validación CUIT/CUIL matemática
@@ -376,6 +466,7 @@ async function verBots(){
  let r=await fetch('/api/bot/estado'); let j=await r.json();
  document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
 }
+actualizarBarra();
 cargarDatos();}
  else alert('Error');
 }
@@ -430,7 +521,61 @@ async function verBots(){
  let r=await fetch('/api/bot/estado'); let j=await r.json();
  document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
 }
+actualizarBarra();
 cargarDatos();
+async function publicarBarrio(){
+ let data={
+  titulo:document.getElementById('barrio-titulo').value,
+  descripcion:document.getElementById('barrio-desc').value,
+  presupuesto_total:parseFloat(document.getElementById('barrio-presupuesto').value)||2000,
+  zona:document.getElementById('barrio-zona').value,
+  whatsapp:document.getElementById('barrio-wsp').value,
+  tipo:'producto',
+  modo:'barrio'
+ };
+ if(!data.titulo){ alert('Poné qué vendés'); return; }
+ let r=await fetch('/api/campana-rapida',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+ let j=await r.json();
+ document.getElementById('resultado-barrio').style.display='block';
+ document.getElementById('resultado-barrio').innerHTML=`
+  <div class="mono" style="font-size:11px"><b>${j.modo}</b><br>Título: ${j.datos.titulo}<br>Zona: ${j.datos.zona}<br>Total cliente: $${j.datos.presupuesto_total_cliente} (Ads $${j.datos.ads_real} + Comisión $${j.datos.comision_nodo_20_adentro} 20% adentro) - ${j.datos.dias} días x $${j.datos.presupuesto_diario_total}/día total</div>
+  <div style="margin-top:8px"><b>Alcance:</b> ${j.calculo_barra_facebook.alcance_estimado} personas<br><b>Interesados:</b> ${j.calculo_barra_facebook.personas_interesadas}</div>
+  <div style="margin-top:8px;font-size:10px" class="mono"><b>Herramientas:</b><br>${j.herramientas_recomendadas.map(h=>`● ${h.nombre} - $${h.costo} - ${h.alcance}`).join('<br>')}</div>
+  <div style="margin-top:8px;font-size:10px;background:rgba(212,175,55,0.1);padding:8px;border-radius:6px" class="mono"><b>Diferencial:</b><br>${j.diferencial_nodo.join('<br>')}</div>
+ `;
+ document.getElementById('detalle-barrio').innerHTML=`<div class="total-box"><div class="mono" style="font-size:10px">Alcance: ${j.calculo_barra_facebook.alcance_estimado}<br>Interesados: ${j.calculo_barra_facebook.personas_interesadas}<br>CPM: $${j.calculo_barra_facebook.cpm}</div><div class="total">$${j.datos.presupuesto_total} - ${j.datos.dias} días</div></div>`;
+}
+function actualizarBarra(){
+ let presupuesto = parseFloat(document.getElementById('barrio-presupuesto').value)||2000;
+ let zona = document.getElementById('barrio-zona').value;
+ // Lógica simple barra Facebook
+ let diario_min = 300;
+ if(zona.includes('Catamarca')) diario_min = 400;
+ if(zona.includes('Todo')) diario_min = 800;
+ let dias = Math.max(1, Math.min(30, Math.floor(presupuesto / diario_min)));
+ let porcentaje = (dias/30)*100;
+ document.getElementById('barra-progreso').style.width = porcentaje + '%';
+ document.getElementById('barra-dias').innerText = dias + ' días';
+ 
+ // Estimación alcance
+ let cpm = 80;
+ if(zona.includes('Catamarca')) cpm = 120;
+ if(zona.includes('Todo')) cpm = 350;
+ let total_cliente = presupuesto; // Presupuesto total ya incluye 20%
+ let ads_real = total_cliente / 1.2;
+ let comision = total_cliente - ads_real;
+ let alcance_min = Math.floor((ads_real / cpm) * 1000 * 0.7);
+ let alcance_max = Math.floor((ads_real / cpm) * 1000 * 1.3);
+ 
+ document.getElementById('calculo-barrio').innerHTML=`
+  <b>$${presupuesto} total (ya con 20% adentro)</b> en <b>${zona}</b><br>
+  → Ads real: $${Math.round(ads_real)} + Comisión NODO 20%: $${Math.round(comision)} = Total $${presupuesto}<br>
+  → ${dias} días x $${Math.round(presupuesto/dias)}/día total (ads real $${Math.round(ads_real/dias)}/día)<br>
+  → Alcance: ${alcance_min.toLocaleString()} - ${alcance_max.toLocaleString()} personas<br>
+  → Interesados: ${Math.floor(alcance_min*0.02)} - ${Math.floor(alcance_max*0.04)}<br>
+  → CPM: $${cpm} | Km: según segmentación
+ `;
+}
 </script>
 </body>
 </html>
