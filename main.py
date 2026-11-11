@@ -11,6 +11,18 @@ import httpx
 
 app = FastAPI(title="NODO Argentina - Sistema Privado Completo")
 
+# FIX FOTOS: servir carpeta assets/ - sin esto, ninguna foto se ve
+if os.path.isdir("assets"):
+    app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
+@app.get("/assets/{nombre}")
+def servir_assets(nombre: str):
+    ruta = os.path.join("assets", nombre)
+    if os.path.isfile(ruta):
+        from fastapi.responses import FileResponse
+        return FileResponse(ruta)
+    return {"ok": False, "error": "No existe " + nombre}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
