@@ -824,19 +824,9 @@ def api_vendedor_venta(payload: dict):
 # Google Calendar también tiene calendarios de feriados, pero Nager es gratis, sin clave y directo desde el navegador/servidor.
 # Calendarific cubre 230+ países pero pide clave y tiene límite 1000/día en plan gratis. Por eso usamos Nager primero.
 @app.get("/api/feriados/{codigo_pais}/{anio}")
-async def api_feriados(codigo_pais: str, anio: int):
-    """Devuelve feriados oficiales de ese país y año. Ej: /api/feriados/AR/2026, /api/feriados/BR/2026"""
-    cod = codigo_pais.strip().upper()[:2]
-    # dLocal LatAm permitidos - si piden otro, igual intentamos con Nager
-    try:
-        async with httpx.AsyncClient(timeout=8) as client:
-            r = await client.get(f"https://date.nager.at/api/v3/PublicHolidays/{anio}/{cod}")
-            if r.status_code == 200:
-                data = r.json()
-                return {"ok": True, "pais": cod, "anio": anio, "fuente": "Nager.Date - calendario oficial actualizado", "feriados": data}
-    except Exception as e:
-        pass
-    return {"ok": False, "pais": cod, "anio": anio, "feriados": [], "nota": "No se pudo cargar feriados ahora. Elegí la fecha en el calendario y se agrega igual."}
+def feriados_eliminados(codigo_pais: str, anio: int):
+    """Feriados ELIMINADOS por pedido de Max. NODO no usa feriados. El comercio elige sus días."""
+    return {"ok": True, "feriados": [], "nota": "Feriados eliminados. El comercio elige sus días."}
 
 @app.get("/api/paises-dlocal")
 async def api_paises_dlocal():
@@ -992,3 +982,33 @@ def api_cobros_suscripcion(payload: dict):
 def api_cobros_cobrar_mes(payload: dict):
     """Cobra mes a todos los tokens de una institución. Si falla, reintenta y avisa."""
     return {"ok": True, "accion": "COBRAR_TOKEN", "mes": payload.get("mes"), "nota": "Se cobra a cada token. Si no tiene plata, se reintenta al día siguiente y se avisa por WhatsApp."}
+
+
+# === NODO V21 - FX por país + Bots automáticos ===
+FX_POR_PAIS = {"AR":1450,"MX":17.2,"UY":40.5,"BR":5.4,"CL":950,"CO":4100,"PE":3.7,"EC":1,"VE":36,"BO":6.9,"PY":7800,"GT":7.8,"PA":1,"CR":510,"DO":60}
+SIMBOLO_POR_PAIS = {"AR":"$","MX":"$","UY":"$U","BR":"R$","CL":"$","CO":"$","PE":"S/","EC":"$","VE":"Bs","BO":"Bs","PY":"₲","GT":"Q","PA":"$","CR":"₡","DO":"RD$"}
+
+@app.get("/api/fx/{codigo_pais}")
+def fx_pais(codigo_pais: str):
+    """Tipo de cambio de hoy. El Bot de precios lo revisa todos los días a las 6am."""
+    cod = codigo_pais.upper()
+    return {"ok": True, "pais": cod, "fx": FX_POR_PAIS.get(cod, 1450), "simbolo": SIMBOLO_POR_PAIS.get(cod, "$"), "nota": "Precio base 10 días = 5.38 USD. Se convierte a moneda local con este FX. Se revisa todos los días."}
+
+@app.post("/api/bot/whatsapp-confirmar")
+def bot_whatsapp_confirmar(payload: dict):
+    """Bot 2 - Cobros: institución envía datos del cliente, bot le escribe por WhatsApp, confirma identidad, envía link de pago. El cliente NO entra a la plataforma. La institución NO toca la tarjeta."""
+    nombre = payload.get("nombre","").strip()
+    dni = payload.get("dni","").strip()
+    whatsapp = payload.get("whatsapp","").strip()
+    correo = payload.get("correo","").strip()
+    monto = payload.get("monto")
+    concepto = payload.get("concepto","Cuota mensual")
+    if not nombre or not dni or not whatsapp:
+        return {"ok": False, "error": "Faltan datos: Nombre completo, DNI y WhatsApp del cliente son obligatorios."}
+    mensaje = f"Hola {nombre}, te escribe NODO de parte de tu institución. ¿Sos vos, DNI {dni}? Respondé SÍ para confirmar y te enviamos tu link de pago de {concepto}."
+    return {"ok": True, "accion": "WHATSAPP_CONFIRMAR", "para": whatsapp, "mensaje": mensaje, "paso_siguiente": "Si responde SÍ, enviar link de pago. Cuando paga, tokenizar tarjeta y cobrar todos los meses automático.", "nota": "El cliente no entra a la plataforma. La institución no toca la tarjeta."}
+
+@app.post("/api/bot/revisar-precios")
+def bot_revisar_precios(payload: dict = {}):
+    """Bot de precios: revisa tipo de cambio todos los días. Si cambia, actualiza calculadora. Nadie lo hace a mano."""
+    return {"ok": True, "accion": "REVISAR_PRECIOS", "fx": FX_POR_PAIS, "nota": "Se ejecuta todos los días a las 6am. Si el FX cambia, el precio local cambia solo."}
