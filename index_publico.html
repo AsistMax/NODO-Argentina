@@ -1,346 +1,223 @@
 <!DOCTYPE html>
-<html lang="es-AR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NODO Argentina - Tu negocio, con más clientes</title>
+<!-- saved from url=(0053)file:///C:/Users/usuario/Downloads/Index-Publico.html -->
+<html lang="es-AR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NODO Argentina - Fintech para tu negocio</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;line-height:1.5}
-header{background:#111;border-bottom:2px solid #D4AF37;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:10px}
-header b{color:#D4AF37;font-size:22px;letter-spacing:2px}header span{font-size:12px;color:#aaa}
-nav a{color:#ccc;text-decoration:none;margin:0 10px;font-size:14px}nav a:hover{color:#D4AF37}
-.btn{background:#D4AF37;color:#000;padding:13px 22px;border:none;border-radius:10px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}
-.btn2{background:#111;color:#D4AF37;border:1px solid #D4AF37;padding:13px 22px;border-radius:10px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}
-.wrap{max-width:1100px;margin:0 auto;padding:20px}
-.hero{border:2px solid #D4AF37;border-radius:16px;overflow:hidden;background:#111;display:grid;grid-template-columns:1.1fr 1fr}
-.hero-img{background:linear-gradient(135deg,#1a1a1a,#2a2200);min-height:340px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
-.hero-img b{color:#D4AF37;font-size:28px}
-.hero-txt{padding:24px}.hero-txt h1{color:#D4AF37;font-size:32px;margin:0 0 8px;line-height:1.1}
-.hero-txt h1 i{color:#fff;font-style:normal}
-.card{background:#111;border:1px solid #222;border-radius:14px;padding:22px;margin:16px 0}
-.card h2{color:#D4AF37;margin-top:0;font-size:24px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-/* === RESPONSIVE NODO: Celular, Tablet, PC === */
-img{max-width:100%;height:auto;display:block}
-table{display:block;overflow-x:auto;white-space:nowrap}
-.hero-img img{width:100%;height:100%;object-fit:cover}
-input,select,textarea{font-size:16px}
-#menuBtn{display:none;background:#D4AF37;color:#000;border:none;padding:10px 14px;border-radius:8px;font-weight:800;cursor:pointer}
-@media(max-width:1024px){.wrap{max-width:960px;padding:16px}.hero-txt h1{font-size:28px}.card{padding:18px}}
-@media(max-width:768px){
-  header{padding:10px 12px;gap:8px}
-  #menuBtn{display:inline-block}
-  nav{display:none;width:100%;order:3;background:#111;border-top:1px solid #333;padding:10px 0}
-  nav.abierto{display:flex;flex-direction:column;gap:4px}
-  nav a{display:block;margin:0;padding:10px 8px;font-size:16px;border-bottom:1px solid #222}
-  header .btn,header .btn2{width:100%;text-align:center;padding:12px}
-  header>div:last-child{width:100%;display:flex;gap:8px}
-  .wrap{padding:12px}
-  .grid,.hero{grid-template-columns:1fr}
-  .hero-txt{padding:16px}.hero-txt h1{font-size:24px;line-height:1.15}
-  .hero-img{min-height:220px}
-  .card{padding:16px;margin:12px 0}
-  .card h2{font-size:20px}
-  .btn,.btn2{width:100%;text-align:center;margin:4px 0;padding:14px;font-size:16px}
-  .chip{padding:8px 12px;font-size:13px}
-  input,select,textarea{padding:14px}
-  table{font-size:13px}
-  .modal{padding:10px;align-items:flex-start;overflow-y:auto}
-  .modal>div{max-width:100%;max-height:90vh;overflow-y:auto;padding:16px}
-}
-@media(max-width:420px){
-  header b{font-size:18px}
-  .hero-txt h1{font-size:22px}
-  .wrap{padding:10px}
-  .card{padding:14px}
-}
-input,select,textarea{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff;font-size:15px}
-label{font-size:13px;color:#ccc}.small{font-size:12px;color:#aaa}
-.kpi{border:1px solid #333;border-radius:12px;padding:14px;background:#000}.kpi b{color:#D4AF37;font-size:22px;display:block}
-.chip{display:inline-block;background:#222;border:1px solid #D4AF37;color:#D4AF37;padding:6px 10px;border-radius:20px;font-size:12px;margin:3px;cursor:pointer}
-.chip.act{background:#D4AF37;color:#000}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid #333;padding:10px;text-align:left}th{color:#D4AF37}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999;align-items:center;justify-content:center;padding:20px}
-.modal>div{background:#111;border:2px solid #D4AF37;border-radius:14px;padding:22px;max-width:420px;width:100%}
-#nodoAdminDot{position:fixed;bottom:4px;right:6px;width:8px;height:8px;background:#111;border-radius:50%;opacity:.25;cursor:pointer;z-index:9999}
-.badge{background:#D4AF37;color:#000;font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;display:inline-block}
-</style></head><body>
-<header><div><b>NODO</b> ARGENTINA<br><span>Te acompañamos 24/7, estés donde estés.</span></div><nav><a href="#calculadora" title="Publicá en tu zona con un plan básico, acorde a tu presupuesto. WhatsApp + Facebook.">Impulso</a><a href="#calculadora" title="Expandí en tu área. Publicá en más ciudades y en todo el país, con plataforma completa.">Expansión</a><a href="#cobros" title="Cobrá cuotas, alquileres y socios sin perseguir a nadie. Cobro automático todos los meses.">Cobros</a><a href="#como-funciona" title="Publicás lo que vendés, te llevamos gente, te escriben a tu WhatsApp. Así de simple.">Cómo funciona</a><a href="#mis-resultados" title="Entrá y mirá tus resultados: cuántas personas vieron, cuántas hicieron clic, cuántos mensajes y ventas te llegaron.">Ver mis resultados</a></nav><button id="menuBtn" onclick="document.querySelector('nav').classList.toggle('abierto')">☰ Menú</button><div><button class="btn2" onclick="abrirLogin()">Acceso</button> &nbsp; <a class="btn" href="#publicar">Publicar ahora →</a></div></header>
-<div class="wrap">
-<div style="background:#D4AF37;color:#000;text-align:center;padding:10px 16px;font-weight:800;font-size:14px;letter-spacing:1px">Estamos en tu barrio, en el país entero y en toda Latinoamérica. Te acompañamos, en todo momento 24/7, estés donde estés.</div>
-<div class="hero"><div class="hero-img" style="padding:0"><img src="img_don_pepe.webp" alt="Almacén Don Pepe con mucha gente comprando" style="width:100%;height:100%;object-fit:cover;min-height:340px;display:block"><div style="position:absolute;margin-top:-80px;background:rgba(0,0,0,.7);padding:10px 14px;border-radius:10px"><b>ALMACÉN DON PEPE</b><br><span style="color:#ccc;font-size:13px">Un negocio con más clientes. Todos los días.</span></div></div><div class="hero-txt"><p class="small" style="color:#D4AF37;letter-spacing:2px">DESDE TU BARRIO HASTA TODA LATINOAMÉRICA • TE ACOMPAÑAMOS 24/7</p><h1>Tu negocio, con más clientes.<br><i>Todos los días.</i></h1><p>Publicá lo que vendés. Nosotros te ayudamos a que más personas te conozcan.</p><p><a class="btn" href="#impulso">NODO IMPULSO<br>Desde $1.500 - Precio real según días y alcance →</a> &nbsp; <a class="btn2" href="#expansion">NODO EXPANSIÓN<br>Crecer en todo el país →</a></p><div class="grid"><div><b>Publicá</b><br><span class="small">En pocos pasos</span></div><div><b>Todo el país</b><br><span class="small">Elegís tu zona</span></div><div><b>Tu WhatsApp</b><br><span class="small">Te escriben a vos</span></div></div><p class="small">Sin vueltas. Sin palabras difíciles. Empezás en tu barrio y crecés hasta donde quieras. Te acompañamos, en todo momento 24/7, estés donde estés.</p></div></div>
-<div class="card"><h2>Así se ve cuando NODO te lleva clientes</h2><p>Según tu rubro, tu publicidad se ve así. Casa de electrodomésticos, shopping, farmacia, gimnasio, comercio de barrio.</p><div class="grid"><div><img src="img_electrodomesticos.webp" alt="Casa de electrodomésticos" style="width:100%;border-radius:12px;max-height:280px;object-fit:cover"><p class="small">Casa de electrodomésticos - Clienta pagando en el mostrador. Los que pagan bien.</p></div><div><img src="img_shopping.webp" alt="Shopping con mucha gente comprando con bolsas" style="width:100%;border-radius:12px;max-height:280px;object-fit:cover"><p class="small">Shopping - Gente que va a comprar lo que vendés</p></div></div></div>
-<div class="card" id="calculadora"><p class="small" style="color:#D4AF37">NODO ARGENTINA Y LATINOAMÉRICA — Publicamos de manera masiva por todas partes.</p>
-<h2>Calculá tu publicidad</h2>
-<p>Elegí <b>Impulso</b> o <b>Expansión</b> acá mismo, en el mismo cuadro. Compará y elegí el que querés. No hace falta ir a otro cuadro.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0">
-<button class="btn" id="btnImpulso" onclick="elegirProducto('impulso')">NODO IMPULSO</button>
-<button class="btn2" id="btnExpansion" onclick="elegirProducto('expansion')">NODO EXPANSIÓN</button>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#0A1633;font-family:Inter,Arial,sans-serif;line-height:1.5;overflow-x:hidden}
+header{background:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30;border-bottom:1px solid #E6EAF2}
+.logo{font-weight:900;font-size:22px}.logo span{color:#2E5BFF}
+nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center}nav button{background:transparent;color:#0A1633;border:none;padding:9px 12px;border-radius:999px;cursor:pointer;font-weight:700}
+nav button:hover{background:#EEF2FF}nav button.act{background:#0A1633;color:#fff}
+nav .priv{font-size:10px;background:#EEF2FF;color:#2E5BFF;padding:2px 6px;border-radius:999px;margin-left:4px;font-weight:800;vertical-align:middle}
+.drop{position:relative}.drop-menu{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid #E6EAF2;border-radius:12px;padding:8px;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.12);z-index:40}.drop:hover .drop-menu{display:block}.drop-menu button{display:block;width:100%;text-align:left;color:#0A1633}
+.btn{background:#2E5BFF;color:#fff;border:none;padding:14px 26px;border-radius:999px;font-weight:900;cursor:pointer;transition:all .2s}
+.btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 22px rgba(46,91,255,.35)}
+.btn2{background:#fff;color:#0A1633;border:1px solid #D8DEFF;padding:12px 22px;border-radius:999px;font-weight:800;cursor:pointer;transition:all .2s}
+.btn2:hover{background:#0A1633;color:#fff}
+/* HERO VIDEO, COMO ON */
+.hero-video{position:relative;max-width:1180px;margin:16px auto;border-radius:24px;overflow:hidden;background:#0A1633}
+.hero-video video{width:100%;display:block;max-height:560px;object-fit:cover}
+.hero-video .overlay{position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.75) 42%, rgba(255,255,255,0) 62%);display:flex;align-items:center;padding:28px}
+.hero-video h1{font-size:clamp(64px,9vw,120px);line-height:.85;margin:0;font-weight:900;letter-spacing:-3px}
+.hero-video h1 span{color:#2E5BFF}
+.hero-video h2{font-size:clamp(18px,2.4vw,26px);line-height:1.15;margin:12px 0 8px;max-width:460px}
+.hero-video p{color:#475569;max-width:440px}
+.galeria{display:flex;gap:14px;overflow-x:auto;padding:20px 16px;scroll-snap-type:x mandatory;max-width:1180px;margin:0 auto}
+.galeria img{width:340px;height:230px;object-fit:cover;border-radius:18px;flex-shrink:0;scroll-snap-align:center}
+.reveal{opacity:0;transform:translateY(30px);transition:all .6s}.reveal.vis{opacity:1;transform:translateY(0)}
+section{display:none;padding:0 0 28px;max-width:1120px;margin:0 auto}section.act{display:block}
+.full{max-width:1120px;margin:0 auto;padding:28px 16px}.full h2{font-size:32px;margin:0 0 10px}.small{color:#64748B;font-size:13px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3 img,.grid2 img{width:100%;border-radius:14px;display:block}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #D8DEFF;background:#fff;color:#222;margin:6px 0 12px}
+label{font-weight:700;font-size:14px}.chip{display:inline-block;padding:7px 12px;border:1px solid #D8DEFF;border-radius:999px;margin:4px;cursor:pointer;font-size:13px;background:#fff}.chip.act{background:#2E5BFF;color:#fff;border-color:#2E5BFF;font-weight:800}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}.cal div{padding:10px 0;border-radius:10px;background:#F8F9FF;border:1px solid #EDEFFF;cursor:pointer}.cal div.sel{background:#0A1633;color:#fff;font-weight:800}.cal div.fer{background:#E0F2FE;border-color:#2E5BFF}.cal .head{background:#0A1633;color:#fff;font-weight:800;cursor:default}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:60;padding:16px}.modal>div{background:#fff;border-radius:18px;padding:22px;max-width:540px;width:100%;color:#222;max-height:92vh;overflow:auto}
+.lock{background:#EEF2FF;border:1px solid #D8DEFF;border-radius:18px;padding:22px;text-align:center;margin:16px}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}.kpi div{background:#F8F9FF;border:1px solid #EDEFFF;border-radius:14px;padding:14px}.kpi b{font-size:24px;color:#2E5BFF}
+.cta{background:#2E5BFF;color:#fff;border-radius:18px;padding:24px;margin:16px;text-align:center}.cta h2{color:#fff}
+.hero-panel{background:#0A1633;color:#fff;border-radius:24px;padding:32px 22px;display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:center;margin:16px}.hero-panel h2{font-size:36px;line-height:1.05;margin:0}.hero-panel h2 span{color:#7AA2FF}.hero-panel p{color:#C8D0E8}
+.dash{background:#fff;color:#0A1633;border-radius:18px;padding:18px}.dash .saldo{font-size:32px;font-weight:900}.dash .row{display:flex;gap:10px;margin-top:12px}.dash .mini{flex:1;background:#F1F5FF;border-radius:12px;padding:12px;text-align:center}.dash .mini b{font-size:18px;color:#2E5BFF}
+@media(max-width:860px){.hero-video .overlay{position:relative;background:#fff}.hero-video video{max-height:320px}.hero-panel{grid-template-columns:1fr}.grid2,.grid3{grid-template-columns:1fr}header{flex-direction:column;gap:10px;align-items:flex-start}nav{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}nav button{white-space:nowrap}.kpi{grid-template-columns:1fr 1fr}.galeria img{width:280px}}
+@media(max-width:480px){.btn,.btn2{width:100%;margin:4px 0}}
+</style></head>
+<body>
+<header><div class="logo">NODO <span>•</span> ARGENTINA</div>
+<nav>
+<button class="act" onclick="ir('inicio',this)">Inicio</button>
+<div class="drop"><button>Servicios</button><div class="drop-menu"><button onclick="ir('impulso',document.querySelectorAll('nav button')[1])">NODO Impulso - Publicar en tu zona</button><button onclick="ir('expansion',document.querySelectorAll('nav button')[2])">NODO Expansión - Crecer en más ciudades</button><button onclick="ir('cobros',document.querySelectorAll('nav button')[3])">NODO Cobros - Cobro recurrente</button></div></div>
+<button onclick="ir('impulso',this)">Impulso <span class="priv">PRIVADO</span></button>
+<button onclick="ir('expansion',this)">Expansión <span class="priv">PRIVADO</span></button>
+<button onclick="ir('cobros',this)">Cobros <span class="priv">PRIVADO</span></button>
+<button onclick="ir('como',this)">Cómo funciona</button>
+<button onclick="ir('resultados',this)">Ver mis resultados <span class="priv">PRIVADO</span></button>
+<button class="btn" onclick="abrirRegistro()">Registrarme</button>
+</nav></header>
+
+<section id="sec-inicio" class="act">
+<!-- HERO VIDEO, COMO ON: video que cambia, texto fijo -->
+<div class="hero-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="auto" src="nodo_hero.mp4" disablepictureinpicture=""></video>
+<div class="overlay"><div><h1>NODO<span>.</span></h1><h2>Tu negocio, con más clientes. Y cobrando todos los meses.</h2><p>Publicidad + Cobros, en un solo lugar. Estamos en tu barrio, en el país entero y en toda Latinoamérica.</p><p><button class="btn" onclick="abrirRegistro()">Registrarme y empezar</button> <button class="btn2" onclick="ir('como',document.querySelectorAll('nav button')[4])">Cómo funciona</button></p><p class="small">Para entrar a Impulso, Expansión, Cobros o Ver mis resultados, primero te registrás.</p></div></div>
 </div>
-<p id="descProducto" class="small">Impulso: Publicá en tu zona con un plan básico, acorde a tu presupuesto. Para empezar a crecer.</p>
-<label>🗓️ Días — Mové la barra: 1 a 30 días</label>
-<input type="range" id="diasImpulso" min="1" max="30" value="3" oninput="calcImpulso()">
-<div><b id="diasImpVal">3 días</b> — <span id="alcanceImpVal">Alcance: 1.500 personas</span> — <b id="precioFinalVal" style="color:#D4AF37">Total: $2.340</b></div>
-<p id="alcanceCalcImp" class="small">1 día = 500 personas. 15 días = 7.500 personas. A más días, más personas y más precio. Precio real según zona, días y plan.</p>
-<div class="grid"><div><label data-i18n="pais">País</label>
-<select id="paisPubli" onchange="cambiarPais()">
-<option value="AR" data-moneda="ARS" data-idioma="es" selected>Argentina — ARS</option>
-<option value="BO" data-moneda="BOB" data-idioma="es">Bolivia — BOB</option>
-<option value="BR" data-moneda="BRL" data-idioma="pt">Brasil — BRL</option>
-<option value="CL" data-moneda="CLP" data-idioma="es">Chile — CLP</option>
-<option value="CO" data-moneda="COP" data-idioma="es">Colombia — COP</option>
-<option value="CR" data-moneda="CRC" data-idioma="es">Costa Rica — CRC</option>
-<option value="DO" data-moneda="DOP" data-idioma="es">Rep. Dominicana — DOP</option>
-<option value="EC" data-moneda="USD" data-idioma="es">Ecuador — USD</option>
-<option value="SV" data-moneda="USD" data-idioma="es">El Salvador — USD</option>
-<option value="GT" data-moneda="GTQ" data-idioma="es">Guatemala — GTQ</option>
-<option value="HN" data-moneda="HNL" data-idioma="es">Honduras — HNL</option>
-<option value="MX" data-moneda="MXN" data-idioma="es">México — MXN</option>
-<option value="NI" data-moneda="NIO" data-idioma="es">Nicaragua — NIO</option>
-<option value="PA" data-moneda="PAB" data-idioma="es">Panamá — PAB</option>
-<option value="PY" data-moneda="PYG" data-idioma="es">Paraguay — PYG</option>
-<option value="PE" data-moneda="PEN" data-idioma="es">Perú — PEN</option>
-<option value="UY" data-moneda="UYU" data-idioma="es">Uruguay — UYU</option>
-</select>
-<p class="small" id="paisInfo">Te acompañamos, en todo momento 24/7, estés donde estés. Elegí tu país y seguimos. Cobro en tu moneda. Si cambiás de país, cambia el idioma, la moneda y los feriados automáticamente.</p>
-<label>Idioma</label><select id="idiomaPubli" onchange="aplicarIdioma(this.value)"><option value="es" selected>Español</option><option value="pt">Português (Brasil)</option><option value="en">English</option></select>
-</div><div><label data-i18n="provincia">Provincia / Estado / Departamento — según tu país</label><select id="provinciaPubli" onchange="calcImpulso()"></select>
-<p class="small">Elegí tu país y después tu provincia.</p></div></div>
-<div class="grid"><div><label>¿Dónde querés publicar?</label>
-<select id="zonaPubli" onchange="calcImpulso()">
-<option value="local" data-mult="1">Mi localidad / mi barrio</option>
-<option value="provincia" data-mult="1.4">Mi provincia / estado</option>
-<option value="pais" data-mult="2.2">Todo el país</option>
-<option value="latam" data-mult="2.8">Latinoamérica</option>
-</select>
-<p class="small" id="zonaExplica">Empezás en tu barrio y llegás hasta donde quieras. Te acompañamos, en todo momento 24/7, estés donde estés.</p>
-</div><div><label>Localidad</label><input id="localidadPubli" placeholder="Ej: San Fernando del Valle"><label>Código Postal</label><input placeholder="Ej: 4700"></div></div>
-<div class="grid"><div><label>Localidad</label><input id="localidadPubli" placeholder="Ej: San Fernando del Valle"></div><div><label>Código Postal</label><input placeholder="Ej: 4700"></div></div>
-<div><label>Plan — Elegí qué querés que incluya</label>
-<select id="plats" onchange="calcImpulso()">
-<option value="basica">Básica — WhatsApp + Facebook</option>
-<option value="completa">Completa — WhatsApp + Facebook + Google</option>
-<option value="total">Total — Todas + Diseño + Audio</option>
-</select>
-<p class="small">Básica: WhatsApp + Facebook. Completa: suma Google para llegar a más gente. Total: todas + diseño + audio, para que tu negocio se vea completo.</p></div>
-<p><b>Tu precio final:</b> <span id="calcTxt">Todo incluido. Sin sorpresas.</span></p>
-<p id="ejemploPrecio" class="small" style="background:#000;border:1px solid #333;border-radius:8px;padding:10px">Ejemplo: 15 días en tu localidad con Básica = 7.500 personas. Si cambiás a Provincia o a Todo el país, el mismo 15 días sale más caro, porque es más km y más personas. Si cambiás a Total, también sube.</p>
-<h3 data-i18n="calendario">Programá tu calendario</h3>
-<p class="small">Elegí cuándo querés que salga. Podés marcar varias opciones juntas. Si marcás Lunes a Viernes + Fin de semana, es todos los días. Si sumás Feriados, también sale los feriados.</p>
-<div id="chipsCalendario"><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Lunes a Viernes</span><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Fin de semana</span><span class="chip" onclick="this.classList.toggle('act');calcImpulso()">Feriados</span></div>
-<div style="background:#000;border:1px solid #333;border-radius:12px;padding:12px;margin-top:10px"><b>Feriados en <span id="nombrePaisFeriado">Argentina</span> — <span id="anioFeriado">2026</span></b><p class="small">Tocá un feriado para agregarlo a tu campaña.</p><div id="listaFeriados"><p class="small">Cargando feriados...</p></div><p class="small" id="feriadosSeleccionados"></p></div>
-<label>Fecha de inicio</label><input type="date" id="fechaInicio">
-<label>Elegí días específicos en el calendario</label><input type="date" id="fechaEspecifica"><p class="small">Elegí en el calendario el día que querés — por ejemplo Día del Niño, Reyes, Día de la Madre — y se agrega a tu campaña. Podés agregar varios días.</p>
-<label>Días específicos (separados por coma)</label><input id="diasEspecificos" placeholder="Ej: 12/05, 13/05, 20/05">
-<div style="margin-top:12px"><a class="btn" href="#publicar">Quiero impulsar / expandirme</a> &nbsp; <button class="btn2" onclick="verPublicacion()">Ver publicación — Cómo va a quedar</button></div>
+<p style="text-align:center" class="small">Video: NODO + mapa de Latinoamérica que se va marcando, dueño atendiendo, cliente pagando con el celu, equipo trabajando. Como ON, el video cambia y el texto queda fijo.</p>
+
+<div class="galeria" id="galeriaTop">
+<img src="./index_publico_files/treasury-hdr-400-1.png.webp" alt="Dueño atendiendo a clienta">
+<img src="./index_publico_files/ERFOLGREICHEN-EINKAUF.webp" alt="Clienta en tienda">
+<img src="./index_publico_files/como-fidelizar-clientes-cafeteria-1.webp" alt="Dueño sirviendo café">
+<img src="./index_publico_files/unnamed.webp" alt="Local ordenado">
+<img src="./index_publico_files/da62b567-d021-4225-9941-58c89bb19921.png" alt="Mercado local">
 </div>
-<div class="card" id="cobros"><h2>NODO COBROS</h2><p>¿Cobrás cuotas, alquileres, socios, alumnos? Nosotros nos encargamos de que te paguen sin que tengas que perseguir a nadie.</p><a class="btn" href="#form-cobros">Quiero Cobro Recurrente</a></div>
-<div class="card" id="publicar"><h2>Publicar ahora</h2>
-<label>¿Qué vendés?</label><input placeholder="Ej: Pan casero, zapatos, ropa, servicios">
-<label>Subí hasta 3 imágenes</label><input type="file" accept="image/*" multiple>
-<label>Subí tu logo</label><input type="file" accept="image/*">
-<label>Subí archivos / flyer</label><input type="file" multiple>
-<label>¿A quién querés llegar?</label><textarea rows="2" placeholder="Ej: Personas de mi barrio que compran pan casero"></textarea>
-<label>WhatsApp de TU comercio</label><input placeholder="Ej: 3834607740">
-<label>Mail</label><input placeholder="mail@ejemplo.com">
-<button class="btn" onclick="alert('Listo. Tu publicación quedó registrada. Te contactamos para activarla.')">Publicar ahora</button></div>
-<div class="card" id="form-cobros"><h2>NODO COBROS - Cobro recurrente</h2>
-<p class="small">El cobro se hace con tarjeta, en una página segura. Nosotros nunca vemos ni guardamos el número de tu tarjeta.</p>
-<h3 style="color:#D4AF37">PARTE 1 - El que recibe: tu institución / comercio</h3>
-<p class="small">Acá van tus datos para que te llegue la plata. Tu CBU es para que te llegue la plata.</p>
-<div class="grid"><div><label>CUIT</label><input placeholder="Ej: 20-12345678-9"></div><div><label>Nombre institución / comercio</label><input placeholder="Ej: Club, Colegio, Gremio"></div></div>
-<div class="grid"><div><label>Representante</label><input placeholder="Nombre y apellido"></div><div><label>DNI Representante</label><input placeholder="DNI"></div></div>
-<div class="grid"><div><label>CBU para que te llegue la plata</label><input placeholder="CBU - 22 dígitos"></div><div><label>Mail</label><input placeholder="mail@ejemplo.com"></div></div>
-<div class="grid"><div><label>Teléfono</label><input placeholder="383..."></div><div><label>¿Qué cobrás?</label><input placeholder="Ej: Cuota socios"></div></div>
-<div class="grid"><div><label>Monto por cuota</label><input placeholder="Ej: 10000"></div><div><label>Frecuencia</label><select><option>Mensual</option><option>Quincenal</option><option>Semanal</option></select></div></div>
-<div class="grid"><div><label>Día de cobro</label><select><option>Día 5 de cada mes</option><option>Día 1 de cada mes</option><option>Día 10 de cada mes</option></select></div><div><label>¿Cómo querés cargar a tus clientes?</label><select><option>Yo cargo la lista de mis clientes</option><option>Que les llegue un link para que cada uno ponga su tarjeta</option></select></div></div>
-<h3 style="color:#D4AF37;margin-top:16px">PARTE 2 - Los que pagan: tus clientes / alumnos / socios</h3>
-<p class="small">Cada cliente / alumno / Cada socio pone sus datos y su tarjeta en una página segura. Nosotros nunca vemos el número. Se cobra solo todos los meses.</p>
-<div class="grid"><div><label>Nombre completo como figura en la tarjeta</label><input placeholder="Ej: Juan Pérez"></div><div><label>DNI del titular de la tarjeta</label><input placeholder="DNI"></div></div>
-<div class="grid"><div><label>Mail del cliente</label><input placeholder="mail@ejemplo.com"></div><div><label>WhatsApp del cliente</label><input placeholder="383..."></div></div>
-<div class="grid"><div><label>Tarjeta - Número (se carga en página segura, no la vemos)</label><input placeholder="**** **** **** ****" disabled></div><div><label>Vencimiento / Código</label><input placeholder="MM/AA - CVV" disabled></div></div>
-<p class="small">⚠️ Tu tarjeta se carga en una página segura. Nosotros nunca vemos ni guardamos el número de tu tarjeta. El cliente acepta: "Autorizo que me debiten todos los meses."</p>
-<label><input type="checkbox" style="width:auto"> Acepto que me debiten todos los meses el monto de la cuota.</label><br><br>
-<button class="btn" onclick="alert('Listo. Tu solicitud de NODO COBROS quedó registrada. Le mandamos el link seguro a cada cliente para que ponga su tarjeta.')">Quiero Cobro Recurrente</button>
-<p class="small">Ejemplo: Gremio de Catamarca cobra $10.000 por mes a 50 socios. Cada socio pone su tarjeta una vez. El 5 de cada mes se cobra solo. Lo que no paga, se reintenta y se avisa.</p></div>
-<div class="card" id="mis-resultados"><h2>Ver mis resultados</h2><p>Entrá con tu usuario y contraseña y mirá cómo va tu campaña, en vivo. Cada uno ve solo lo suyo.</p><p class="small">Acá ves: cuántas personas vieron tu publicación, cuántas hicieron clic, cuántos mensajes te llegaron a WhatsApp, cuántos leads (personas que preguntaron) y cuántas ventas registraste. Todo en un solo lugar.</p>
-<button class="btn" onclick="abrirLogin()">Ingresar a mis resultados</button>
-<div id="panelUsuario" style="display:none;margin-top:16px">
-<h3 style="color:#D4AF37">Mis resultados - Tu campaña</h3>
-<div class="grid"><div class="kpi"><b>0</b>Personas que vieron</div><div class="kpi"><b>0</b>Clics en tu publicación</div></div><div class="grid"><div class="kpi"><b>0</b>Mensajes de hoy</div><div class="kpi"><b>0</b>Ventas registradas</div></div>
-<div class="grid"><div class="kpi"><b>0</b>Personas que preguntaron</div><div class="kpi"><b>0 días</b>Publicación activa</div></div>
-<h4>Leads - Personas que te escribieron</h4><p class="small">Todavía no hay leads. Cuando alguien te escriba, aparece acá con nombre, hora y mensaje.</p>
-<button class="btn2" onclick="alert('Descargando resumen de tu campaña...')">Descargar mi resumen</button></div>
-<div id="panelGustavo" style="display:none;margin-top:16px;border:1px solid #D4AF37;border-radius:12px;padding:16px">
-<h3 style="color:#D4AF37">Panel Colaborador - Consultora - Catamarca</h3><p class="small">Acceso exclusivo. Solo ves tu equipo y tus empresas. No ves lo de otros.</p>
-<div class="grid"><div class="kpi"><b>0</b>Ventas de tu equipo hoy</div><div class="kpi"><b>0</b>Asesores activos</div></div>
-<label>Generar código ID para asesor</label><div class="grid"><div><input id="nombreAsesor" placeholder="Nombre del asesor"></div><div><button class="btn2" onclick="generarCodigo()">Generar código</button></div></div><p id="codigoGen" class="small"></p>
-<h4>Asesores - Control para rendir y pagarles</h4><table><tr><th>Asesor</th><th>Código ID</th><th>Ventas hoy</th><th>Total</th></tr><tr><td>—</td><td>—</td><td>0</td><td>$0</td></tr></table>
-<h4>Precios por empresa - Vos ponés el precio</h4><div class="grid"><div><label>Empresa</label><input placeholder="Nombre empresa"></div><div><label>Precio que pactaste</label><input placeholder="Ej: 850000"></div></div><button class="btn2" onclick="alert('Precio guardado para esa empresa.')">Guardar precio</button>
-<h4>Descargar</h4><p class="small">Descargás 2 archivos: 1 Interno con detalle de asesores para pagarles, 2 Profesional para presentar a empresas, con nombre de tu consultora, editable.</p><button class="btn2" onclick="alert('Descargando archivo interno...')">Descargar interno</button> &nbsp; <button class="btn2" onclick="alert('Descargando informe para empresa...')">Descargar informe para empresa</button>
+
+<div class="hero-panel reveal vis"><div><h2>Publicá. <span>Te llevamos gente.</span><br>Cobrá todos los meses.</h2><p>Publicá lo que vendés. Te llevamos gente. Te llegan mensajes directo a tu WhatsApp. Y cobrás todos los meses sin perseguir a nadie.</p><p><button class="btn" onclick="abrirRegistro()">Registrarme y empezar</button></p><p class="small" style="color:#8A9AB8">Para entrar a Impulso, Expansión, Cobros o Ver mis resultados, primero te registrás.</p></div>
+<div class="dash"><p class="small">TU PANEL • HOY</p><p class="saldo">$0</p><p class="small">Ventas de hoy • Cuando empieces, se ve acá en vivo.</p><div class="row"><div class="mini"><b>0</b><br><span class="small">Personas que vieron</span></div><div class="mini"><b>0</b><br><span class="small">Mensajes</span></div><div class="mini"><b>0</b><br><span class="small">Cobros del mes</span></div></div><p style="margin-top:14px"><button class="btn" style="width:100%" onclick="abrirRegistro()">Ver mi panel</button></p><p class="small" style="text-align:center">Sin números inventados.</p></div></div>
+
+<div class="full reveal vis"><h2>¿QUÉ HACE NODO?</h2><p>NODO es fintech para tu negocio. Publicidad para vender, publicidad para crecer, y cobros para que te paguen.</p><div class="grid3">
+<div style="background:#EEF2FF;border-radius:18px;padding:20px"><h3>NODO IMPULSO</h3><p>Publicar en tu zona, con un plan acorde a tu presupuesto.</p><button class="btn2" onclick="abrirRegistro()">Quiero Impulso</button></div>
+<div style="background:#0A1633;color:#fff;border-radius:18px;padding:20px"><h3 style="color:#7AA2FF">NODO EXPANSIÓN</h3><p>Crecer en más ciudades, en todo el país, con más alcance, diseño y audio.</p><button class="btn" onclick="abrirRegistro()">Quiero Expansión</button></div>
+<div style="background:#E0F2FE;border-radius:18px;padding:20px"><h3>NODO COBROS</h3><p>Cobrar cuotas, socios, alumnos, alquileres, sin perseguir a nadie.</p><button class="btn2" onclick="abrirRegistro()">Quiero Cobros</button></div>
 </div></div>
-<div class="card" id="revision"><h2>Antes de publicar, vos decidís</h2><p>Nosotros armamos tu publicidad. Vos la ves antes y solo se publica si vos decís que sí.</p><div style="border:1px solid #D4AF37;border-radius:12px;padding:16px;background:#000"><p><b>Tu publicidad está lista para revisar</b></p><p class="small">Acá ves la imagen y el texto que armamos para vos, completa, como la va a ver la gente.</p><button class="btn2" onclick="verPublicacion()">Ver publicación completa</button><p class="small">¿Te gusta?</p><button class="btn" onclick="alert('Listo. Tu publicidad se publica de manera masiva por todas partes.')">✅ Me gusta, publicá</button> &nbsp; <button class="btn2" onclick="document.getElementById('cambiarPubli').style.display='block'">❌ No, quiero cambiar algo</button><div id="cambiarPubli" style="display:none;margin-top:12px"><label>Escribí acá qué querés que diga, como vos hablás, aunque tenga errores, nosotros lo corregimos:</label><textarea rows="3" placeholder="Ej: quiero que diga que mi pan es el mas rico del barrio y que vendo barato"></textarea><button class="btn" onclick="alert('Listo. Lo corregimos y te lo mostramos de nuevo para que lo apruebes.')">Enviar corrección</button><p class="small">Lo corregimos y te lo mostramos de nuevo. No se publica hasta que vos digas que sí.</p></div></div><p class="small">Nosotros armamos tu publicidad. Vos la ves antes. Solo se publica si vos decís que sí.</p></div>
-<div class="card" id="vendedores"><h2>Control de vendedores - Para todas las empresas</h2><p>Si tenés vendedores que salen a la calle a vender TU producto (autos, motos, planes de obra social, lo que sea), les generamos un código para controlarlos.</p><p class="small">Ellos NO venden NODO. Venden tu producto. Nosotros solo te damos el código para que los controles.</p><label>Nombre del vendedor</label><input id="nombreVendedor" placeholder="Ej: Juan Pérez"><div class="grid"><div><label>Zona donde trabaja</label><input id="zonaVendedor" placeholder="Ej: Barrio Centro, Catamarca"></div><div><label>Horario</label><input id="horarioVendedor" placeholder="Ej: 9 a 13 y 17 a 21"></div></div><button class="btn2" onclick="generarCodigoVendedor()">Generar código para este vendedor</button><p id="codigoVendedorGen" class="small"></p><p class="small">Con ese código, cada venta queda registrada: quién vendió, dónde, cuándo, qué vendió. Vos ves en tu panel: dónde estuvo, a qué hora, cuántas visitas, cuántas ventas. Para pagarle solo por lo que vendió.</p></div>
-<div class="card" id="como-funciona"><h2>¿Cómo funciona?</h2><p><b>1.</b> Publicás lo que vendés. &nbsp; <b>2.</b> Te llevamos gente. &nbsp; <b>3.</b> Te llegan mensajes al WhatsApp de TU comercio.</p></div>
-<div class="card"><h2>Atención al cliente</h2><p>Para todo el mundo. Escribinos al <b>+54 9 3834 607740</b>. Te acompañamos, en todo momento 24/7, estés donde estés. Te responde nuestro asistente automático.</p></div>
-<div class="card"><h2>Términos y Condiciones</h2><p class="small">NODO Argentina es solo facilitador / conector. Provee marketing y conexión. No es banco, no es proveedor de pagos, no guarda tarjetas, no vende el producto del comercio. Los pagos los procesa el proveedor de pago habilitado. Las ventas son entre el comercio y su cliente. Cada comercio entra a su cuenta con su usuario y contraseña. Cada uno ve solo su información.</p></div>
-<p class="small" style="text-align:center">NODO Argentina - Todo el país - Atención al cliente +54 9 3834 607740 - nodo.cliente@gmail.com - Para todo el mundo</p>
-</div>
-<div id="modalVerPubli" class="modal"><div style="max-width:520px"><h2 style="color:#D4AF37;margin-top:0">Así va a quedar tu publicidad</h2>
-<img src="img_don_pepe.webp" style="width:100%;border-radius:12px;max-height:240px;object-fit:cover">
-<p><b id="tituloVerPubli">Tu negocio, con más clientes</b></p><p class="small" id="textoVerPubli">Publicidad armada para vos, con tu imagen y tu texto. Revisala tranquila.</p>
-<p class="small">¿Te gusta?</p>
-<button class="btn" style="width:100%" onclick="document.getElementById('modalVerPubli').style.display='none';alert('Listo. Tu publicidad se publica de manera masiva por todas partes.')">✅ Me gusta, publicá</button>
-<button class="btn2" style="width:100%;margin-top:8px" onclick="document.getElementById('modalVerPubli').style.display='none';document.getElementById('cambiarPubli').style.display='block';document.getElementById('revision').scrollIntoView()">❌ No, quiero cambiar algo</button>
-<button class="btn2" style="width:100%;margin-top:8px" onclick="document.getElementById('modalVerPubli').style.display='none'">Cerrar (X)</button>
-</div></div>
-<!-- LOGIN CLIENTE / COLABORADOR - Arriba, con usuario + contraseña -->
-<div id="modalLogin" class="modal"><div><h2 style="color:#D4AF37;margin-top:0">Acceso</h2><p class="small">Si ya estás registrado, poné tu usuario y contraseña y entrás a ver tus resultados.</p><label>Usuario</label><input id="loginUser" placeholder="Ej: Gustavo Nodo / tu usuario"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Tu contraseña"><button class="btn" style="width:100%" onclick="hacerLogin()">Ingresar</button><button class="btn2" style="width:100%;margin-top:8px" onclick="cerrarLogin()">Cerrar</button><p class="small">¿No tenés cuenta? Registrate publicando tu primera campaña arriba.</p><p id="loginError" style="color:#ff4444;font-size:13px"></p></div></div>
-<!-- LOGIN ADMIN MAX - Solo puntito, solo clave, sin usuario, sin decir que es panel -->
-<div id="modalAdmin" class="modal"><div><h2 style="color:#D4AF37;margin-top:0">Acceso</h2><label>Clave de acceso</label><input id="claveAdmin" type="password" placeholder="••••••••"><button class="btn" style="width:100%" onclick="loginAdmin()">Ingresar</button><button class="btn2" style="width:100%;margin-top:8px" onclick="document.getElementById('modalAdmin').style.display='none'">Cerrar</button><p id="adminError" style="color:#ff4444;font-size:13px"></p></div></div>
-<div id="nodoAdminDot" onclick="document.getElementById('modalAdmin').style.display='flex'" title=""></div>
+
+<div class="full reveal"><h2>¿POR QUÉ ELEGIRNOS?</h2><div class="grid2"><div><p><b>Planes accesibles</b><br><span class="small">Empezás con Impulso, crecés con Expansión cuando quieras.</span></p><p><b>Estrategia antes que ejecución</b><br><span class="small">Primero vemos qué vendés, a quién, y dónde.</span></p></div><div><p><b>Resultados medibles</b><br><span class="small">Ves cuántas personas vieron, cuántas hicieron clic, cuántas te escribieron.</span></p><p><b>Acompañamiento 24/7</b><br><span class="small">Te acompañamos, en todo momento 24/7, estés donde estés.</span></p></div></div></div>
+
+<div class="full reveal"><h2>¿CÓMO FUNCIONA?</h2><p><b>1.</b> Te registrás. &nbsp; <b>2.</b> Decís qué vendés. &nbsp; <b>3.</b> Armamos tu publicidad, vos la aprobás. &nbsp; <b>4.</b> Te llegan mensajes a tu WhatsApp y cobrás todos los meses.</p><button class="btn2" onclick="ir('como',document.querySelectorAll('nav button')[4])">Ver cómo funciona</button></div>
+
+<div class="full reveal"><h2>Todos tus canales, en un solo lugar</h2><p><b>Instagram • WhatsApp • Facebook • Messenger • Gmail • Telegram • TikTok</b></p><p class="small">Los mensajes le llegan directo a tu WhatsApp o a tu Messenger. NODO no guarda tus chats, solo cuenta cuántos te escribieron.</p></div>
+
+<div class="cta reveal"><h2>¿LISTO PARA CRECER?</h2><p>Registrate y armá tu primera publicidad. Vos la revisás, y solo se publica si vos decís que sí.</p><p><button class="btn" style="background:#fff;color:#0A1633" onclick="abrirRegistro()">Registrarme y empezar</button></p><p class="small">Atención al cliente para todo el mundo: +54 9 3834 607740</p></div>
+
+<div class="full reveal"><h2>Preguntas frecuentes</h2><p><b>¿Tengo que saber de publicidad?</b><br><span class="small">No. Vos nos decís qué vendés, nosotros armamos la publicidad y vos la aprobás.</span></p><p><b>¿Dónde me llegan los mensajes?</b><br><span class="small">Directo a tu WhatsApp o a tu Messenger.</span></p><p><b>¿Puedo pausar cuando quiera?</b><br><span class="small">Sí. 30 días sin costo. Después $2.700 por mes para mantener activa, o queda en pausa, guardada y segura.</span></p></div>
+</section>
+<section id="sec-impulso"><div id="lock-impulso"></div><div id="content-impulso" style="display:none">
+<h2>NODO IMPULSO</h2><p>Publicá en tu zona con un plan acorde a tu presupuesto. Para empezar a crecer.</p>
+<div class="card"><h2>Calculá tu publicidad</h2><label>Días - Mové la barra: 1 a 30 días</label><input type="range" id="diasImpulso" min="1" max="30" value="10" oninput="calcImpulso()">
+<p id="resumenCalc" style="font-size:20px;font-weight:900">10 días - Alcance: 5.000 personas - Total: $7.800 ARS</p><p class="small" id="detalleCalc">1 día = 500 personas en Impulso. Precio en ARS.</p>
+<div class="grid2"><div><label>País</label><select id="paisPubli" onchange="cambiarPais()"><option value="AR">Argentina - ARS</option><option value="MX">México - MXN</option><option value="BR">Brasil - BRL</option><option value="CL">Chile - CLP</option><option value="CO">Colombia - COP</option><option value="PE">Perú - PEN</option><option value="UY">Uruguay - UYU</option><option value="EC">Ecuador - USD</option><option value="DO">Rep. Dominicana - DOP</option><option value="BO">Bolivia - BOB</option><option value="PY">Paraguay - PYG</option><option value="CR">Costa Rica - CRC</option></select><p class="small" id="paisInfo">País: Argentina - Cobro en ARS.</p></div><div><label>Provincia / Estado / Departamento</label><select id="provinciaPubli" onchange="calcImpulso()"><option>Buenos Aires</option><option>CABA</option><option>Catamarca</option><option>Chaco</option><option>Chubut</option><option>Córdoba</option><option>Corrientes</option><option>Entre Ríos</option><option>Formosa</option><option>Jujuy</option><option>La Pampa</option><option>La Rioja</option><option>Mendoza</option><option>Misiones</option><option>Neuquén</option><option>Río Negro</option><option>Salta</option><option>San Juan</option><option>San Luis</option><option>Santa Cruz</option><option>Santa Fe</option><option>Santiago del Estero</option><option>Tierra del Fuego</option><option>Tucumán</option></select></div></div>
+<div class="grid2"><div><label>Idioma</label><select id="idiomaPubli"><option value="es">Español</option><option value="pt">Portugués</option><option value="en">English</option></select></div><div><label>¿Dónde querés publicar?</label><select id="zonaPubli" onchange="calcImpulso()"><option value="local" data-mult="1">Mi localidad / mi barrio</option><option value="provincia" data-mult="1.4">Mi provincia / estado</option><option value="pais" data-mult="2.2">Todo el país</option><option value="latam" data-mult="2.8">Latinoamérica</option></select></div></div>
+<div class="grid2"><div><label>Localidad</label><input id="localidadPubli" placeholder="Ej: San Fernando del Valle de Catamarca"></div><div><label>Código Postal</label><input id="codigoPostalPubli" placeholder="Ej: 4700"></div></div>
+<label>Plan - Elegí qué querés que incluya</label><select id="plats" onchange="calcImpulso()"><option value="basica">Básica — WhatsApp + Facebook</option><option value="completa">Completa — WhatsApp + Facebook + Google</option><option value="total">Total — Todas + Diseño + Audio</option></select>
+<p class="small">Básica: WhatsApp + Facebook. Completa: suma Google para llegar a más gente. Total: todas + diseño + audio.</p><p><b>Tu precio final:</b> <span id="calcTxt">Tu precio final por 10 días, 5.000 personas, $7.800 ARS. Todo incluido.</span></p></div>
+<div class="card"><h2>Programá tu calendario - Tocá los días</h2><p class="small">Tocá los días que querés publicar. Los feriados están marcados en naranja.</p><p><button class="btn2" onclick="cambiarMes(-1)">← Mes anterior</button> <b id="tituloMes">noviembre de 2026</b> <button class="btn2" onclick="cambiarMes(1)">Mes siguiente →</button></p><div class="cal" id="calendarioReal"><div class="head">Lun</div><div class="head">Mar</div><div class="head">Mié</div><div class="head">Jue</div><div class="head">Vie</div><div class="head">Sáb</div><div class="head">Dom</div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div style="background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; cursor: default;"></div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div class="fer">23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div></div><p class="small" id="diasElegidos">Días elegidos: ninguno todavía.</p><p><button class="btn2" onclick="selCalendario('semana')">Lunes a Viernes</button> <button class="btn2" onclick="selCalendario('finde')">Fin de semana</button> <button class="btn2" onclick="limpiarDias()">Limpiar</button></p><div id="listaFeriados"><p><b>Feriados en Argentina - 2026</b></p><span class="chip">Año Nuevo (01-01)</span><span class="chip">Carnaval (02-16)</span><span class="chip">Carnaval (02-17)</span><span class="chip">Día Nacional de la Memoria por la Verdad y la Justicia (03-24)</span><span class="chip">Día del Veterano y de los Caídos en la Guerra de Malvinas (04-02)</span><span class="chip">Viernes Santo (04-03)</span><span class="chip">Día del Trabajador (05-01)</span><span class="chip">Día de la Revolución de Mayo (05-25)</span><span class="chip">Paso a la Inmortalidad del General Martín Miguel de Güemes (06-15)</span><span class="chip">Paso a la Inmortalidad del General Manuel Belgrano (06-20)</span><span class="chip">Día de la Independencia (07-09)</span><span class="chip">Paso a la Inmortalidad del General José de San Martín (08-17)</span><span class="chip">Día del Respeto a la Diversidad Cultural (10-12)</span><span class="chip">Día de la Soberanía Nacional (11-23)</span><span class="chip">Día de la Inmaculada Concepción de María (12-08)</span><span class="chip">Navidad (12-25)</span></div></div>
+<div class="card"><h2>Publicar ahora</h2><label>¿Qué vendés?</label><input placeholder="Ej: Pan casero, zapatos, ropa, servicios"><div class="grid2"><div><label>Subí hasta 3 imágenes</label><input type="file" multiple="" accept="image/*"></div><div><label>Subí tu logo</label><input type="file" accept="image/*"></div></div><div class="grid2"><div><label>Subí archivo / flyer</label><input type="file"></div><div><label>Subí un PDF para entrenar al bot (opcional)</label><input type="file" accept=".pdf"></div></div><label>WhatsApp de tu comercio</label><input placeholder="Ej: 3834607740"><p><button class="btn" onclick="verPublicacion()">Ver publicación</button> <button class="btn" onclick="abrirPagar()">Pagar</button></p></div>
+</div></section>
+<section id="sec-expansion"><div id="lock-expansion"></div><div id="content-expansion" style="display:none"><h2>NODO EXPANSIÓN</h2><p>Expandí en tu área. Más ciudades, más alcance, diseño y audio. Vos aprobás antes de publicar.</p><div class="card"><p>Usá la calculadora de Impulso, pero con Expansión, para llegar a más gente por día.</p><button class="btn" onclick="elegirProducto('expansion');ir('impulso',document.querySelectorAll('nav button')[1])">Calcular Expansión →</button></div></div></section>
+<section id="sec-cobros"><div id="lock-cobros"></div><div id="content-cobros" style="display:none"><h2>NODO COBROS</h2><p>¿Cobrás cuotas, alquileres, socios, alumnos? Nosotros nos encargamos de que te paguen sin que tengas que perseguir a nadie.</p><p><button class="btn" onclick="mostrarCobro('inst')">Soy la institución / comercio</button> <button class="btn2" onclick="mostrarCobro('paga')">Soy quien paga</button></p>
+<div id="cobro-inst" class="card"><h3>PARTE 1 - El que recibe</h3><div class="grid2"><div><label>CUIT</label><input placeholder="Ej: 20-12345678-9"></div><div><label>Nombre institución / comercio</label><input placeholder="Ej: Club, Colegio, Gremio"></div></div><div class="grid2"><div><label>Representante</label><input placeholder="Nombre y apellido"></div><div><label>DNI Representante</label><input placeholder="DNI"></div></div><div class="grid2"><div><label>CBU para que te llegue la plata</label><input placeholder="CBU - 22 dígitos"></div><div><label>Mail</label><input placeholder="mail@ejemplo.com"></div></div><div class="grid2"><div><label>Monto por cuota</label><input placeholder="Ej: 10000"></div><div><label>Frecuencia</label><select><option>Mensual</option><option>Quincenal</option><option>Semanal</option></select></div></div><label>Subí tu lista en Excel - Nombre, DNI y Teléfono</label><input type="file" accept=".xlsx,.xls,.csv"><p class="small">Arrastrá tu archivo de Excel acá.</p><p><button class="btn" onclick="abrirPagar()">Pagar</button></p></div>
+<div id="cobro-paga" class="card" style="display:none"><h3>PARTE 2 - Los que pagan</h3><p class="small">Cada cliente pone sus datos en una página segura. Nosotros nunca vemos el número de la tarjeta.</p><div class="grid2"><div><label>Nombre completo como figura en la tarjeta</label><input placeholder="Ej: Juan Pérez"></div><div><label>DNI del titular</label><input placeholder="DNI"></div></div><div class="grid2"><div><label>Mail</label><input placeholder="mail@ejemplo.com"></div><div><label>WhatsApp</label><input placeholder="383..."></div></div><div class="grid2"><div><label>Tarjeta - Número</label><input placeholder="XXXX XXXX XXXX XXXX"></div><div><label>Vencimiento / Código</label><input placeholder="MM/AA - CVV"></div></div><p><label><input type="checkbox" style="width:auto"> Acepto que me debiten todos los meses el monto de la cuota.</label></p><p><button class="btn" onclick="abrirPagar()">Quiero Cobro Recurrente</button></p></div>
+</div></section>
+<section id="sec-como"><h2>¿Cómo funciona?</h2><div class="card"><p>1. Publicás lo que vendés. &nbsp; 2. Te llevamos gente. &nbsp; 3. Te llegan mensajes al WhatsApp de tu comercio.</p><p class="small">Vos aprobás antes de publicar. Solo se publica si vos decís que sí.</p></div><div class="card"><h2>Control de vendedores</h2><p>Si tenés vendedores que salen a la calle, les generamos un código para controlarlos.</p><div class="grid2"><div><label>Nombre del vendedor</label><input id="nombreVendedor" placeholder="Ej: Juan Pérez"></div><div><label>Zona</label><input id="zonaVendedor" placeholder="Ej: Barrio Centro"></div></div><label>Horario</label><input id="horarioVendedor" placeholder="Ej: 9 a 13 y 17 a 21"><button class="btn" onclick="generarCodigoVendedor()">Generar código</button><p id="codigoVendedorGen" class="small"></p></div><div class="card"><h2>Atención al cliente</h2><p>Para todo el mundo. Escribinos al +54 9 3834 607740. Te acompañamos, en todo momento 24/7.</p></div><div class="card"><h2>Términos y Condiciones</h2><p class="small">NODO Argentina es solo facilitador / conector. No es banco, no es proveedor de pagos. No guardamos tarjetas. El cobro se hace con tarjeta, en una página segura. Nosotros armamos tu publicidad. Vos la ves antes. Solo se publica si vos decís que sí.</p></div></section>
+<section id="sec-resultados"><div id="lock-resultados"></div><div id="content-resultados" style="display:none"><h2>Ver mis resultados</h2><div class="card"><div class="kpi"><div><b>0</b><br>Personas que vieron</div><div><b>0</b><br>Clics</div><div><b>0</b><br>Mensajes de hoy</div></div><div class="kpi" style="margin-top:10px"><div><b>0</b><br>Personas que preguntaron</div><div><b>0</b><br>Ventas</div><div><b>0 días</b><br>Publicación activa</div></div><p><b>Leads - Personas que te escribieron</b></p><p class="small">Todavía no hay leads. Cuando alguien te escriba, aparece acá.</p></div><div class="card"><h2>Mantener activa / Pausar</h2><p>Cuando finaliza tu campaña, tenés 30 días sin costo para contactar a tus clientes. Después, podés mantener tu cuenta activa por $2.700 por mes. Mientras esté activa, seguimos registrando a cada persona nueva que ingresa. Si no la mantenés activa, queda guardada y en pausa.</p><button class="btn" onclick="abrirPagar()">Mantener activa - $2.700 por mes</button> <button class="btn2" onclick="alert('Tu información queda guardada y en pausa.')">Pausar</button></div></div></section>
+<div id="modalRegistro" class="modal"><div><h2>Registrarme</h2><p class="small">Para entrar a Impulso, Expansión, Cobros y Ver mis resultados, primero te registrás. Es para que tu información esté segura.</p><label>Nombre</label><input id="regNombre" placeholder="Tu nombre"><label>Teléfono / WhatsApp</label><input id="regTel" placeholder="383..."><label>Mail</label><input id="regMail" placeholder="mail@ejemplo.com"><label>Clave</label><input id="regClave" type="password" placeholder="Elegí una clave"><button class="btn" onclick="registrar()">Registrarme y entrar</button> <button class="btn2" onclick="cerrarModal('modalRegistro')">Cerrar</button></div></div>
+<div id="modalAcceso" class="modal"><div><h2>Acceso</h2><p class="small">Poné tu clave para entrar.</p><label>Clave</label><input id="claveAcceso" type="password" placeholder="Tu clave"><button class="btn" onclick="hacerLogin()">Ingresar</button> <button class="btn2" onclick="cerrarModal('modalAcceso')">Cerrar</button></div></div>
+<div id="modalPagar" class="modal"><div><h2>Pagar</h2><p class="small">Elegí cómo querés pagar, según tu país.</p><div id="opcionesPago"></div><button class="btn2" onclick="cerrarModal('modalPagar')">Cerrar</button></div></div>
+<div id="modalVerPubli" class="modal"><div><h2 id="tituloVerPubli">Tu publicación</h2><p id="textoVerPubli"></p><button class="btn" onclick="cerrarModal('modalVerPubli');abrirPagar()">Pagar</button> <button class="btn2" onclick="cerrarModal('modalVerPubli')">Cerrar</button></div></div>
 <script>
-document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{document.querySelector('nav')?.classList.remove('abierto')}));
-function abrirLogin(){document.getElementById('modalLogin').style.display='flex'}
-function cerrarLogin(){document.getElementById('modalLogin').style.display='none'}
-// === NODO: Países dLocal (17 LatAm) + Provincias + Idioma + Feriados ===
-const PROVINCIAS_POR_PAIS = {
-AR: ["Buenos Aires","Catamarca","Córdoba","Santa Fe","Mendoza","Tucumán","Salta","Jujuy","La Rioja","Santiago del Estero","Chaco","Corrientes","Misiones","Entre Ríos","San Juan","San Luis","La Pampa","Neuquén","Río Negro","Chubut","Santa Cruz","Tierra del Fuego","CABA"],
-BO: ["La Paz","Cochabamba","Santa Cruz","Oruro","Potosí","Chuquisaca","Tarija","Beni","Pando"],
-BR: ["Acre","Alagoas","Amapá","Amazonas","Bahía","Ceará","Distrito Federal","Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Río de Janeiro","Río Grande do Norte","Río Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"],
-CL: ["Arica y Parinacota","Tarapacá","Antofagasta","Atacama","Coquimbo","Valparaíso","Metropolitana","O'Higgins","Maule","Ñuble","Biobío","La Araucanía","Los Ríos","Los Lagos","Aysén","Magallanes"],
-CO: ["Amazonas","Antioquia","Arauca","Atlántico","Bogotá","Bolívar","Boyacá","Caldas","Caquetá","Casanare","Cauca","Cesar","Chocó","Córdoba","Cundinamarca","Guainía","Guaviare","Huila","La Guajira","Magdalena","Meta","Nariño","Norte de Santander","Putumayo","Quindío","Risaralda","San Andrés","Santander","Sucre","Tolima","Valle del Cauca","Vaupés","Vichada"],
-CR: ["San José","Alajuela","Cartago","Heredia","Guanacaste","Puntarenas","Limón"],
-DO: ["Distrito Nacional","Santo Domingo","Santiago","La Vega","Puerto Plata","San Cristóbal","La Altagracia","San Pedro de Macorís","Duarte","Espaillat"],
-EC: ["Guayas","Pichincha","Azuay","Manabí","El Oro","Loja","Tungurahua","Chimborazo","Esmeraldas","Imbabura"],
-SV: ["San Salvador","Santa Ana","San Miguel","La Libertad","Usulután","Sonsonate","La Unión"],
-GT: ["Guatemala","Quetzaltenango","Escuintla","Huehuetenango","Petén","Alta Verapaz","Sacatepéquez","Chimaltenango"],
-HN: ["Francisco Morazán","Cortés","Atlántida","Yoro","Olancho","Choluteca","Comayagua","Copán"],
-MX: ["Ciudad de México","Jalisco","Nuevo León","Puebla","Guanajuato","Veracruz","Yucatán","Quintana Roo","Chihuahua","Baja California","Sinaloa","Michoacán","Oaxaca","Chiapas","Sonora","Coahuila","Tamaulipas","Hidalgo","Querétaro","Morelos","Aguascalientes","Baja California Sur","Campeche","Colima","Durango","Guerrero","Nayarit","San Luis Potosí","Tabasco","Tlaxcala","Zacatecas"],
-NI: ["Managua","León","Granada","Masaya","Chinandega","Matagalpa","Estelí","Rivas"],
-PA: ["Panamá","Chiriquí","Colón","Coclé","Veraguas","Herrera","Los Santos","Bocas del Toro","Darién"],
-PY: ["Asunción","Central","Alto Paraná","Itapúa","Caaguazú","San Pedro","Cordillera","Guairá"],
-PE: ["Lima","Callao","Arequipa","Cusco","Piura","La Libertad","Lambayeque","Junín","Áncash","Cajamarca","Puno","Ica","Tacna","Ayacucho","Huánuco","San Martín","Amazonas","Apurímac","Huancavelica","Moquegua","Pasco","Tumbes","Ucayali","Madre de Dios"],
-UY: ["Montevideo","Canelones","Maldonado","Colonia","Salto","Paysandú","Rivera","Tacuarembó","Durazno","Florida","Rocha","Soriano","Artigas","Cerro Largo","Flores","Lavalleja","Río Negro","San José","Treinta y Tres"]
-};
-const TRAD = {
-es: {pais:"País", provincia:"Provincia / Estado / Departamento — según tu país", calendario:"Programá tu calendario"},
-pt: {pais:"País — Só países onde cobramos com dLocal", provincia:"Província / Estado / Departamento — conforme seu país", calendario:"Programe seu calendário"},
-en: {pais:"Country — Only countries where we charge with dLocal", provincia:"Province / State / Department — by your country", calendario:"Schedule your calendar"}
-};
+const PAISES=[{cod:'AR',nombre:'Argentina',moneda:'ARS',simbolo:'$',idioma:'es',prov:['Buenos Aires','CABA','Catamarca','Chaco','Chubut','Córdoba','Corrientes','Entre Ríos','Formosa','Jujuy','La Pampa','La Rioja','Mendoza','Misiones','Neuquén','Río Negro','Salta','San Juan','San Luis','Santa Cruz','Santa Fe','Santiago del Estero','Tierra del Fuego','Tucumán']},{cod:'MX',nombre:'México',moneda:'MXN',simbolo:'$',idioma:'es',prov:['Ciudad de México','Jalisco','Nuevo León','Puebla','Yucatán','Veracruz']},{cod:'BR',nombre:'Brasil',moneda:'BRL',simbolo:'R$',idioma:'pt',prov:['São Paulo','Río de Janeiro','Minas Gerais','Bahía']},{cod:'CL',nombre:'Chile',moneda:'CLP',simbolo:'$',idioma:'es',prov:['Santiago','Valparaíso','Concepción']},{cod:'CO',nombre:'Colombia',moneda:'COP',simbolo:'$',idioma:'es',prov:['Bogotá','Medellín','Cali']},{cod:'PE',nombre:'Perú',moneda:'PEN',simbolo:'S/',idioma:'es',prov:['Lima','Arequipa','Cusco']},{cod:'UY',nombre:'Uruguay',moneda:'UYU',simbolo:'$',idioma:'es',prov:['Montevideo','Canelones','Maldonado']},{cod:'EC',nombre:'Ecuador',moneda:'USD',simbolo:'$',idioma:'es',prov:['Quito','Guayaquil','Cuenca']},{cod:'DO',nombre:'Rep. Dominicana',moneda:'DOP',simbolo:'RD$',idioma:'es',prov:['Distrito Nacional','Santiago','La Vega']},{cod:'BO',nombre:'Bolivia',moneda:'BOB',simbolo:'Bs',idioma:'es',prov:['La Paz','Santa Cruz','Cochabamba']},{cod:'PY',nombre:'Paraguay',moneda:'PYG',simbolo:'₲',idioma:'es',prov:['Asunción','Ciudad del Este']},{cod:'CR',nombre:'Costa Rica',moneda:'CRC',simbolo:'₡',idioma:'es',prov:['San José','Alajuela','Cartago']}];
+let _pais='AR', _registrado=false, _mesCal=new Date();
+try{ _registrado = localStorage.getItem('nodo_registrado')==='1'; }catch(e){}
+function ir(sec,btn){
+ document.querySelectorAll('section').forEach(s=>s.classList.remove('act'));
+ document.getElementById('sec-'+sec).classList.add('act');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('act')); if(btn) btn.classList.add('act');
+ window.scrollTo({top:0,behavior:'smooth'});
+ const bloqueadas=['impulso','expansion','cobros','resultados'];
+ if(bloqueadas.includes(sec) && !_registrado){ mostrarLock(sec); } else { ocultarLock(sec); }
+ if(sec==='impulso' && _registrado){ window._productoNodo='impulso'; calcImpulso(); }
+}
+function mostrarLock(sec){
+ const lock=document.getElementById('lock-'+sec); const cont=document.getElementById('content-'+sec);
+ if(lock) lock.innerHTML='<div class="lock"><h2>Para entrar acá, primero registrate</h2><p>Es para que tu información esté segura. No mostramos los paneles sin registro.</p><button class="btn" onclick="abrirRegistro()">Registrarme</button> <button class="btn2" onclick="abrirAcceso()">Ya estoy registrado, ingresar con clave</button></div>';
+ if(lock) lock.style.display='block'; if(cont) cont.style.display='none';
+}
+function ocultarLock(sec){ const lock=document.getElementById('lock-'+sec); const cont=document.getElementById('content-'+sec); if(lock) lock.style.display='none'; if(cont) cont.style.display='block'; }
+function abrirRegistro(){ document.getElementById('modalRegistro').style.display='flex'; }
+function abrirAcceso(){ document.getElementById('modalAcceso').style.display='flex'; }
+function cerrarModal(id){ document.getElementById(id).style.display='none'; }
+function registrar(){
+ const n=document.getElementById('regNombre').value.trim(), t=document.getElementById('regTel').value.trim(), m=document.getElementById('regMail').value.trim(), c=document.getElementById('regClave').value.trim();
+ if(!n||!t||!c){ alert('Completá nombre, teléfono y clave.'); return; }
+ try{ localStorage.setItem('nodo_registrado','1'); localStorage.setItem('nodo_nombre',n); }catch(e){}
+ _registrado=true; cerrarModal('modalRegistro'); alert('¡Listo, '+n+'! Ya podés entrar a Impulso, Expansión, Cobros y Ver mis resultados.');
+ ir('impulso',document.querySelectorAll('nav button')[1]);
+}
+function hacerLogin(){ const p=document.getElementById('claveAcceso').value.trim(); if(!p){ alert('Poné tu clave.'); return; } try{ localStorage.setItem('nodo_registrado','1'); }catch(e){} _registrado=true; cerrarModal('modalAcceso'); ir('resultados',document.querySelectorAll('nav button')[5]); }
+function mostrarCobro(tipo){ document.getElementById('cobro-inst').style.display=tipo==='inst'?'block':'none'; document.getElementById('cobro-paga').style.display=tipo==='paga'?'block':'none'; }
+function abrirPagar(){
+ const p=PAISES.find(x=>x.cod===_pais)||PAISES[0]; let opts='';
+ if(_pais==='AR'){ opts='<p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con Mercado Pago.\')">Pagar con Mercado Pago</button></p><p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con Pago TIC.\')">Pagar con Pago TIC</button></p><p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con dLocal.\')">Pagar con dLocal</button></p>'; }
+ else if(['BR','MX','CL','CO','PE','UY','EC'].includes(_pais)){ opts='<p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con Mercado Pago.\')">Pagar con Mercado Pago</button></p><p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con dLocal.\')">Pagar con dLocal</button></p>'; }
+ else { opts='<p><button class="btn" style="width:100%;margin:4px 0" onclick="alert(\'Te llevamos a pagar con dLocal.\')">Pagar con dLocal</button></p>'; }
+ document.getElementById('opcionesPago').innerHTML='<p class="small">País: '+p.nombre+' - Moneda: '+p.moneda+'</p>'+opts;
+ document.getElementById('modalPagar').style.display='flex';
+}
+function cargarPaises(){ const sel=document.getElementById('paisPubli'); sel.innerHTML=''; PAISES.forEach(p=>{ const o=document.createElement('option'); o.value=p.cod; o.text=p.nombre+' - '+p.moneda; sel.appendChild(o); }); sel.value='AR'; cambiarPais(); }
 function cambiarPais(){
-  const sel=document.getElementById('paisPubli'); if(!sel) return;
-  const cod=sel.value; const opt=sel.options[sel.selectedIndex];
-  const idioma=opt.dataset.idioma||'es'; const moneda=opt.dataset.moneda||'';
-  const nombre=opt.text.split(' — ')[0];
-  const selId=document.getElementById('idiomaPubli'); if(selId) selId.value=idioma;
-  aplicarIdioma(idioma);
-  const prov=document.getElementById('provinciaPubli'); if(prov){ prov.innerHTML=''; (PROVINCIAS_POR_PAIS[cod]||[]).forEach(p=>{ const o=document.createElement('option'); o.text=p; prov.appendChild(o); }); }
-  const info=document.getElementById('paisInfo'); if(info) info.innerText='Te acompañamos, en todo momento 24/7, estés donde estés. Elegí tu país y seguimos. Cobro en '+moneda+' ('+nombre+'). ';
-  const np=document.getElementById('nombrePaisFeriado'); if(np) np.innerText=nombre;
-  cargarFeriados(cod);
-  calcImpulso();
-}
-function aplicarIdioma(lang){
-  window._idiomaNodo=lang;
-  document.documentElement.lang = lang==='pt' ? 'pt-BR' : lang==='en' ? 'en' : 'es-AR';
-  const d=TRAD[lang]||TRAD.es;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(d[k]) el.innerText=d[k]; });
-  const sel=document.getElementById('idiomaPubli'); if(sel) sel.value=lang;
-}
-async function cargarFeriados(cod){
-  const cont=document.getElementById('listaFeriados'); if(!cont) return;
-  const anio=new Date().getFullYear();
-  const elAnio=document.getElementById('anioFeriado'); if(elAnio) elAnio.innerText=anio;
-  cont.innerHTML='<p class="small">Cargando feriados...</p>';
-  let lista=[];
-  try{ const r=await fetch('/api/feriados/'+cod+'/'+anio); const j=await r.json(); if(j.ok&&j.feriados) lista=j.feriados; }catch(e){}
-  if(!lista.length){ try{ const r2=await fetch('https://date.nager.at/api/v3/PublicHolidays/'+anio+'/'+cod); if(r2.ok) lista=await r2.json(); }catch(e){} }
-  if(!lista.length){ cont.innerHTML='<p class="small">No pudimos cargar feriados de este país ahora. Elegí la fecha en el calendario de abajo y se agrega igual.</p>'; return; }
-  cont.innerHTML='';
-  lista.slice(0,30).forEach(f=>{
-    const s=document.createElement('span'); s.className='chip'; s.style.cursor='pointer';
-    const fecha=(f.date||'').slice(5); const nombre=f.localName||f.name||'Feriado';
-    s.innerText=nombre+' ('+fecha+')';
-    s.onclick=()=>{ s.classList.toggle('act'); const sel=document.getElementById('feriadosSeleccionados'); const elegidos=[...cont.querySelectorAll('.chip.act')].map(c=>c.innerText).join(', '); if(sel) sel.innerText=elegidos?('Feriados elegidos: '+elegidos):''; calcImpulso(); };
-    cont.appendChild(s);
-  });
-}
-function elegirProducto(prod){
-  window._productoNodo = prod;
-  const bI=document.getElementById('btnImpulso'), bE=document.getElementById('btnExpansion');
-  if(bI&&bE){ if(prod==='impulso'){ bI.className='btn'; bE.className='btn2'; } else { bI.className='btn2'; bE.className='btn'; } }
-  const d=document.getElementById('descProducto');
-  if(d) d.innerText = prod==='impulso' ? 'Impulso: Publicá en tu zona con un plan básico, acorde a tu presupuesto. Para empezar a crecer.' : 'Expansión: Expandí en tu área. Publicá en más ciudades y en todo el país, con plataforma completa, diseño y estrategia.';
-  calcImpulso();
-}
-function verPublicacion(){
-  const prod = window._productoNodo || 'impulso';
-  const dias = document.getElementById('diasImpulso')?.value || 3;
-  const zona = document.getElementById('zonaPubli')?.options[document.getElementById('zonaPubli').selectedIndex]?.text || '';
-  const plan = document.getElementById('plats')?.options[document.getElementById('plats').selectedIndex]?.text || '';
-  const tt=document.getElementById('tituloVerPubli'); if(tt) tt.innerText = (prod==='impulso'?'NODO IMPULSO — ':'NODO EXPANSIÓN — ') + 'Tu negocio, con más clientes';
-  const tx=document.getElementById('textoVerPubli'); if(tx) tx.innerText = 'Publicidad para '+dias+' días, en '+zona+', plan '+plan+'. Con tu imagen y tu texto. Revisala y decí si te gusta.';
-  const mm=document.getElementById('modalVerPubli'); if(mm) mm.style.display='flex';
+ const sel=document.getElementById('paisPubli'); if(!sel) return; _pais=sel.value;
+ const p=PAISES.find(x=>x.cod===_pais)||PAISES[0];
+ const loc=document.getElementById('localidadPubli'); if(loc) loc.value='';
+ const cp=document.getElementById('codigoPostalPubli'); if(cp) cp.value='';
+ const prov=document.getElementById('provinciaPubli'); if(prov){ prov.innerHTML=''; p.prov.forEach(x=>{ const o=document.createElement('option'); o.text=x; prov.appendChild(o); }); }
+ const id=document.getElementById('idiomaPubli'); if(id) id.value=p.idioma;
+ const info=document.getElementById('paisInfo'); if(info) info.innerText='País: '+p.nombre+' - Cobro en '+p.moneda+'.';
+ cargarFeriados(_pais); renderCalendario(); calcImpulso();
 }
 function calcImpulso(){
-  const dias = +document.getElementById('diasImpulso').value||3;
-  const prod = window._productoNodo || 'impulso';
-  const zonaSel = document.getElementById('zonaPubli');
-  const zonaMult = zonaSel ? (+zonaSel.options[zonaSel.selectedIndex].dataset.mult || 1) : 1;
-  const zonaTxt = zonaSel ? zonaSel.options[zonaSel.selectedIndex].text : 'Mi localidad';
-  const planSel = document.getElementById('plats');
-  const plan = planSel ? planSel.value : 'basica';
-  const planMult = plan==='total' ? 2.1 : plan==='completa' ? 1.5 : 1;
-  const planTxt = planSel ? planSel.options[planSel.selectedIndex].text : 'Básica';
-  // Base: Impulso 500 personas/día, Expansión 2000 personas/día. Costo base por día: Impulso $650, Expansión $2500 (más alcance, más trabajo)
-  const alcancePorDia = prod==='expansion' ? 2000 : 500;
-  const costoBaseDia = prod==='expansion' ? 2500 : 650;
-  const alcance = dias * alcancePorDia;
-  const costoPlat = Math.round(costoBaseDia * zonaMult * planMult * dias);
-  const total = Math.round(costoPlat * 1.20);
-  const piso = prod==='expansion' ? 10000 : 1500;
-  const totalFinal = Math.max(piso, total);
-  const dEl=document.getElementById('diasImpVal'); if(dEl) dEl.innerText=dias+' días';
-  const aEl=document.getElementById('alcanceImpVal'); if(aEl) aEl.innerText='Alcance: '+alcance.toLocaleString('es-AR')+' personas';
-  const pEl=document.getElementById('precioFinalVal'); if(pEl) pEl.innerText='Total: $'+totalFinal.toLocaleString('es-AR');
-  const aCalc=document.getElementById('alcanceCalcImp'); if(aCalc) aCalc.innerText=dias+' días = '+alcance.toLocaleString('es-AR')+' personas ('+alcancePorDia.toLocaleString('es-AR')+' por día en '+(prod==='impulso'?'Impulso':'Expansión')+'). A más días, más personas y más precio.';
-  const mEl=document.getElementById('montoVal'); if(mEl) mEl.innerText='$'+totalFinal.toLocaleString('es-AR');
-  const calc=document.getElementById('calcTxt'); if(calc) calc.innerText='Tu precio final por '+dias+' días. Alcance '+alcance.toLocaleString('es-AR')+' personas.';
-  const ej=document.getElementById('ejemploPrecio'); if(ej) ej.innerText='Ejemplo: '+dias+' días en '+ (prod==='impulso'?'Impulso':'Expansión') + ' — Total $'+totalFinal.toLocaleString('es-AR')+'.';
+ const dias=+document.getElementById('diasImpulso').value||10;
+ const prod=window._productoNodo||'impulso';
+ const zonaSel=document.getElementById('zonaPubli'); const zonaMult=zonaSel?(+zonaSel.options[zonaSel.selectedIndex].dataset.mult||1):1;
+ const planSel=document.getElementById('plats'); const plan=planSel?planSel.value:'basica'; const planMult=plan==='total'?2.1:plan==='completa'?1.5:1;
+ const alcancePorDia=prod==='expansion'?2000:500; const costoBaseDia=prod==='expansion'?2500:650;
+ const alcance=dias*alcancePorDia; const costoPlat=Math.round(costoBaseDia*zonaMult*planMult*dias); const total=Math.round(costoPlat*1.20); const piso=prod==='expansion'?10000:1500; const totalFinal=Math.max(piso,total);
+ const p=PAISES.find(x=>x.cod===_pais)||PAISES[0];
+ document.getElementById('resumenCalc').innerText=dias+' días - Alcance: '+alcance.toLocaleString('es-AR')+' personas - Total: '+p.simbolo+totalFinal.toLocaleString('es-AR')+' '+p.moneda;
+ const d=document.getElementById('detalleCalc'); if(d) d.innerText='1 día = '+alcancePorDia.toLocaleString('es-AR')+' personas en '+(prod==='impulso'?'Impulso':'Expansión')+'. Precio en '+p.moneda+'.';
+ const c=document.getElementById('calcTxt'); if(c) c.innerText='Tu precio final por '+dias+' días, '+alcance.toLocaleString('es-AR')+' personas, '+p.simbolo+totalFinal.toLocaleString('es-AR')+' '+p.moneda+'. Todo incluido.';
 }
-function hacerLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  const p=document.getElementById('loginPass').value.trim();
-  if(u==='Gustavo Nodo' && p==='Gustavo Nodo 2026'){
-    document.getElementById('modalLogin').style.display='none';
-    document.getElementById('panelGustavo').style.display='block';
-    document.getElementById('panelGustavo').scrollIntoView();
-    document.getElementById('loginError').innerText='';
-    return;
-  }
-  if(u && p){
-    document.getElementById('modalLogin').style.display='none';
-    document.getElementById('panelUsuario').style.display='block';
-    document.getElementById('panelUsuario').scrollIntoView();
-    return;
-  }
-  document.getElementById('loginError').innerText='Completá usuario y contraseña.';
+function elegirProducto(prod){ window._productoNodo=prod; calcImpulso(); }
+let _diasSel=new Set(), _feriados=new Set();
+function renderCalendario(){
+ const cont=document.getElementById('calendarioReal'); if(!cont) return;
+ const y=_mesCal.getFullYear(), m=_mesCal.getMonth();
+ document.getElementById('tituloMes').innerText=_mesCal.toLocaleString('es-AR',{month:'long',year:'numeric'});
+ cont.innerHTML='';
+ ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(d=>{ const h=document.createElement('div'); h.className='head'; h.innerText=d; cont.appendChild(h); });
+ const primer=new Date(y,m,1); let offset=(primer.getDay()+6)%7;
+ for(let i=0;i<offset;i++){ const e=document.createElement('div'); e.style.background='transparent'; e.style.border='none'; e.style.cursor='default'; cont.appendChild(e); }
+ const diasMes=new Date(y,m+1,0).getDate();
+ for(let d=1;d<=diasMes;d++){
+   const fecha=new Date(y,m,d); const iso=fecha.toISOString().slice(0,10);
+   const c=document.createElement('div'); c.innerText=d;
+   if(_diasSel.has(iso)) c.classList.add('sel');
+   if(_feriados.has(iso)) c.classList.add('fer');
+   c.onclick=()=>{ if(_diasSel.has(iso)){ _diasSel.delete(iso); c.classList.remove('sel'); } else { _diasSel.add(iso); c.classList.add('sel'); } actualizarDias(); };
+   cont.appendChild(c);
+ }
 }
-function generarCodigo(){
-  const n=document.getElementById('nombreAsesor').value.trim()||'ASESOR';
-  const cod='NODO-'+n.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)+'-'+Math.floor(1000+Math.random()*9000);
-  document.getElementById('codigoGen').innerText='Código generado: '+cod+' - Compartilo con tu asesor. Cada venta con ese código queda registrada a su nombre para rendir y pagarle.';
+function cambiarMes(delta){ _mesCal.setMonth(_mesCal.getMonth()+delta); renderCalendario(); }
+function actualizarDias(){ const el=document.getElementById('diasElegidos'); if(el) el.innerText=_diasSel.size?('Días elegidos: '+_diasSel.size+' días'):'Días elegidos: ninguno todavía.'; }
+function selCalendario(tipo){ _diasSel.clear(); const y=_mesCal.getFullYear(), m=_mesCal.getMonth(); const diasMes=new Date(y,m+1,0).getDate(); for(let d=1;d<=diasMes;d++){ const f=new Date(y,m,d); const dow=f.getDay(); if(tipo==='semana'&&dow>=1&&dow<=5) _diasSel.add(f.toISOString().slice(0,10)); if(tipo==='finde'&&(dow===0||dow===6)) _diasSel.add(f.toISOString().slice(0,10)); } renderCalendario(); actualizarDias(); }
+function limpiarDias(){ _diasSel.clear(); renderCalendario(); actualizarDias(); }
+async function cargarFeriados(cod){
+ const cont=document.getElementById('listaFeriados'); if(!cont) return;
+ const anio=new Date().getFullYear(); cont.innerHTML='<p class="small">Cargando feriados...</p>'; let lista=[];
+ try{ const r=await fetch('/api/feriados/'+cod+'/'+anio); const j=await r.json(); if(j.ok&&j.feriados) lista=j.feriados; }catch(e){}
+ if(!lista.length){ try{ const r2=await fetch('https://date.nager.at/api/v3/PublicHolidays/'+anio+'/'+cod); if(r2.ok) lista=await r2.json(); }catch(e){} }
+ _feriados.clear(); lista.forEach(f=>{ if(f.date) _feriados.add(f.date); });
+ if(!lista.length){ cont.innerHTML='<p class="small">No pudimos cargar feriados ahora.</p>'; renderCalendario(); return; }
+ cont.innerHTML='<p><b>Feriados en '+(PAISES.find(x=>x.cod===cod)?.nombre||cod)+' - '+anio+'</b></p>';
+ lista.slice(0,20).forEach(f=>{ const s=document.createElement('span'); s.className='chip'; s.innerText=(f.localName||f.name||'Feriado')+' ('+(f.date||'').slice(5)+')'; s.onclick=()=>{ s.classList.toggle('act'); if(f.date){ if(_feriados.has(f.date) && s.classList.contains('act')) _diasSel.add(f.date); else _diasSel.delete(f.date); actualizarDias(); } }; cont.appendChild(s); });
+ renderCalendario();
 }
-async function loginAdmin(){
-  const c=document.getElementById('claveAdmin').value;
-  try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clave:c})});const j=await r.json();if(j.ok){window.location.href='/admin';}else{document.getElementById('adminError').innerText='Clave incorrecta';}}catch(e){document.getElementById('adminError').innerText='No se pudo conectar. Intentá de nuevo.';}
-}
-calcImpulso(); cambiarPais();
-function generarCodigoVendedor(){
-  const n=document.getElementById('nombreVendedor')?.value.trim()||'VENDEDOR';
-  const z=document.getElementById('zonaVendedor')?.value.trim()||'';
-  const h=document.getElementById('horarioVendedor')?.value.trim()||'';
-  const cod='NODO-'+n.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)+'-'+Math.floor(1000+Math.random()*9000);
-  const el=document.getElementById('codigoVendedorGen');
-  if(el) el.innerText='Código generado: '+cod+' - Vendedor: '+n+' - Zona: '+z+' - Horario: '+h+' - Cada venta con ese código queda a su nombre.';
-}
-</script>
-</body></html>
+function verPublicacion(){ const prod=window._productoNodo||'impulso'; const dias=document.getElementById('diasImpulso')?.value||10; document.getElementById('tituloVerPubli').innerText=(prod==='impulso'?'NODO IMPULSO - ':'NODO EXPANSIÓN - ')+'Tu negocio, con más clientes'; document.getElementById('textoVerPubli').innerText='Publicidad para '+dias+' días. Con tu imagen y tu texto. Revisala y decí si te gusta.'; document.getElementById('modalVerPubli').style.display='flex'; }
+function generarCodigoVendedor(){ const n=document.getElementById('nombreVendedor')?.value.trim()||'VENDEDOR'; const z=document.getElementById('zonaVendedor')?.value.trim()||''; const h=document.getElementById('horarioVendedor')?.value.trim()||''; const cod='VEN-'+Math.floor(1000+Math.random()*9000); const el=document.getElementById('codigoVendedorGen'); if(el) el.innerText='Código: '+cod+' - Vendedor: '+n+' - Zona: '+z+' - Horario: '+h+'.'; }
+cargarPaises(); renderCalendario(); calcImpulso();
+
+
+
+
+const obs=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const gal=document.getElementById('galeriaTop');
+if(gal){ setInterval(()=>{ if(gal.scrollLeft+gal.clientWidth>=gal.scrollWidth) gal.scrollTo({left:0,behavior:'smooth'}); else gal.scrollBy({left:340,behavior:'smooth'}); },3500); }
+</script></body></html>

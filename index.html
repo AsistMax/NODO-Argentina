@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
-<html lang="es-AR">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0061)file:///C:/Users/usuario/Downloads/Privada-NODO-COMPLETA.html -->
+<html lang="es-AR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NODO Argentina - Sistema País</title>
 <style>
@@ -41,6 +40,7 @@ th{color:var(--muted);font-weight:600}
 </style>
 </head>
 <body>
+
 <!-- LOGIN NODO - Panel Admin Oculto - Clave segura, no se muestra contraseña -->
 <div id="loginOverlay" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;">
   <div style="background:#111;border:2px solid #D4AF37;border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center;">
@@ -48,7 +48,7 @@ th{color:var(--muted);font-weight:600}
     <p style="color:#aaa;font-size:13px;">Panel Administrador - Solo equipo NODO</p>
     <input id="claveAdmin" type="password" placeholder="Clave privada" style="width:100%;padding:12px;margin:12px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff;">
     <button onclick="loginAdmin()" style="width:100%;background:#D4AF37;color:#000;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer;">Ingresar</button>
-    <p style="font-size:12px;color:#888;margin-top:10px;">Si no tenés clave, volvé a <a href="/" style="color:#D4AF37;">nodo-argentina.onrender.com</a> (público)</p>
+    <p style="font-size:12px;color:#888;margin-top:10px;">Si no tenés clave, volvé a <a href="file:///C:/" style="color:#D4AF37;">nodo-argentina.onrender.com</a> (público)</p>
     <p id="loginError" style="color:#FF4444;font-size:12px;"></p>
   </div>
 </div>
@@ -64,13 +64,15 @@ async function loginAdmin(){
 }
 document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key==='Enter') loginAdmin(); });
 </script>
+
 <div class="header">
 <div class="logo">NODO <span>ARGENTINA</span> - SISTEMA PAÍS</div>
-<a href="/" style="background:#D4AF37;color:#000;padding:8px 14px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px;white-space:nowrap">← Volver a Página Pública</a>
+<a href="file:///C:/" style="background:#D4AF37;color:#000;padding:8px 14px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px;white-space:nowrap">← Volver a Página Pública</a>
 <div class="status">Groq <b>Activo</b> | Meta <b>Activo</b> | Google Ads <b>Pendiente RapiPago</b></div>
 </div>
+
 <div class="container">
-<div style="margin-bottom:12px"><a id="btn-volver-publico" href="/" style="display:inline-block;background:#D4AF37;color:#000;padding:10px 16px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px">← Volver a Página Pública (lo que ve la gente)</a> <span style="font-size:12px;color:#888">Estás en la parte privada. El público entra por / y ve otra página.</span></div>
+<div style="margin-bottom:12px"><a id="btn-volver-publico" href="file:///C:/" style="display:inline-block;background:#D4AF37;color:#000;padding:10px 16px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px">← Volver a Página Pública (lo que ve la gente)</a> <span style="font-size:12px;color:#888">Estás en la parte privada. El público entra por / y ve otra página.</span></div>
 <div class="tabs">
 <div class="tab active" data-tab="adm">PANEL ADM</div>
 <div class="tab" data-tab="crm">CRM</div>
@@ -81,6 +83,7 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <div class="tab" data-tab="barrio" style="background:var(--gold);color:#000;font-weight:800">MODO BARRIO - RÁPIDO</div>
 <div class="tab" data-tab="suscripciones">SUSCRIPCIONES Y PAGOS</div>
 </div>
+
 <!-- PANEL ADM -->
 <div id="tab-adm" class="tab-content">
 <div class="kpi">
@@ -91,10 +94,12 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 </div>
 <div class="card"><h3>Empresas - Red NODO</h3><div id="lista-empresas" class="empty">No hay empresas en Red NODO - Usá Incorporación para cargar la primera</div></div>
 </div>
+
 <!-- CRM -->
 <div id="tab-crm" class="tab-content" style="display:none">
 <div class="card"><h3>Contactos - Gestión Comercial</h3><div id="lista-crm" class="empty">Sin contactos registrados - Los contactos de tus links de área aparecerán aquí con comprobante</div></div>
 </div>
+
 <!-- EXPLOTACION DE AREA -->
 <div id="tab-area" class="tab-content" style="display:none">
 <div class="grid2">
@@ -116,6 +121,7 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 </div>
 <div class="card"><h3>Agentes de Área - País</h3><div id="lista-agentes" class="empty">Sin agentes - Creá tu primer agente para generar link AGT-XXXX</div></div>
 </div>
+
 <!-- INCORPORACION -->
 <div id="tab-incorporacion" class="tab-content" style="display:none">
 <div class="card"><h3>Incorporación de Empresa / Comercio</h3>
@@ -134,12 +140,13 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <label><input type="checkbox" value="Catamarca"> Catamarca</label><label><input type="checkbox" value="La Rioja"> La Rioja</label><label><input type="checkbox" value="Tucuman"> Tucumán</label><label><input type="checkbox" value="Salta"> Salta</label><label><input type="checkbox" value="Jujuy"> Jujuy</label><label><input type="checkbox" value="Cordoba"> Córdoba</label><label><input type="checkbox" value="CABA"> CABA</label><label><input type="checkbox" value="Buenos Aires"> Buenos Aires</label><label><input type="checkbox" value="Mendoza"> Mendoza</label><label><input type="checkbox" value="Santa Fe"> Santa Fe</label><label><input type="checkbox" value="Todo el país"> Todo el país</label>
 </div>
 <label>Descripción detallada</label><textarea id="inc-desc" rows="3" placeholder="Servicios, promociones, horarios..."></textarea>
-<label>Archivos (fotos, videos, catálogo)</label><input type="file" multiple>
+<label>Archivos (fotos, videos, catálogo)</label><input type="file" multiple="">
 </div>
 </div>
 <button onclick="crearEmpresa()">Activar en Red NODO</button>
 </div>
 </div>
+
 <!-- COSTOS -->
 <div id="tab-costos" class="tab-content" style="display:none">
 <div class="card"><h3>Cálculo de Costos - Organizado y Prolijo</h3>
@@ -167,18 +174,20 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <button id="btn-pagar" style="display:none;margin-top:12px;background:#2ecc71;color:#000" onclick="generarPago()">Pagar con Mercado Pago - Monto Variable</button>
 </div>
 </div>
+
+
 <!-- CIERRE AUTOMATICO 24/7 -->
 <div id="tab-cierre" class="tab-content" style="display:none">
 <div class="grid2">
 <div class="card"><h3>Bot 24/7 - Cierre Automático de Convenio</h3>
-<p style="font-size:12px;color:var(--muted)">Bots cierran convenios 24/7 con T&C + tarjeta tokenizada. Débito automático fecha límite + reintentos diarios.</p>
+<p style="font-size:12px;color:var(--muted)">Bots cierran convenios 24/7 con T&amp;C + tarjeta tokenizada. Débito automático fecha límite + reintentos diarios.</p>
 <label>Razón Social</label><input id="cierre-razon">
 <label>CUIT (validación matemática)</label><input id="cierre-cuit" placeholder="20123456789">
 <label>Email</label><input id="cierre-email">
 <label>Teléfono</label><input id="cierre-telefono" placeholder="3834...">
 <label>Provincias</label><input id="cierre-provincias" placeholder="Catamarca, Todo el país">
 <label>Monto Total (calculado por bots)</label><input id="cierre-monto" type="number" value="1200000">
-<label><input type="checkbox" id="cierre-terminos"> Acepto Términos y Condiciones <a href="#" onclick="verTerminos();return false;" style="color:var(--gold)">Ver T&C</a></label>
+<label><input type="checkbox" id="cierre-terminos"> Acepto Términos y Condiciones <a href="file:///C:/Users/usuario/Downloads/Privada-NODO-COMPLETA.html#" onclick="verTerminos();return false;" style="color:var(--gold)">Ver T&amp;C</a></label>
 <label>Token Tarjeta (Mercado Pago tokenizado - simulado)</label><input id="cierre-token" placeholder="tok_... (MP tokeniza automáticamente)">
 <button onclick="cerrarConvenio()">Cerrar Convenio Automático</button>
 <div id="resultado-cierre" class="total-box" style="display:none"></div>
@@ -203,14 +212,19 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 </div>
 </div>
 </div>
+
+
 <!-- MODO BARRIO - PUBLICACIÓN RÁPIDA -->
 <div id="tab-barrio" class="tab-content" style="display:none">
 <div class="grid2">
 <div class="card" style="border:1px solid var(--gold)">
 <h3>🚀 MODO BARRIO - Publicación Rápida (Sin tanto formulario)</h3>
 <div class="mono" style="font-size:10px;color:var(--muted)">Para el que vende zapatos HOY con $2000. Sin CUIT, sin tanta info. Publica YA en el barrio. Barra tipo Facebook que calcula días y alcance automático.</div>
+
 <label>¿Qué vendés? (Título)</label><input id="barrio-titulo" placeholder="Ej: Vendo par de zapatos Nike 42 - Nuevos">
+
 <label>Descripción corta</label><textarea id="barrio-desc" rows="2" placeholder="Ej: Zapatos nuevos, talle 42, $15.000, barrio Centro"></textarea>
+
 <label>Presupuesto total que tenés ($)</label>
 <input type="range" id="barrio-presupuesto-range" min="500" max="20000" step="500" value="2000" oninput="actualizarBarra()">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
@@ -218,6 +232,7 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <input id="barrio-presupuesto" type="number" value="2000" style="width:100px;text-align:center;font-weight:800" oninput="document.getElementById('barrio-presupuesto-range').value=this.value; actualizarBarra()">
 <span class="badge">$20.000</span>
 </div>
+
 <div style="margin-top:12px">
 <label>Barra Facebook - Días calculados automáticamente según monto</label>
 <div style="height:8px;background:#111;border-radius:4px;overflow:hidden;border:1px solid var(--border)">
@@ -227,11 +242,16 @@ document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key=
 <span>1 día</span><span id="barra-dias" style="font-weight:800">6 días</span><span>30 días</span>
 </div>
 </div>
+
 <label>Zona - Barrio / Ciudad</label><select id="barrio-zona" onchange="actualizarBarra()"><option>Barrio - 2km a la redonda</option><option>Catamarca - Ciudad</option><option>Catamarca - Todo</option><option>La Rioja</option><option>Todo el país</option></select>
+
 <label>WhatsApp destino (donde le llegan interesados directo - AUTOGESTION)</label><input id="barrio-wsp" placeholder="3834...">
+
 <button class="gold" onclick="publicarBarrio()" style="margin-top:12px">PUBLICAR YA EN EL BARRIO - MODO RÁPIDO</button>
+
 <div id="resultado-barrio" class="total-box" style="display:none"></div>
 </div>
+
 <div>
 <div class="card">
 <h3>📊 Cálculo Barra Tipo Facebook - En Tiempo Real</h3>
@@ -241,6 +261,7 @@ Ejemplo $2000 en barrio: 6 días x $333/día = 15.000-25.000 personas ven tu pub
 </div>
 <div id="detalle-barrio" style="margin-top:10px"></div>
 </div>
+
 <div class="card" style="margin-top:10px">
 <h3>🛠️ Herramientas que usamos para no gastar fortuna</h3>
 <div style="font-size:10px" class="mono">
@@ -253,6 +274,7 @@ Ejemplo $2000 en barrio: 6 días x $333/día = 15.000-25.000 personas ven tu pub
 </div>
 <div class="config" style="margin-top:8px">Estrategia: 80% herramientas gratis + 20% Meta barato. No pagas TikTok Ads caro. Costo NODO casi $0, solo lo que paga cliente en Meta.</div>
 </div>
+
 <div class="card" style="margin-top:10px;border:1px solid var(--gold)">
 <h3>⭐ Diferencial NODO - Por qué no somos uno más</h3>
 <div class="mono" style="font-size:10px;line-height:1.6">
@@ -266,11 +288,14 @@ Ejemplo $2000 en barrio: 6 días x $333/día = 15.000-25.000 personas ven tu pub
 </div>
 </div>
 </div>
+
 <!-- SUSCRIPCIONES -->
 <div id="tab-suscripciones" class="tab-content" style="display:none">
 <div class="card"><h3>Suscripciones y Pagos - Sistema País</h3><p style="font-size:12px;color:var(--muted)">Bots calculan vencimientos automáticamente. Pago tokenizado con MP, nunca sin crédito.</p><div id="lista-suscripciones"></div></div>
 </div>
+
 </div>
+
 <script>
 const API = '';
 // Tabs
@@ -283,6 +308,7 @@ document.querySelectorAll('.tab').forEach(t=>{
   if(t.dataset.tab==='suscripciones') cargarSuscripciones();
  });
 });
+
 async function cargarDatos(){
  try{
   let r = await fetch('/api/empresas'); let _e = await r.json(); let empresas = Array.isArray(_e) ? _e : (_e.empresas || []);
@@ -299,6 +325,7 @@ async function cargarDatos(){
   document.getElementById('kpi-area').innerText = equipo.length || 0;
  }catch(e){console.log(e); ['kpi-empresas','kpi-leads','kpi-area','kpi-agentes'].forEach(id=>{let el=document.getElementById(id); if(el && (el.innerText==='undefined'||!el.innerText)) el.innerText='0';});}
 }
+
 async function crearAgente(){
  let data={nombre:document.getElementById('ag-nombre').value, dni:document.getElementById('ag-dni').value, zona:document.getElementById('ag-zona').value, telefono:document.getElementById('ag-tel').value};
  let r=await fetch('/api/equipo-campo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
@@ -331,10 +358,12 @@ async function cerrarConvenio(){
   document.getElementById('resultado-cierre').innerHTML=`<div style="color:#e74c3c">${j.detail||'Error'}</div>`;
  }
 }
+
 async function verTerminos(){
  let r=await fetch('/api/terminos-condiciones'); let j=await r.json();
  alert(j.terminos.join('\n\n'));
 }
+
 async function buscarEmpresas(){
  let q=document.getElementById('bot-busqueda').value;
  let prov=document.getElementById('bot-provincia').value;
@@ -343,13 +372,16 @@ async function buscarEmpresas(){
  let j=await r.json();
  document.getElementById('resultado-busqueda').innerHTML=`<div style="margin-top:12px;font-size:12px"><b>${j.bots_activos}</b><br>${j.resultados.map(x=>`- ${x.razon} (${x.tipo}) - Potencial ${x.potencial}`).join('<br>')}<br><br><small>${j.nota}</small></div>`;
 }
+
 async function verBots(){
  let r=await fetch('/api/bot/estado'); let j=await r.json();
  document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
 }
+
 actualizarBarra();
 cargarDatos();
 }
+
 function calcularArea(){
  let personas=parseInt(document.getElementById('calc-personas').value)||1;
  let dias=parseInt(document.getElementById('calc-dias').value)||30;
@@ -367,6 +399,7 @@ function calcularArea(){
   <div style="font-size:11px;color:#888;margin-top:8px">Ejemplo: 3 personas x 15 días Normal = $1.200.000</div>
  `;
 }
+
 async function calcularPresupuestoCompleto(){
  let data={
   personas: parseInt(document.getElementById('costo-personas').value)||1,
@@ -397,6 +430,7 @@ async function calcularPresupuestoCompleto(){
  document.getElementById('btn-pagar').style.display='block';
  document.getElementById('btn-pagar').dataset.monto=j.total;
 }
+
 async function generarPago(){
  let monto=document.getElementById('btn-pagar').dataset.monto;
  let r=await fetch('/api/crear-pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({monto:parseFloat(monto), descripcion:'Servicio NODO Argentina - Sistema País'})});
@@ -404,6 +438,7 @@ async function generarPago(){
  if(j.init_point) window.open(j.init_point,'_blank');
  else alert('Error generando pago: '+(j.detail||''));
 }
+
 async function crearEmpresa(){
  let provincias=[];
  document.querySelectorAll('#tab-incorporacion input[type=checkbox]:checked').forEach(c=>provincias.push(c.value));
@@ -428,6 +463,14 @@ async function crearEmpresa(){
  if(verif!==parseInt(cuit[10])){alert('CUIT/CUIL inválido (dígito verificador)'); return;}
  let r=await fetch('/api/empresas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
  if(r.ok){alert('Empresa activada en Red NODO'); 
+
+
+
+
+
+
+
+
 async function cargarSuscripciones(){
  let r=await fetch('/api/suscripciones'); let j=await r.json();
  let html='<table><tr><th>Servicio</th><th>Costo</th><th>Vencimiento</th><th>Auto-pago</th><th>Estado</th></tr>';
@@ -437,6 +480,16 @@ async function cargarSuscripciones(){
  html+='</table><p style="font-size:11px;color:#888;margin-top:8px">'+j.nota+'</p>';
  document.getElementById('lista-suscripciones').innerHTML=html;
 }
+
+
+
+
+
+
+
+
+
+
 async function publicarBarrio(){
  let data={
   titulo:document.getElementById('barrio-titulo').value,
@@ -459,6 +512,7 @@ async function publicarBarrio(){
  `;
  document.getElementById('detalle-barrio').innerHTML=`<div class="total-box"><div class="mono" style="font-size:10px">Alcance: ${j.calculo_barra_facebook.alcance_estimado}<br>Interesados: ${j.calculo_barra_facebook.personas_interesadas}<br>CPM: $${j.calculo_barra_facebook.cpm}</div><div class="total">$${j.datos.presupuesto_total} - ${j.datos.dias} días</div></div>`;
 }
+
 function actualizarBarra(){
  let presupuesto = parseFloat(document.getElementById('barrio-presupuesto').value)||2000;
  let zona = document.getElementById('barrio-zona').value;
@@ -490,6 +544,8 @@ function actualizarBarra(){
   → CPM: $${cpm} | Km: según segmentación
  `;
 }
+
 </script>
-</body>
-</html>
+
+
+</body></html>
