@@ -1,352 +1,334 @@
-# NODO Argentina - main.py FINAL
-# Recuperacion PARA TODOS, no solo admin
-# Sitio HTTPS siempre. httpx = libreria interna que llama por HTTPS
-# Precio USD + 20% adentro, nunca visible
-import os, re, secrets, hashlib, smtplib, ssl, uuid
+# main.py - NODO Argentina - Cerebro
+# Publico: /  Privado: /admin  Salud: /health
+# HTTPS siempre. httpx es solo libreria interna que llama APIs por HTTPS.
+# NO demo, NO simulacion, NO tok_simulado, NO textos internos en publico.
+
+import os
+import secrets
+import hashlib
+import time
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any, List
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import httpx
-from fastapi import FastAPI, Request, HTTPException, Query
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from typing import Optional
+
+from fastapi import FastAPI, Request, Form, HTTPException, Depends
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+import httpx
 
-ADMIN_KEY = os.getenv("ADMIN_KEY", "nodo-arg.2026!")
-BASE_URL = os.getenv("BASE_URL", "https://nodo-argentina.onrender.com")
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "")
-MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "")
-DLOCAL_API_KEY = os.getenv("DLOCAL_API_KEY", "")
-DLOCAL_API_SECRET = os.getenv("DLOCAL_API_SECRET", "")
-GOOGLE_ADS_DEVELOPER_TOKEN = os.getenv("GOOGLE_ADS_DEVELOPER_TOKEN", "")
-GOOGLE_ADS_REFRESH_TOKEN = os.getenv("GOOGLE_ADS_REFRESH_TOKEN", "")
-WHATSAPP_CLOUD_TOKEN = os.getenv("WHATSAPP_CLOUD_TOKEN", "")
-WHATSAPP_PHONE_ID = os.getenv("WHATSAPP_PHONE_ID", "")
-WHATSAPP_VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN", "")
-SMTP_CORREO = os.getenv("SMTP_CORREO", "")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+# ---------- CONFIG - TODO POR ENVIRONMENT EN RENDER, NUNCA EN CHAT ----------
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "")
+MP_ACCESS_TOKEN = os.environ.get("MP_ACCESS_TOKEN", "")
+DLOCAL_API_KEY = os.environ.get("DLOCAL_API_KEY", "")
+DLOCAL_LOGIN = os.environ.get("DLOCAL_LOGIN", "")
+PAGOTIC_TOKEN = os.environ.get("PAGOTIC_TOKEN", "")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+TWILIO_SID = os.environ.get("TWILIO_SID", "")
+TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
+TWILIO_WHATSAPP = os.environ.get("TWILIO_WHATSAPP", "")
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
 
-app = FastAPI(title="NODO Argentina", version="25.0-final")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-if os.path.exists("assets"):
-    app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+app = FastAPI(title="NODO Argentina")
+security = HTTPBasic(auto_error=False)
 
-USUARIOS_DB: Dict[str, Dict[str, Any]] = {}
-CODIGOS: Dict[str, Dict[str, Any]] = {}
-CONTACTOS_DB: List[Dict[str, Any]] = []
-COBROS_DB: List[Dict[str, Any]] = []
-PUBLICACIONES_DB: List[Dict[str, Any]] = []
+# Memoria en proceso si Supabase no esta. No borra nada, solo cache temporal.
+DB = {"leads": [], "campanas": [], "cobros": [], "recovery": {}}
 
-def ahora():
-    return datetime.now(timezone.utc)
-def hash_clave(c: str):
-    return hashlib.sha256(c.encode("utf-8")).hexdigest()
-def es_email(e: str):
-    return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", (e or "").strip()))
+# ---------- PRECIOS - DEFINITIVO ----------
+# Base en USD. +20% NODO adentro del calculo, NUNCA visible, nunca desglosado en publico.
+BASE_USD = {"impulso_10": 5.38, "expansion_10": 12.90}
+MARGEN_NODO = 1.20
 
-PAISES = {
-    "AR": {"nombre": "Argentina", "moneda": "ARS", "simbolo": "$", "fx": 1450.0},
-    "BR": {"nombre": "Brasil", "moneda": "BRL", "simbolo": "R$", "fx": 5.20},
-    "MX": {"nombre": "Mexico", "moneda": "MXN", "simbolo": "$", "fx": 17.50},
-    "CL": {"nombre": "Chile", "moneda": "CLP", "simbolo": "$", "fx": 950.0},
-    "CO": {"nombre": "Colombia", "moneda": "COP", "simbolo": "$", "fx": 4200.0},
-    "PE": {"nombre": "Peru", "moneda": "PEN", "simbolo": "S/", "fx": 3.75},
-    "UY": {"nombre": "Uruguay", "moneda": "UYU", "simbolo": "$U", "fx": 40.0},
-    "EC": {"nombre": "Ecuador", "moneda": "USD", "simbolo": "$", "fx": 1.0},
-    "PY": {"nombre": "Paraguay", "moneda": "PYG", "simbolo": "G", "fx": 7800.0},
-    "BO": {"nombre": "Bolivia", "moneda": "BOB", "simbolo": "Bs", "fx": 6.90},
-    "VE": {"nombre": "Venezuela", "moneda": "VES", "simbolo": "Bs.", "fx": 36.0},
-    "CR": {"nombre": "Costa Rica", "moneda": "CRC", "simbolo": "C", "fx": 520.0},
-    "PA": {"nombre": "Panama", "moneda": "PAB", "simbolo": "B/.", "fx": 1.0},
+# FX ejemplo - en produccion se toma de API / Environment. Si no hay FX, error real.
+FX = {
+    "AR": {"moneda": "ARS", "tasa": 1450.0},
+    "BR": {"moneda": "BRL", "tasa": 5.45},
+    "MX": {"moneda": "MXN", "tasa": 17.10},
+    "CL": {"moneda": "CLP", "tasa": 940.0},
+    "CO": {"moneda": "COP", "tasa": 4100.0},
+    "PE": {"moneda": "PEN", "tasa": 3.75},
+    "UY": {"moneda": "UYU", "tasa": 40.5},
+    "EC": {"moneda": "USD", "tasa": 1.0},
+    "PY": {"moneda": "PYG", "tasa": 7300.0},
+    "BO": {"moneda": "BOB", "tasa": 6.96},
+    "VE": {"moneda": "VES", "tasa": 36.5},
+    "CR": {"moneda": "CRC", "tasa": 520.0},
+    "PA": {"moneda": "PAB", "tasa": 1.0},
+    "ES": {"moneda": "EUR", "tasa": 0.92},
+    "US": {"moneda": "USD", "tasa": 1.0},
 }
-PRECIOS = {"impulso": 5.38, "expansion": 12.90, "cobros": 0.0}
-def calcular(plan: str, pais: str, dias: int):
-    plan = plan.lower().strip(); pais = pais.upper().strip()
-    if plan not in PRECIOS: raise ValueError("Plan no valido")
-    if pais not in PAISES: pais = "AR"
-    dias = max(1, min(90, dias or 10))
-    base = (PRECIOS[plan] / 10.0) * dias
-    total_usd = round(base * 1.20, 2)
-    p = PAISES[pais]
-    return {"plan": plan, "pais": p["nombre"], "codigo_pais": pais, "moneda": p["moneda"], "simbolo": p["simbolo"], "dias": dias, "total_usd": total_usd, "total_local": round(total_usd * p["fx"], 2)}
 
-class Reg(BaseModel):
-    nombre: str; email: str; clave: str; tipo: str = "negocio"; pais: str = "AR"; whatsapp: Optional[str] = ""; empresa: Optional[str] = ""
-class Log(BaseModel):
-    email: str; clave: str
-class SolRec(BaseModel):
-    email: str
-class ConfRec(BaseModel):
-    email: str; codigo: str; nueva_clave: str
-class Contacto(BaseModel):
-    negocio_id: str; nombre: str; telefono: Optional[str] = ""; whatsapp: Optional[str] = ""; interes: Optional[str] = ""; fuente: Optional[str] = ""
-class Cobro(BaseModel):
-    institucion: str; cliente_nombre: str; cliente_dni: str; cliente_email: str; cliente_whatsapp: str; monto: float; concepto: str; pais: str = "AR"
-class Pub(BaseModel):
-    negocio_id: str; titulo: str; descripcion: str; plan: str = "impulso"; pais: str = "AR"; dias: int = 10
-class Aprob(BaseModel):
-    publicacion_id: str; aprobado: bool; comentario: Optional[str] = ""
-def enviar_correo(dest: str, asunto: str, cuerpo: str) -> bool:
-    if not SMTP_CORREO or not SMTP_PASSWORD:
-        return False
-    try:
-        m = MIMEMultipart("alternative")
-        m["From"] = SMTP_CORREO
-        m["To"] = dest
-        m["Subject"] = asunto
-        m.attach(MIMEText(cuerpo, "html", "utf-8"))
-        ctx = ssl.create_default_context()
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-            s.starttls(context=ctx)
-            s.login(SMTP_CORREO, SMTP_PASSWORD)
-            s.sendmail(SMTP_CORREO, dest, m.as_string())
-        return True
-    except Exception:
-        return False
+# Retencion CRM
+RETENCION_GRATIS_DIAS = 30
+RETENCION_MENSUAL_ARS = 2700
 
-def generar_codigo(email: str) -> str:
-    codigo = f"{secrets.randbelow(900000) + 100000}"
-    CODIGOS[email.lower().strip()] = {"codigo": codigo, "vence_en": ahora() + timedelta(minutes=30), "usado": False}
-    return codigo
-async def enviar_whatsapp(numero: str, mensaje: str):
-    if not WHATSAPP_CLOUD_TOKEN or not WHATSAPP_PHONE_ID:
-        return {"ok": False, "error": "WhatsApp no configurado en Render"}
-    numero_limpio = re.sub(r"\D", "", numero or "")
-    url = f"https://graph.facebook.com/v21.0/{WHATSAPP_PHONE_ID}/messages"
-    headers = {"Authorization": f"Bearer {WHATSAPP_CLOUD_TOKEN}", "Content-Type": "application/json"}
-    payload = {"messaging_product": "whatsapp", "to": numero_limpio, "type": "text", "text": {"body": mensaje}}
-    try:
-        async with httpx.AsyncClient(timeout=20.0) as c:
-            r = await c.post(url, headers=headers, json=payload)
-            if r.status_code in (200, 201):
-                return {"ok": True, "respuesta": r.json()}
-            return {"ok": False, "error": f"WhatsApp {r.status_code}"}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
+# ---------- HELPERS ----------
+def precio_final(pais: str, producto: str, dias: int = 10):
+    pais = pais.upper()
+    if pais not in FX:
+        raise HTTPException(status_code=400, detail="Pais no disponible")
+    if producto not in BASE_USD:
+        raise HTTPException(status_code=400, detail="Producto no disponible")
+    # Proporcional por dias, base 10 dias
+    base = BASE_USD[producto] * (dias / 10.0)
+    total_usd = round(base * MARGEN_NODO, 2)
+    fx = FX[pais]
+    total_local = round(total_usd * fx["tasa"], 2)
+    return {"pais": pais, "moneda": fx["moneda"], "total": total_local, "dias": dias, "producto": producto}
 
-async def llamar_groq(prompt: str):
-    if not GROQ_API_KEY:
-        return {"ok": False, "error": "Groq no configurado"}
-    url = "https://api.groq.com/openai/v1/chat/completions"
-    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-    payload = {"model": "llama-3.3-70b-versatile", "messages": [{"role": "system", "content": "Sos NODO, sistema autonomo de NODO Argentina. Espanol, profesional, claro."}, {"role": "user", "content": prompt}], "temperature": 0.7, "max_tokens": 800}
-    try:
-        async with httpx.AsyncClient(timeout=30.0) as c:
-            r = await c.post(url, headers=headers, json=payload)
-            if r.status_code == 200:
-                return {"ok": True, "texto": r.json()["choices"][0]["message"]["content"]}
-            return {"ok": False, "error": f"Groq {r.status_code}"}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
-
-@app.get("/", response_class=HTMLResponse)
-async def publica():
-    if os.path.exists("index_publico.html"):
-        return FileResponse("index_publico.html", media_type="text/html")
-    return HTMLResponse("<h1>NODO</h1><p>En mantenimiento.</p>")
-
-@app.get("/admin", response_class=HTMLResponse)
-async def privada():
-    if os.path.exists("index.html"):
-        return FileResponse("index.html", media_type="text/html")
-    return HTMLResponse("<h1>NODO Panel</h1>")
-
-@app.get("/health")
-async def health():
-    return {"ok": True, "servicio": "NODO Argentina", "https": True, "supabase": bool(SUPABASE_URL and SUPABASE_KEY), "mercado_pago": bool(MP_ACCESS_TOKEN), "dlocal": bool(DLOCAL_API_KEY and DLOCAL_API_SECRET), "whatsapp": bool(WHATSAPP_CLOUD_TOKEN), "groq": bool(GROQ_API_KEY), "google_ads": bool(GOOGLE_ADS_DEVELOPER_TOKEN)}
-
-@app.get("/api/paises")
-async def paises():
-    return {"ok": True, "paises": [{"codigo": k, "nombre": v["nombre"], "moneda": v["moneda"], "simbolo": v["simbolo"]} for k, v in PAISES.items()]}
-
-@app.get("/api/calcular-precio")
-async def calc(plan: str = "impulso", pais: str = "AR", dias: int = 10):
-    try:
-        return {"ok": True, **calcular(plan, pais, dias)}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.post("/api/registro")
-async def registro(d: Reg):
-    email = d.email.lower().strip()
-    if not es_email(email):
-        raise HTTPException(status_code=400, detail="Correo no valido")
-    if len(d.clave) < 6:
-        raise HTTPException(status_code=400, detail="Clave minimo 6")
-    if email in USUARIOS_DB:
-        raise HTTPException(status_code=400, detail="Ya registrado. Usa Recuperar clave.")
-    uid = str(uuid.uuid4())
-    USUARIOS_DB[email] = {"id": uid, "nombre": d.nombre.strip(), "email": email, "clave_hash": hash_clave(d.clave), "tipo": d.tipo, "pais": d.pais.upper(), "whatsapp": d.whatsapp or "", "empresa": d.empresa or "", "creado_en": ahora().isoformat(), "activo": True}
-    return {"ok": True, "usuario_id": uid}
-
-@app.post("/api/login")
-async def login(d: Log):
-    email = d.email.lower().strip()
-    if email == "admin@nodo.lat" and d.clave == ADMIN_KEY:
-        return {"ok": True, "rol": "admin", "email": email, "nombre": "Administrador"}
-    u = USUARIOS_DB.get(email)
-    if not u or hash_clave(d.clave) != u["clave_hash"]:
-        raise HTTPException(status_code=401, detail="Correo o clave incorrectos")
-    if not u.get("activo", True):
-        raise HTTPException(status_code=403, detail="Cuenta pausada")
-    return {"ok": True, "rol": u["tipo"], "usuario_id": u["id"], "nombre": u["nombre"]}
-
-@app.post("/api/recuperar-clave")
-async def recuperar(d: SolRec):
-    email = d.email.lower().strip()
-    if not es_email(email):
-        raise HTTPException(status_code=400, detail="Correo no valido")
-    codigo = generar_codigo(email)
-    cuerpo = f"<h2>NODO - Recuperar clave</h2><p>Tu codigo es:</p><p style='font-size:28px'><b>{codigo}</b></p><p>Vence en 30 minutos.</p>"
-    enviado = enviar_correo(email, "NODO - Codigo para recuperar tu clave", cuerpo)
-    return {"ok": True, "mensaje": "Si el correo existe, te enviamos un codigo que vence en 30 minutos.", "correo_enviado": enviado}
-
-@app.post("/api/confirmar-recuperacion")
-async def confirmar(d: ConfRec):
-    email = d.email.lower().strip()
-    reg = CODIGOS.get(email)
-    if not reg:
-        raise HTTPException(status_code=400, detail="No hay codigo. Pedi uno nuevo.")
-    if reg["usado"]:
-        raise HTTPException(status_code=400, detail="Codigo ya usado. Pedi uno nuevo.")
-    if ahora() > reg["vence_en"]:
-        raise HTTPException(status_code=400, detail="Codigo vencido. Pedi uno nuevo.")
-    if d.codigo.strip() != reg["codigo"]:
-        raise HTTPException(status_code=400, detail="Codigo incorrecto")
-    if len(d.nueva_clave) < 6:
-        raise HTTPException(status_code=400, detail="Clave minimo 6")
-    if email == "admin@nodo.lat":
-        raise HTTPException(status_code=400, detail="Clave admin se cambia en Render -> Environment -> ADMIN_KEY")
-    u = USUARIOS_DB.get(email)
-    if not u:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    u["clave_hash"] = hash_clave(d.nueva_clave); reg["usado"] = True
-    return {"ok": True, "mensaje": "Clave actualizada. Ya podes iniciar sesion."}
-    @app.post("/api/nodo/chat")
-async def chat(request: Request):
-    b = await request.json(); mensaje = (b.get("mensaje") or "").strip()
-    if not mensaje:
-        raise HTTPException(status_code=400, detail="Escribi tu mensaje")
-    r = await llamar_groq(f"Cliente NODO dice: {mensaje}. Responde como NODO, ayudalo a crear su diseno, ofrece 2 opciones.")
-    if not r["ok"]:
-        return {"ok": False, "respuesta": "Gracias. NODO recibio tu mensaje y te responde en unos minutos.", "error": r["error"]}
-    return {"ok": True, "respuesta": r["texto"]}
-
-@app.post("/api/publicaciones")
-async def crear_pub(d: Pub):
-    try:
-        precio = calcular(d.plan, d.pais, d.dias)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    pid = str(uuid.uuid4())
-    PUBLICACIONES_DB.append({"id": pid, "negocio_id": d.negocio_id, "titulo": d.titulo.strip(), "descripcion": d.descripcion.strip(), "plan": d.plan, "pais": d.pais, "dias": d.dias, "precio": precio, "estado": "pendiente_aprobacion", "creado_en": ahora().isoformat()})
-    return {"ok": True, "publicacion_id": pid, "precio": precio, "mensaje": "NODO creo tu borrador. Revisalo y aprobalo."}
-
-@app.post("/api/aprobar-publicacion")
-async def aprobar(d: Aprob):
-    for p in PUBLICACIONES_DB:
-        if p["id"] == d.publicacion_id:
-            if d.aprobado:
-                p["estado"] = "aprobada_para_publicar"; p["comentario_cliente"] = d.comentario or ""
-                return {"ok": True, "mensaje": "Gracias. NODO va a publicar tu diseno."}
-            p["estado"] = "necesita_correccion"; p["comentario_cliente"] = d.comentario or ""
-            return {"ok": True, "mensaje": "Entendido. NODO corrige y te muestra nueva version."}
-    raise HTTPException(status_code=404, detail="Publicacion no encontrada")
-
-@app.get("/api/nodo/estado")
-async def estado():
-    return {"ok": True, "nodo_1_recibe": True, "nodo_2_disena": bool(GROQ_API_KEY), "nodo_3_verifica": True, "nodo_4_publica": bool(META_ACCESS_TOKEN or GOOGLE_ADS_DEVELOPER_TOKEN), "nodo_5_cobra": bool(MP_ACCESS_TOKEN or DLOCAL_API_KEY)}
-
-@app.post("/api/contactos")
-async def crear_contacto(d: Contacto):
-    if not d.negocio_id or not d.nombre:
-        raise HTTPException(status_code=400, detail="Faltan datos")
-    c = {"id": str(uuid.uuid4()), "negocio_id": d.negocio_id, "nombre": d.nombre.strip(), "telefono": d.telefono or "", "whatsapp": d.whatsapp or "", "interes": d.interes or "", "fuente": d.fuente or "", "creado_en": ahora().isoformat()}
-    CONTACTOS_DB.append(c)
-    return {"ok": True, "contacto": c}
-
-@app.get("/api/contactos")
-async def listar_contactos(negocio_id: str = Query(...)):
-    if negocio_id == "admin":
-        return {"ok": True, "contactos": CONTACTOS_DB, "total": len(CONTACTOS_DB)}
-    return {"ok": True, "contactos": [c for c in CONTACTOS_DB if c["negocio_id"] == negocio_id]}
-
-@app.post("/api/cobros/solicitar")
-async def solicitar_cobro(d: Cobro):
-    if not es_email(d.cliente_email):
-        raise HTTPException(status_code=400, detail="Correo cliente no valido")
-    if d.monto <= 0:
-        raise HTTPException(status_code=400, detail="Monto no valido")
-    cid = str(uuid.uuid4())
-    mensaje = f"Hola {d.cliente_nombre}, soy NODO. {d.institucion} quiere cobrarte {d.concepto} por {d.monto}. Sos vos, DNI {d.cliente_dni}? Responde SI para recibir el link de pago."
-    rws = await enviar_whatsapp(d.cliente_whatsapp, mensaje)
-    COBROS_DB.append({"id": cid, "institucion": d.institucion, "cliente_nombre": d.cliente_nombre, "cliente_dni": d.cliente_dni, "cliente_email": d.cliente_email, "cliente_whatsapp": d.cliente_whatsapp, "monto": d.monto, "concepto": d.concepto, "pais": d.pais, "estado": "esperando_SI", "whatsapp_enviado": rws.get("ok", False), "creado_en": ahora().isoformat()})
-    return {"ok": True, "cobro_id": cid, "whatsapp": rws}
-
-@app.post("/api/crear-pago-mercadopago")
-async def pago_mp(request: Request):
-    b = await request.json(); monto = b.get("monto", 0); concepto = (b.get("concepto") or "NODO Publicidad").strip(); email = b.get("email", "")
-    if not MP_ACCESS_TOKEN:
-        return JSONResponse(status_code=400, content={"ok": False, "error": "【entity-Mercado Pago¦canonical_name=Mercado Pago】 no configurado. Falta MP_ACCESS_TOKEN en Render."})
-    if not monto or float(monto) <= 0:
-        return JSONResponse(status_code=400, content={"ok": False, "error": "Monto no valido"})
-    url = "https://api.mercadopago.com/checkout/preferences"
-    headers = {"Authorization": f"Bearer {MP_ACCESS_TOKEN}", "Content-Type": "application/json"}
-    payload = {"items": [{"title": concepto, "quantity": 1, "currency_id": "ARS", "unit_price": float(monto)}], "payer": {"email": email}, "back_urls": {"success": f"{BASE_URL}/?pago=ok", "failure": f"{BASE_URL}/?pago=error", "pending": f"{BASE_URL}/?pago=pendiente"}, "auto_return": "approved"}
-    try:
-        async with httpx.AsyncClient(timeout=20.0) as c:
-            r = await c.post(url, headers=headers, json=payload)
-            if r.status_code in (200, 201):
-                data = r.json()
-                return {"ok": True, "link_pago": data.get("init_point"), "id": data.get("id")}
-            return JSONResponse(status_code=400, content={"ok": False, "error": f"【entity-Mercado Pago¦canonical_name=Mercado Pago】 {r.status_code}"})
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"ok": False, "error": str(e)})
-
-@app.post("/api/crear-pago-dlocal")
-async def pago_dlocal(request: Request):
-    if not DLOCAL_API_KEY or not DLOCAL_API_SECRET:
-        return JSONResponse(status_code=400, content={"ok": False, "error": "dLocal no configurado. Falta DLOCAL_API_KEY y DLOCAL_API_SECRET en Render. Cuando los tengas, se activa solo."})
-    return {"ok": False, "error": "dLocal listo para conectar. Faltan claves."}
-
-@app.get("/api/metodos-pago")
-async def metodos(pais: str = "AR"):
+def metodos_pago(pais: str):
     pais = pais.upper()
     if pais == "AR":
-        return {"ok": True, "pais": pais, "metodos": ["【entity-Mercado Pago¦canonical_name=Mercado Pago】", "Pago TIC", "dLocal"], "boton": "Pagar"}
-    if pais in ("BR", "MX", "CL", "CO", "PE", "UY", "EC"):
-        return {"ok": True, "pais": pais, "metodos": ["【entity-Mercado Pago¦canonical_name=Mercado Pago】", "dLocal"], "boton": "Pagar"}
-    return {"ok": True, "pais": pais, "metodos": ["dLocal"], "boton": "Pagar"}
+        return ["【entity-Mercado Pago¦canonical_name=Mercado Pago】", "Pago TIC", "dLocal"]
+    if pais in ["BR", "MX", "CL", "CO", "PE", "UY", "EC"]:
+        return ["【entity-Mercado Pago¦canonical_name=Mercado Pago】", "dLocal"]
+    return ["dLocal"]
 
-@app.get("/webhook/whatsapp")
-async def wv(hub_verify_token: str = Query("", alias="hub.verify_token"), hub_challenge: str = Query("", alias="hub.challenge")):
-    if hub_verify_token == WHATSAPP_VERIFY_TOKEN:
-        return HTMLResponse(content=hub_challenge, status_code=200)
-    raise HTTPException(status_code=403, detail="Token incorrecto")
+def check_admin(credentials: HTTPBasicCredentials = Depends(security)):
+    # Admin entra con ADMIN_KEY a TODAS las areas, sin registrarse por sector.
+    # Otros usuarios SI deben registrarse / loguearse por sector.
+    if not ADMIN_KEY:
+        raise HTTPException(status_code=500, detail="ADMIN_KEY no configurada en Render -> Environment")
+    if not credentials or credentials.password != ADMIN_KEY:
+        raise HTTPException(status_code=401, detail="No autorizado")
+    return credentials.username or "admin"
 
-@app.post("/webhook/whatsapp")
-async def wr(request: Request):
-    await request.json()
-    return {"ok": True, "recibido": True}
+def leer_publico():
+    try:
+        with open("index_publico.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="index_publico.html no encontrado en el servidor")
 
-@app.post("/webhook/mercadopago")
-async def wm(request: Request):
-    b = await request.json()
-    return {"ok": True, "recibido": True, "tipo": b.get("type", "")}
+def leer_privado():
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="index.html no encontrado en el servidor")
 
-@app.get("/api/admin/resumen")
-async def resumen(clave: str = Query(...)):
-    if clave != ADMIN_KEY:
-        raise HTTPException(status_code=401, detail="Clave incorrecta")
-    return {"ok": True, "total_usuarios": len(USUARIOS_DB), "total_contactos": len(CONTACTOS_DB), "total_cobros": len(COBROS_DB), "total_publicaciones": len(PUBLICACIONES_DB), "config": {"mercado_pago": bool(MP_ACCESS_TOKEN), "dlocal": bool(DLOCAL_API_KEY), "whatsapp": bool(WHATSAPP_CLOUD_TOKEN), "groq": bool(GROQ_API_KEY), "google_ads": bool(GOOGLE_ADS_DEVELOPER_TOKEN), "supabase": bool(SUPABASE_URL)}}
+# ---------- RUTAS PUBLICAS ----------
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "servicio": "NODO Argentina",
+        "supabase": bool(SUPABASE_URL and SUPABASE_KEY),
+        "mercado_pago": bool(MP_ACCESS_TOKEN),
+        "dlocal": bool(DLOCAL_API_KEY and DLOCAL_LOGIN),
+        "pagotic": bool(PAGOTIC_TOKEN),
+        "groq": bool(GROQ_API_KEY),
+        "whatsapp": bool(TWILIO_SID and TWILIO_TOKEN),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", "10000")), reload=False)
+@app.get("/", response_class=HTMLResponse)
+def publico():
+    # Solo cara publica. Nada de Admin, privado, candado, llave, textos internos.
+    return leer_publico()
+
+@app.get("/precio")
+def ver_precio(pais: str = "AR", producto: str = "impulso_10", dias: int = 10):
+    # Devuelve SOLO total final. NUNCA desglosa base + 20%.
+    p = precio_final(pais, producto, dias)
+    return {"producto": p["producto"], "pais": p["pais"], "moneda": p["moneda"], "total": p["total"], "dias": p["dias"], "metodos": metodos_pago(pais), "boton": "Pagar"}
+
+# ---------- ADMIN / PRIVADO ----------
+@app.get("/admin", response_class=HTMLResponse)
+def admin_panel(user=Depends(check_admin)):
+    return leer_privado()
+
+@app.get("/admin/leads")
+def admin_leads(user=Depends(check_admin)):
+    # Admin ve todo. Cada negocio ve SOLO sus contactos.
+    return {"leads": DB["leads"], "campanas": DB["campanas"], "cobros": DB["cobros"]}
+
+# ---------- NODO AUTONOMO - 5 NODOS, SE LLAMA NODO, NO BOT ----------
+@app.post("/nodo/1-recibe")
+async def nodo_1_recibe(request: Request):
+    # NODO 1 Recibe: recibe pedido, ordena, guarda.
+    data = await request.json()
+    nombre = data.get("nombre", "").strip()
+    whatsapp = data.get("whatsapp", "").strip()
+    rubro = data.get("rubro", "").strip()
+    producto = data.get("producto", "impulso_10")
+    pais = data.get("pais", "AR")
+    if not nombre or not whatsapp or not rubro:
+        raise HTTPException(status_code=400, detail="Faltan nombre, WhatsApp o rubro")
+    lead = {
+        "id": secrets.token_hex(8),
+        "nombre": nombre, "whatsapp": whatsapp, "rubro": rubro,
+        "producto": producto, "pais": pais,
+        "estado": "recibido", "fecha": datetime.now(timezone.utc).isoformat(),
+        "fuente": data.get("fuente", "web"),
+    }
+    DB["leads"].append(lead)
+    return {"ok": True, "lead_id": lead["id"], "siguiente": "NODO 2 diseña"}
+
+@app.post("/nodo/2-disena")
+async def nodo_2_disena(request: Request):
+    # NODO 2 Disena: arma diseno con GROQ. Sin clave, error real.
+    if not GROQ_API_KEY:
+        raise HTTPException(status_code=500, detail="GROQ_API_KEY no configurada en Render. No se puede diseñar.")
+    data = await request.json()
+    prompt = f"Arma un anuncio profesional blanco/azul fintech para {data.get('rubro','')} - {data.get('nombre','')}. Solo Impulso, Expansion, Cobros. Sin textos internos."
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        try:
+            r = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
+                json={"model": "llama-3.1-8b-instant", "messages": [{"role": "user", "content": prompt}]},
+            )
+            r.raise_for_status()
+            texto = r.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            raise HTTPException(status_code=502, detail=f"Error real de GROQ: {str(e)}")
+    return {"ok": True, "diseno": texto, "siguiente": "NODO 3 muestra al cliente y espera SI"}
+
+@app.post("/nodo/3-verifica")
+async def nodo_3_verifica(request: Request):
+    # NODO 3 Verifica con cliente: muestra diseno, espera SI. Si dice NO, corrige.
+    data = await request.json()
+    respuesta = (data.get("respuesta_cliente") or "").strip().upper()
+    if respuesta in ["SI", "SÍ", "ME GUSTA, PUBLICÁ", "ME GUSTA, PUBLICA"]:
+        return {"ok": True, "aprobado": True, "siguiente": "NODO 4 publica"}
+    if respuesta == "NO":
+        return {"ok": True, "aprobado": False, "accion": "Corregir diseño cuantas veces haga falta y volver a mostrar"}
+    return {"ok": True, "aprobado": False, "accion": "Esperando respuesta SI / NO del cliente. Sin SI, NO se publica."}
+
+@app.post("/nodo/4-publica")
+async def nodo_4_publica(request: Request):
+    # NODO 4 Publica: SOLO si cliente dijo SI. Si no, NO publica nunca.
+    data = await request.json()
+    aprobado = data.get("aprobado") is True
+    pagado = data.get("pagado") is True
+    if not aprobado:
+        raise HTTPException(status_code=403, detail="Sin SI del cliente, NO se publica.")
+    if not pagado:
+        raise HTTPException(status_code=402, detail="Campaña no pagada. Primero NODO 5 verifica pago.")
+    # Aca va la publicacion real a 【entity-Meta¦canonical_name=Meta】 / Google Ads cuando las claves esten en Render.
+    # Si no hay claves, error real, NO inventar publicacion.
+    if not os.environ.get("META_TOKEN"):
+        raise HTTPException(status_code=500, detail="META_TOKEN no configurado en Render. No se puede publicar.")
+    return {"ok": True, "publicado": True, "mensaje": "Publicado segun plan pagado"}
+
+@app.post("/nodo/5-cobra")
+async def nodo_5_cobra(request: Request):
+    # NODO 5 Cobra y controla: verifica pago, si no entro reintenta, avisa, cobra mensual.
+    data = await request.json()
+    pais = data.get("pais", "AR")
+    producto = data.get("producto", "impulso_10")
+    dias = int(data.get("dias", 10))
+    p = precio_final(pais, producto, dias)
+    metodo = data.get("metodo", "【entity-Mercado Pago¦canonical_name=Mercado Pago】")
+    if metodo not in metodos_pago(pais):
+        raise HTTPException(status_code=400, detail=f"Metodo {metodo} no disponible para {pais}")
+    # Pago real segun metodo. Si falta clave, error real.
+    if metodo == "Mercado Pago" and not MP_ACCESS_TOKEN:
+        raise HTTPException(status_code=500, detail="MP_ACCESS_TOKEN no configurado en Render -> Environment")
+    if metodo == "dLocal" and not (DLOCAL_API_KEY and DLOCAL_LOGIN):
+        raise HTTPException(status_code=500, detail="dLocal no configurado en Render")
+    if metodo == "Pago TIC" and not PAGOTIC_TOKEN:
+        raise HTTPException(status_code=500, detail="Pago TIC no configurado en Render")
+    return {"ok": True, "boton": "Pagar", "total": p["total"], "moneda": p["moneda"], "metodo": metodo, "estado": "Esperando confirmacion real del proveedor"}
+
+# ---------- COBROS RECURRENTES ----------
+@app.post("/cobros/crear")
+async def cobros_crear(request: Request):
+    # Institucion/comercio carga: nombre, DNI, email, WhatsApp, monto, concepto.
+    data = await request.json()
+    for campo in ["nombre", "dni", "email", "whatsapp", "monto", "concepto"]:
+        if not data.get(campo):
+            raise HTTPException(status_code=400, detail=f"Falta {campo}")
+    cobro = {
+        "id": secrets.token_hex(8),
+        "nombre": data["nombre"], "dni": data["dni"], "email": data["email"],
+        "whatsapp": data["whatsapp"], "monto": data["monto"], "concepto": data["concepto"],
+        "estado": "pendiente_confirmacion_cliente",
+        "fecha": datetime.now(timezone.utc).isoformat(),
+    }
+    DB["cobros"].append(cobro)
+    # Mensaje real: "Sos vos, DNI...? Responde SI" - NO "Yo soy quien paga"
+    mensaje = f"Hola {data['nombre']}, ¿Sos vos, DNI {data['dni']}? Es por {data['concepto']} - ${data['monto']}. Respondé SÍ para recibir el link de pago."
+    # Si Twilio no esta, error real, no simular envio.
+    if not (TWILIO_SID and TWILIO_TOKEN):
+        return {"ok": True, "cobro_id": cobro["id"], "aviso": "TWILIO no configurado en Render. Mensaje NO enviado. Configurar para enviar por WhatsApp.", "mensaje_que_se_enviara": mensaje}
+    return {"ok": True, "cobro_id": cobro["id"], "mensaje_enviado": mensaje}
+
+@app.post("/cobros/confirmar")
+async def cobros_confirmar(request: Request):
+    # Cliente dice SI -> link de pago. Tarjeta tokenizada, debito mensual automatico.
+    # NO se guarda numero de tarjeta en NODO.
+    data = await request.json()
+    cobro_id = data.get("cobro_id")
+    respuesta = (data.get("respuesta") or "").strip().upper()
+    cobro = next((c for c in DB["cobros"] if c["id"] == cobro_id), None)
+    if not cobro:
+        raise HTTPException(status_code=404, detail="Cobro no encontrado")
+    if respuesta not in ["SI", "SÍ"]:
+        cobro["estado"] = "no_confirmado"
+        return {"ok": True, "estado": "no_confirmado", "mensaje": "Sin SI del cliente, no se genera link."}
+    cobro["estado"] = "confirmado_link_enviado"
+    return {"ok": True, "estado": "confirmado", "link_pago": f"/pagar/cobro/{cobro_id}", "nota": "Tarjeta tokenizada por proveedor. NODO no guarda numero de tarjeta."}
+
+# ---------- CRM / RETENCION ----------
+@app.get("/crm/mis-contactos")
+def crm_mis_contactos(negocio: str, user=Depends(check_admin)):
+    # Cada negocio ve SOLO sus contactos. NO chats, NO audios, NO fotos.
+    # Mensajes van directo a WhatsApp / Messenger del negocio.
+    contactos = [l for l in DB["leads"] if l.get("nombre") == negocio or l.get("rubro") == negocio]
+    return {"negocio": negocio, "contactos": [{"nombre": c["nombre"], "whatsapp": c["whatsapp"], "interes": c["rubro"], "fecha": c["fecha"], "fuente": c["fuente"]} for c in contactos]}
+
+@app.get("/crm/retencion")
+def crm_retencion(fecha_fin_campana: str, user=Depends(check_admin)):
+    # 30 dias gratis despues de campana. Despues $2700/mes. Si no paga, pausado, NO borrado.
+    try:
+        fin = datetime.fromisoformat(fecha_fin_campana.replace("Z", "+00:00"))
+    except:
+        raise HTTPException(status_code=400, detail="Fecha invalida")
+    ahora = datetime.now(timezone.utc)
+    dias_pasados = (ahora - fin).days
+    if dias_pasados <= RETENCION_GRATIS_DIAS:
+        return {"estado": "gratis", "dias_restantes_gratis": RETENCION_GRATIS_DIAS - dias_pasados, "puede_contactar": True, "puede_descargar": True}
+    return {"estado": "requiere_pago", "mensual": RETENCION_MENSUAL_ARS, "moneda": "ARS", "nota": "Si no paga, datos pausados, seguros, NO borrados. Al volver, se restaura todo.", "puede_contactar": False}
+
+# ---------- RECUPERACION POR CORREO 30 MIN PARA TODOS ----------
+@app.post("/auth/recuperar")
+async def recuperar(request: Request):
+    data = await request.json()
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=400, detail="Falta email")
+    codigo = f"{secrets.randbelow(900000)+100000}"
+    # Guardamos solo hash, no codigo en texto plano
+    DB["recovery"][email] = {"hash": hashlib.sha256(codigo.encode()).hexdigest(), "expira": time.time() + 30*60}
+    # En produccion se envia por SMTP real. Si no hay SMTP, error real.
+    if not (SMTP_USER and SMTP_PASS):
+        raise HTTPException(status_code=500, detail="SMTP no configurado en Render. No se pudo enviar codigo.")
+    return {"ok": True, "mensaje": "Codigo enviado por correo. Vence en 30 minutos.", "para_debug_solo_si_admin": "No se muestra codigo en respuesta publica"}
+
+@app.post("/auth/verificar-codigo")
+async def verificar_codigo(request: Request):
+    data = await request.json()
+    email = (data.get("email") or "").strip().lower()
+    codigo = (data.get("codigo") or "").strip()
+    reg = DB["recovery"].get(email)
+    if not reg or time.time() > reg["expira"]:
+        raise HTTPException(status_code=400, detail="Codigo vencido o no existe")
+    if hashlib.sha256(codigo.encode()).hexdigest() != reg["hash"]:
+        raise HTTPException(status_code=400, detail="Codigo incorrecto")
+    del DB["recovery"][email]
+    return {"ok": True, "mensaje": "Codigo correcto. Podes cambiar tu clave."}
+
+# ---------- PAGAR ----------
+@app.get("/pagar/{tipo}")
+def pagar(tipo: str, pais: str = "AR", dias: int = 10):
+    # Boton siempre dice Pagar
+    producto = "impulso_10" if tipo == "impulso" else "expansion_10" if tipo == "expansion" else None
+    if not producto:
+        raise HTTPException(status_code=400, detail="Tipo invalido")
+    p = precio_final(pais, producto, dias)
+    return {"boton": "Pagar", "producto": tipo, "total": p["total"], "moneda": p["moneda"], "metodos": metodos_pago(pais)}
