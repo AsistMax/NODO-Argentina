@@ -6,272 +6,257 @@
 <title>NODO Argentina - Publicidad para Latinoamérica</title>
 <meta name="description" content="NODO Argentina - Publicidad profesional para Latinoamérica. Impulso, Expansión y Cobros.">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
-  body{background:#ffffff;color:#0f2040;line-height:1.6}
-  a{color:#0b4fd8;text-decoration:none}
-  header{background:#fff;border-bottom:1px solid #dbe4f0;position:sticky;top:0;z-index:10}
-  .nav{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
-  .logo{font-weight:900;font-size:24px;color:#0b4fd8}
-  .logo span{color:#0f2040}
-  .nav-links{display:flex;gap:20px;font-size:14px;font-weight:600}
-  @media(max-width:700px){.nav-links{display:none}}
-  .btn{background:#0b4fd8;color:#fff;padding:12px 20px;border-radius:10px;font-weight:800;border:0;cursor:pointer;font-size:15px}
-  .btn.sec{background:#fff;color:#0b4fd8;border:1px solid #0b4fd8}
-  .btn.white{background:#fff;color:#0b4fd8}
-  .wrap{max-width:1100px;margin:0 auto;padding:20px}
-  .hero{background:linear-gradient(135deg,#0b4fd8 0%,#1a6bff 55%,#eaf2ff 100%);color:#fff;border-radius:20px;padding:40px 30px;margin:20px 0;display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:center}
-  @media(max-width:800px){.hero{grid-template-columns:1fr;padding:28px 20px}}
-  .hero h1{font-size:36px;line-height:1.15;margin-bottom:12px}
-  @media(max-width:600px){.hero h1{font-size:28px}}
-  .hero p{font-size:16px;opacity:.95;margin-bottom:18px}
-  .hero-card{background:#fff;color:#0f2040;border-radius:16px;padding:20px}
-  .hero-card b{color:#0b4fd8}
-  .hero-card input,.hero-card select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0;font-size:14px}
-  .badge{display:inline-block;background:rgba(255,255,255,.22);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px}
-  h2{font-size:26px;margin:28px 0 8px}
-  .sub{color:#475569;font-size:15px;margin-bottom:16px}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-  @media(max-width:800px){.grid3{grid-template-columns:1fr}}
-  .card{border:1px solid #dbe4f0;border-radius:16px;padding:22px;background:#fff}
-  .card.feature{border-color:#0b4fd8;background:#f0f6ff}
-  .card h3{font-size:20px;margin-bottom:8px}
-  .card h3 span{color:#0b4fd8}
-  .price{font-size:28px;font-weight:900;margin:10px 0 4px}
-  .price small{font-size:13px;font-weight:600;color:#64748b}
-  ul{list-style:none;margin:12px 0}
-  ul li{padding:6px 0 6px 24px;position:relative;font-size:14px;color:#334155}
-  ul li:before{content:"✓";position:absolute;left:0;color:#0b4fd8;font-weight:900}
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  @media(max-width:800px){.steps{grid-template-columns:1fr 1fr}}
-  .step{background:#f8fbff;border:1px solid #dbe4f0;border-radius:14px;padding:18px;text-align:center}
-  .step b{font-size:28px;color:#0b4fd8;display:block}
-  .paises{background:#f8fbff;border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-top:20px}
-  .paises span{display:inline-block;background:#fff;border:1px solid #dbe4f0;padding:6px 10px;border-radius:20px;font-size:12px;margin:4px 4px 0 0}
-  .faq{border:1px solid #dbe4f0;border-radius:12px;padding:16px;margin-bottom:10px}
-  .faq b{display:block;margin-bottom:4px}
-  .faq p{font-size:14px;color:#475569}
-  .cta{background:#0f2040;color:#fff;border-radius:20px;padding:30px;text-align:center;margin:28px 0}
-  .cta h2{color:#fff;margin-top:0}
-  .cta p{opacity:.9}
-  footer{background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 20px;text-align:center}
-  footer p{font-size:13px;color:#64748b}
-  footer .tel{font-size:12px;color:#94a3b8;margin-top:6px}
-  .ok{background:#e6f7ee;color:#0a7a3d;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
-  .err{background:#fdecec;color:#b91c1c;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
-  .muted{color:#64748b;font-size:13px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+body{background:#fff;color:#0f2040;line-height:1.6}
+a{color:#0b4fd8;text-decoration:none}
+header{background:#fff;border-bottom:1px solid #dbe4f0;position:sticky;top:0;z-index:20}
+.nav{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:24px;color:#0b4fd8}
+.logo span{color:#0f2040}
+.nav-links{display:flex;gap:20px;font-size:14px;font-weight:600}
+@media(max-width:700px){.nav-links{display:none}}
+.btn{background:#0b4fd8;color:#fff;padding:12px 20px;border-radius:10px;font-weight:800;border:0;cursor:pointer;font-size:15px}
+.btn.sec{background:#fff;color:#0b4fd8;border:1px solid #0b4fd8}
+.btn.white{background:#fff;color:#0b4fd8}
+.btn.dark{background:#0f2040}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+.hero{background:#fff;border:1px solid #E6EAF2;border-radius:20px;padding:28px;margin:20px 0;text-align:center}
+.hero h1{font-size:64px;line-height:1;letter-spacing:-2px;color:#0b4fd8}
+@media(max-width:600px){.hero h1{font-size:44px}}
+.hero h2{font-size:26px;margin:8px 0}
+.hero p{font-size:16px;color:#475569;max-width:700px;margin:0 auto 16px}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;z-index:5;margin:14px 0}
+.video-wrap{position:relative;max-width:980px;margin:0 auto}
+.video-wrap video{width:100%;max-width:980px;display:block;margin:16px auto 0;border-radius:18px;border:1px solid #E6EAF2;background:#fff}
+.video-fallback{background:#eaf2ff;border:1px solid #E6EAF2;border-radius:18px;padding:30px;margin:16px auto 0;max-width:980px}
+.video-fallback b{font-size:32px;color:#0b4fd8}
+h2{font-size:26px;margin:28px 0 8px}
+.sub{color:#475569;font-size:15px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:800px){.grid3{grid-template-columns:1fr}}
+.card{border:1px solid #dbe4f0;border-radius:16px;padding:22px;background:#fff}
+.card.feature{border-color:#0b4fd8;background:#f0f6ff}
+.price{font-size:28px;font-weight:900;margin:10px 0 4px}
+.price small{font-size:13px;font-weight:600;color:#64748b}
+ul{list-style:none;margin:12px 0}
+ul li{padding:6px 0 6px 24px;position:relative;font-size:14px;color:#334155}
+ul li:before{content:"✓";position:absolute;left:0;color:#0b4fd8;font-weight:900}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:800px){.steps{grid-template-columns:1fr 1fr}}
+.step{background:#f8fbff;border:1px solid #dbe4f0;border-radius:14px;padding:18px;text-align:center}
+.step b{font-size:28px;color:#0b4fd8;display:block}
+.paises{background:#f8fbff;border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-top:20px}
+.paises span{display:inline-block;background:#fff;border:1px solid #dbe4f0;padding:6px 10px;border-radius:20px;font-size:12px;margin:4px 4px 0 0}
+.faq{border:1px solid #dbe4f0;border-radius:12px;padding:16px;margin-bottom:10px}
+.carrusel-wrap{overflow:hidden;border-radius:16px;border:1px solid #E6EAF2;margin:14px 0;background:#fff}
+.carrusel-track{display:flex;gap:12px;padding:12px;width:max-content;animation:carrusel 28s linear infinite}
+.carrusel-wrap:hover .carrusel-track{animation-play-state:paused}
+@keyframes carrusel{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.carrusel-track img{width:260px;height:180px;object-fit:cover;border-radius:14px;flex-shrink:0}
+.calc{background:#f8fbff;border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.calc{grid-template-columns:1fr}}
+.calc input,.calc select,.chat-box input,.chat-box select,.cobros-box input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0;font-size:14px}
+.modo{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.modo button{width:auto;padding:9px 12px;font-size:13px}
+.modo button.active{background:#0f2040}
+label{font-size:13px;font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0}
+.cal-grid button{padding:9px 0;font-size:13px;background:#fff;color:#0f2040;border:1px solid #cbd5e1;border-radius:8px;cursor:pointer}
+.cal-grid button.sel{background:#0b4fd8;color:#fff;border-color:#0b4fd8}
+.chat-box,.cobros-box{border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-top:16px}
+.chat-msgs{background:#f8fafc;border-radius:12px;padding:12px;min-height:90px;font-size:14px;margin:10px 0;white-space:pre-wrap}
+.cta{background:#0f2040;color:#fff;border-radius:20px;padding:30px;text-align:center;margin:28px 0}
+.cta h2{color:#fff;margin-top:0}
+footer{background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 20px;text-align:center}
+footer p{font-size:13px;color:#64748b}
+footer .tel{font-size:12px;color:#94a3b8;margin-top:6px}
+.ok{background:#e6f7ee;color:#0a7a3d;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+.err{background:#fdecec;color:#b91c1c;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+.muted{color:#64748b;font-size:13px}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="nav">
-    <div class="logo">NODO <span>Argentina</span></div>
-    <div class="nav-links"><a href="#productos">Productos</a><a href="#como-funciona">Cómo funciona</a><a href="#paises">Países</a><a href="#preguntas">Preguntas</a></div>
-    <button class="btn" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Empezar ahora</button>
-  </div>
-</header>
-
+<header><div class="nav"><div class="logo">NODO <span>Argentina</span></div><div class="nav-links"><a href="#productos">Productos</a><a href="#como-funciona">Cómo funciona</a><a href="#paises">Países</a><a href="#preguntas">Preguntas</a></div><button class="btn" onclick="document.getElementById('calculadora').scrollIntoView({behavior:'smooth'})">Empezar ahora</button></div></header>
 <div class="wrap">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <span class="badge">Publicidad profesional para Latinoamérica</span>
-      <h1>Tu negocio vendiendo en toda Latinoamérica.</h1>
-      <p>Publicidad seria, profesional y automática. Elegís tu producto, pagás, aprobás tu diseño y NODO publica por vos.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn white" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Ver productos</button>
-        <button class="btn sec" style="background:transparent;color:#fff;border-color:#fff" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">Cómo funciona</button>
-      </div>
-      <p style="font-size:13px;margin-top:14px;opacity:.9">Argentina • Brasil • México • Chile • Colombia • Perú • Uruguay • Ecuador y más.</p>
-    </div>
-    <div class="hero-card" id="empezar">
-      <b style="font-size:18px">Calculá tu precio</b>
-      <p class="muted">Elegí tu país y tu producto. El precio final ya incluye todo.</p>
-      <label style="font-size:13px;font-weight:700">País</label>
-      <select id="paisCalc" onchange="calcular()">
-        <option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">México</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Perú</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option><option value="PY">Paraguay</option><option value="BO">Bolivia</option><option value="VE">Venezuela</option><option value="CR">Costa Rica</option><option value="PA">Panamá</option><option value="ES">España</option><option value="US">Estados Unidos</option>
-      </select>
-      <label style="font-size:13px;font-weight:700">Producto</label>
-      <select id="prodCalc" onchange="calcular()">
-        <option value="impulso_10">Impulso - 10 días</option>
-        <option value="expansion_10">Expansión - 10 días</option>
-      </select>
-      <div id="resultadoCalc" style="background:#f0f6ff;border-radius:10px;padding:12px;margin:8px 0;font-weight:800">Calculando...</div>
-      <button class="btn" style="width:100%" onclick="irAPagar()">Pagar</button>
-      <p class="muted" style="margin-top:8px">El botón siempre dice Pagar. Sin sorpresas.</p>
-      <div id="msgCalc" class="ok"></div><div id="msgCalcErr" class="err"></div>
-    </div>
-  </section>
+<section class="hero">
+<h1>NODO</h1>
+<h2>Tu negocio vendiendo en toda Latinoamérica.</h2>
+<p>Publicidad seria, profesional y automática. Elegís tu producto, elegís tus días, pagás, aprobás tu diseño y NODO publica por vos.</p>
+<div class="hero-btns"><button class="btn" onclick="hablarNodo()">Hablar con NODO</button><button class="btn sec" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Ver planes</button></div>
+<div class="video-wrap">
+<video id="videoNodo" autoplay muted loop playsinline preload="auto" src="assets/nodo-hero.mp4" style="width:100%;max-width:980px;display:block;margin:16px auto 0;border-radius:18px;border:1px solid #E6EAF2;background:#fff" onerror="mostrarFallbackVideo()"></video>
+<div id="fallbackVideo" class="video-fallback" style="display:none"><b>NODO</b><p>Video sin audio: NODO + mapa con los 15 países, uno por uno.</p></div>
+</div>
+<p class="muted" style="margin-top:10px">Video sin audio: NODO + mapa con los 15 países, uno por uno.</p>
+</section>
 
-  <!-- PRODUCTOS -->
-  <h2 id="productos">Solo 3 productos. Claros y profesionales.</h2>
-  <p class="sub">Sin vueltas. Elegís lo que tu negocio necesita hoy.</p>
-  <div class="grid3">
-    <div class="card feature">
-      <h3><span>Impulso</span></h3>
-      <p>Para empezar a vender ya. Ideal si es tu primera campaña.</p>
-      <div class="price" id="precioImpulsoCard">— <small>/ 10 días</small></div>
-      <ul>
-        <li>Publicidad en redes sociales</li>
-        <li>Diseño profesional incluido</li>
-        <li>Vos aprobás antes de publicar</li>
-        <li>Contactos directos a tu WhatsApp</li>
-        <li>30 días gratis para contactar tu lista</li>
-      </ul>
-      <button class="btn" style="width:100%" onclick="elegirYCalcular('impulso_10')">Pagar Impulso</button>
-    </div>
-    <div class="card feature" style="border-width:2px">
-      <h3><span>Expansión</span></h3>
-      <p>Para crecer más. Más alcance, más canales, más ventas.</p>
-      <div class="price" id="precioExpansionCard">— <small>/ 10 días</small></div>
-      <ul>
-        <li>Todo lo de Impulso</li>
-        <li>Más alcance y más canales</li>
-        <li>Diseño profesional incluido</li>
-        <li>Vos aprobás antes de publicar</li>
-        <li>30 días gratis para contactar tu lista</li>
-      </ul>
-      <button class="btn" style="width:100%" onclick="elegirYCalcular('expansion_10')">Pagar Expansión</button>
-    </div>
-    <div class="card">
-      <h3><span>Cobros</span></h3>
-      <p>Para cobrar todos los meses sin perseguir a nadie.</p>
-      <div class="price" style="font-size:20px">Cobro mensual automático</div>
-      <ul>
-        <li>Para gyms, clubes, escuelas, alquileres y comercios</li>
-        <li>Confirmación por WhatsApp con DNI</li>
-        <li>Cliente dice SÍ y recibe link de pago</li>
-        <li>Tarjeta tokenizada, débito mensual</li>
-        <li>NODO no guarda número de tarjeta</li>
-      </ul>
-      <button class="btn sec" style="width:100%" onclick="document.getElementById('cobros').scrollIntoView({behavior:'smooth'})">Ver Cobros</button>
-    </div>
-  </div>
+<div class="carrusel-wrap" id="carruselWrap"><div class="carrusel-track" id="carruselTrack">
+<img src="assets/carrusel-1-dueno-atendiendo.jpg" alt="Dueño atendiendo">
+<img src="assets/carrusel-2-cliente-pagando.jpg" alt="Cliente pagando">
+<img src="assets/carrusel-3-equipo-trabajando.jpg" alt="Equipo trabajando">
+<img src="assets/carrusel-4-panaderia.jpg" alt="Panadería">
+<img src="assets/carrusel-5-tienda-ropa.jpg" alt="Tienda de ropa">
+<img src="assets/carrusel-6-barberia.jpg" alt="Barbería">
+<img src="assets/carrusel-7-verduleria.jpg" alt="Verdulería">
+<img src="assets/carrusel-1-dueno-atendiendo.jpg" alt="Dueño atendiendo">
+<img src="assets/carrusel-2-cliente-pagando.jpg" alt="Cliente pagando">
+<img src="assets/carrusel-3-equipo-trabajando.jpg" alt="Equipo trabajando">
+<img src="assets/carrusel-4-panaderia.jpg" alt="Panadería">
+<img src="assets/carrusel-5-tienda-ropa.jpg" alt="Tienda de ropa">
+<img src="assets/carrusel-6-barberia.jpg" alt="Barbería">
+<img src="assets/carrusel-7-verduleria.jpg" alt="Verdulería">
+</div></div>
 
-  <!-- COMO FUNCIONA -->
-  <h2 id="como-funciona">Cómo funciona</h2>
-  <p class="sub">Simple, serio y sin sorpresas. Vos tenés el control.</p>
-  <div class="steps">
-    <div class="step"><b>1</b><strong>Elegís</strong><p style="font-size:13px;color:#475569">Elegís Impulso, Expansión o Cobros.</p></div>
-    <div class="step"><b>2</b><strong>Pagás</strong><p style="font-size:13px;color:#475569">Pagás con tu método local. Botón Pagar.</p></div>
-    <div class="step"><b>3</b><strong>Aprobás</strong><p style="font-size:13px;color:#475569">Te mostramos el diseño. Si decís SÍ, se publica. Si decís NO, se corrige.</p></div>
-    <div class="step"><b>4</b><strong>Vendés</strong><p style="font-size:13px;color:#475569">Los contactos llegan directo a tu WhatsApp.</p></div>
-  </div>
-  <div class="card" style="margin-top:16px;background:#fffbeb;border-color:#fde68a">
-    <b>Regla de oro:</b> <span style="font-size:14px">Sin tu SÍ, NO se publica nada. Nunca.</span>
-  </div>
-
-  <!-- COBROS DETALLE -->
-  <h2 id="cobros">Cobros recurrentes, sin estrés</h2>
-  <div class="card">
-    <p style="font-size:15px">¿Tenés clientes que te pagan todos los meses? Nosotros nos encargamos.</p>
-    <ol style="padding-left:18px;margin:12px 0;font-size:14px;color:#334155">
-      <li>Vos cargás: nombre, DNI, email, WhatsApp, monto y concepto.</li>
-      <li>Le escribimos por WhatsApp: <b>"¿Sos vos, DNI...? Respondé SÍ"</b></li>
-      <li>Si dice SÍ, le llega el link de pago.</li>
-      <li>Se cobra todos los meses en forma automática.</li>
-    </ol>
-    <p class="muted">Para gyms, clubes, escuelas, alquileres y comercios. Tu tarjeta la guarda el proveedor de pago, no NODO.</p>
-    <div style="margin-top:14px">
-      <label style="font-size:13px;font-weight:700">¿Querés que te contactemos por Cobros?</label>
-      <input id="cobNombre" placeholder="Nombre de tu negocio" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0">
-      <input id="cobWhatsapp" placeholder="Tu WhatsApp" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0">
-      <button class="btn" onclick="pedirCobros()">Quiero Cobros</button>
-      <div id="msgCobros" class="ok"></div>
-    </div>
-  </div>
-
-  <!-- PAISES -->
-  <div class="paises" id="paises">
-    <h2 style="margin-top:0">Trabajamos en toda Latinoamérica</h2>
-    <p class="sub">Cada país paga en su moneda local. El precio se calcula según tu país.</p>
-    <span>🇦🇷 Argentina</span><span>🇧🇷 Brasil</span><span>🇲🇽 México</span><span>🇨🇱 Chile</span><span>🇨🇴 Colombia</span><span>🇵🇪 Perú</span><span>🇺🇾 Uruguay</span><span>🇪🇨 Ecuador</span><span>🇵🇾 Paraguay</span><span>🇧🇴 Bolivia</span><span>🇻🇪 Venezuela</span><span>🇨🇷 Costa Rica</span><span>🇵🇦 Panamá</span><span>🇪🇸 España</span><span>🇺🇸 Estados Unidos</span>
-    <p class="muted" style="margin-top:12px">Métodos según país: Argentina: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, Pago TIC, dLocal. Brasil, México, Chile, Colombia, Perú, Uruguay, Ecuador: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, dLocal. Resto: dLocal.</p>
-  </div>
-
-  <!-- RETENCION -->
-  <h2>Tus contactos son tuyos</h2>
-  <div class="card">
-    <p style="font-size:15px">Después de tu campaña, tenés <b>30 días gratis</b> para contactar y descargar tu lista de contactos.</p>
-    <p style="font-size:14px;color:#475569;margin-top:8px">Después, $2700/mes para seguir captando. Si no pagás, tus datos quedan pausados, seguros, NO borrados. Cuando volvés, se restaura todo.</p>
-    <p class="muted" style="margin-top:8px">Solo ves tus contactos: nombre, WhatsApp, interés, fecha. No guardamos chats, audios ni fotos. Los mensajes van directo a tu WhatsApp.</p>
-  </div>
-
-  <!-- FAQ -->
-  <h2 id="preguntas">Preguntas frecuentes</h2>
-  <div class="faq"><b>¿Tengo que saber de publicidad?</b><p>No. Elegís tu producto, pagás y NODO arma todo. Vos solo aprobás el diseño.</p></div>
-  <div class="faq"><b>¿Se publica sin que yo lo vea?</b><p>No, nunca. Te mostramos el diseño y solo se publica si decís SÍ.</p></div>
-  <div class="faq"><b>¿Cómo pago?</b><p>Con el botón Pagar, con los métodos de tu país. Argentina: Mercado Pago, Pago TIC, dLocal.</p></div>
-  <div class="faq"><b>¿Dónde llegan los clientes?</b><p>Directo a tu WhatsApp / Messenger. Sin intermediarios.</p></div>
-  <div class="faq"><b>¿Qué pasa con mis contactos después de 30 días?</b><p>Tenés 30 días gratis. Después podés seguir por $2700/mes. Si no pagás, quedan pausados, seguros, no borrados.</p></div>
-  <div class="faq"><b>¿Cobros guarda mi tarjeta?</b><p>No. La tarjeta la tokeniza el proveedor de pago. NODO no guarda número de tarjeta.</p></div>
-
-  <!-- CTA -->
-  <div class="cta">
-    <h2>Empezá hoy. Tu negocio merece vender más.</h2>
-    <p>Elegí Impulso o Expansión y pagá en tu moneda local.</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-      <button class="btn white" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Pagar Impulso</button>
-      <button class="btn" style="background:#fff;color:#0f2040" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Pagar Expansión</button>
-    </div>
-  </div>
-
+<h2 id="productos">Solo 3 productos. Claros y profesionales.</h2><p class="sub">Sin vueltas. Elegís lo que tu negocio necesita hoy.</p>
+<div class="grid3">
+<div class="card feature"><h3>Impulso</h3><p>Para empezar a vender ya. Ideal si es tu primera campaña.</p><div class="price" id="precioImpulsoCard">— <small>/ 10 días</small></div><ul><li>Publicidad en redes sociales</li><li>Diseño profesional incluido</li><li>Vos aprobás antes de publicar</li><li>Contactos directos a tu WhatsApp</li><li>30 días gratis para contactar tu lista</li></ul><button class="btn" style="width:100%" onclick="elegirYCalcular('impulso_10')">Pagar Impulso</button></div>
+<div class="card feature" style="border-width:2px"><h3>Expansión</h3><p>Para crecer más. Más alcance, más canales, más ventas.</p><div class="price" id="precioExpansionCard">— <small>/ 10 días</small></div><ul><li>Todo lo de Impulso</li><li>Más alcance y más canales</li><li>Diseño profesional incluido</li><li>Vos aprobás antes de publicar</li><li>30 días gratis para contactar tu lista</li></ul><button class="btn" style="width:100%" onclick="elegirYCalcular('expansion_10')">Pagar Expansión</button></div>
+<div class="card"><h3>Cobros</h3><p>Para cobrar todos los meses sin perseguir a nadie.</p><div class="price" style="font-size:20px">Cobro mensual automático</div><ul><li>Para gyms, clubes, escuelas, alquileres y comercios</li><li>Confirmación por WhatsApp con DNI</li><li>Cliente dice SÍ y recibe link de pago</li><li>Tarjeta tokenizada, débito mensual</li><li>NODO no guarda número de tarjeta</li></ul><button class="btn sec" style="width:100%" onclick="document.getElementById('cobros').scrollIntoView({behavior:'smooth'})">Ver Cobros</button></div>
 </div>
 
-<footer>
-  <p><b>NODO Argentina</b> - Publicidad para Latinoamérica</p>
-  <p class="muted">Impulso • Expansión • Cobros</p>
-  <p class="tel">Tel: +54 383 456-7890</p>
-</footer>
+<div class="calc" id="calculadora">
+<div>
+<h2 style="margin-top:0">Calculá tu precio</h2>
+<p class="muted">Elegí tu país, tu producto y tus días. El precio final ya incluye todo.</p>
+<label>País</label>
+<select id="paisCalc" onchange="calcular()"><option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">México</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Perú</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option><option value="PY">Paraguay</option><option value="BO">Bolivia</option><option value="VE">Venezuela</option><option value="CR">Costa Rica</option><option value="PA">Panamá</option><option value="ES">España</option><option value="US">Estados Unidos</option></select>
+<label>Producto</label>
+<select id="prodCalc" onchange="calcular()"><option value="impulso_10">Impulso</option><option value="expansion_10">Expansión</option></select>
+<label>¿Qué días querés publicar?</label>
+<div class="modo" id="modoBtns"><button type="button" class="active" onclick="setModo('todos',this)">Todos los días</button><button type="button" onclick="setModo('lunes_viernes',this)">Lunes a Viernes</button><button type="button" onclick="setModo('finde',this)">Fin de semana</button></div>
+<label>Desde</label><input type="date" id="fechaDesde" onchange="calcular()">
+<label>Hasta</label><input type="date" id="fechaHasta" onchange="calcular()">
+<p class="muted">O elegí días individuales 1-31 del mes actual:</p>
+<div class="cal-grid" id="calGrid"></div>
+<p class="muted" id="infoDias">Días elegidos: 10</p>
+<div id="resultadoCalc" style="background:#f0f6ff;border-radius:10px;padding:12px;margin:8px 0;font-weight:800">Calculando...</div>
+<button class="btn" style="width:100%" onclick="irAPagar()">Pagar</button>
+<p class="muted" style="margin-top:8px">El botón siempre dice Pagar. Sin sorpresas.</p>
+<div id="msgCalc" class="ok"></div><div id="msgCalcErr" class="err"></div>
+</div>
+<div>
+<h2 style="margin-top:0">Cómo funciona</h2>
+<div class="steps" style="grid-template-columns:1fr 1fr"><div class="step"><b>1</b><strong>Elegís</strong><p style="font-size:13px;color:#475569">Elegís producto y días.</p></div><div class="step"><b>2</b><strong>Pagás</strong><p style="font-size:13px;color:#475569">Pagás con tu método local. Botón Pagar.</p></div><div class="step"><b>3</b><strong>Aprobás</strong><p style="font-size:13px;color:#475569">Te mostramos el diseño. Si decís SÍ, se publica. Si decís NO, se corrige.</p></div><div class="step"><b>4</b><strong>Vendés</strong><p style="font-size:13px;color:#475569">Los contactos llegan directo a tu WhatsApp.</p></div></div>
+<div class="card" style="margin-top:14px;background:#fffbeb;border-color:#fde68a"><b>Regla de oro:</b> <span style="font-size:14px">Sin tu SÍ, NO se publica nada. Nunca.</span></div>
+<p class="muted" style="margin-top:10px" id="comoFunciona">NODO recibe, crea, muestra, corrige, cobra y controla.</p>
+</div>
+</div>
 
+<div class="chat-box" id="chatNodo">
+<h2 style="margin-top:0">Hablar con NODO</h2>
+<p class="muted">Contanos tu negocio y NODO te arma el borrador. Vos lo aprobás.</p>
+<label>Nombre del negocio</label><input id="chatNombre" placeholder="Nombre">
+<label>Rubro</label><input id="chatRubro" placeholder="Ej: Panadería, Gym, Escuela">
+<label>¿Qué querés anunciar?</label><input id="chatMensaje" placeholder="Ej: Promo de esta semana">
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" onclick="hablarNodo()">Enviar a NODO</button><button class="btn" onclick="aprobarPublicacion()">Me gusta, publica</button></div>
+<div class="chat-msgs" id="chatMsgs">Acá va a aparecer tu borrador.</div>
+<div id="msgChat" class="ok"></div><div id="msgChatErr" class="err"></div>
+<p class="muted">El botón "Me gusta, publica" solo publica si ya aprobaste y ya pagaste.</p>
+</div>
+
+<div class="cobros-box" id="cobros">
+<h2 style="margin-top:0">Cobros recurrentes, sin estrés</h2>
+<p>¿Tenés clientes que te pagan todos los meses? Nosotros nos encargamos.</p>
+<ol style="padding-left:18px;margin:12px 0;font-size:14px;color:#334155"><li>Vos cargás: nombre, DNI, email, WhatsApp, monto y concepto.</li><li>Le escribimos por WhatsApp: <b>"¿Sos vos, DNI...? Respondé SÍ"</b></li><li>Si dice SÍ, le llega el link de pago.</li><li>Se cobra todos los meses en forma automática.</li></ol>
+<label>Nombre del cliente</label><input id="cobNombre" placeholder="Nombre y apellido">
+<label>DNI</label><input id="cobDni" placeholder="DNI">
+<label>Email</label><input id="cobEmail" placeholder="cliente@correo.com">
+<label>WhatsApp del cliente</label><input id="cobWhatsapp" placeholder="WhatsApp">
+<label>Monto</label><input id="cobMonto" type="number" placeholder="Ej: 15000">
+<label>Concepto</label><input id="cobConcepto" placeholder="Ej: Cuota Gym - Noviembre">
+<button class="btn" onclick="crearCobroPublico()">Crear cobro</button>
+<div id="msgCobros" class="ok"></div><div id="msgCobrosErr" class="err"></div>
+</div>
+
+<div class="paises" id="paises"><h2 style="margin-top:0">Trabajamos en toda Latinoamérica</h2><p class="sub">Cada país paga en su moneda local. El precio se calcula según tu país.</p><span>Argentina</span><span>Brasil</span><span>México</span><span>Chile</span><span>Colombia</span><span>Perú</span><span>Uruguay</span><span>Ecuador</span><span>Paraguay</span><span>Bolivia</span><span>Venezuela</span><span>Costa Rica</span><span>Panamá</span><span>España</span><span>Estados Unidos</span><p class="muted" style="margin-top:12px">Argentina: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, Pago TIC, dLocal. Brasil, México, Chile, Colombia, Perú, Uruguay, Ecuador: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, dLocal. Resto: dLocal.</p></div>
+
+<h2>Tus contactos son tuyos</h2><div class="card"><p style="font-size:15px">Después de tu campaña, tenés <b>30 días gratis</b> para contactar y descargar tu lista de contactos.</p><p style="font-size:14px;color:#475569;margin-top:8px">Después, $2700/mes para seguir captando. Si no pagás, tus datos quedan pausados, seguros, NO borrados. Cuando volvés, se restaura todo.</p><p class="muted" style="margin-top:8px">Solo ves tus contactos: nombre, WhatsApp, interés, fecha. No guardamos chats, audios ni fotos. Los mensajes van directo a tu WhatsApp.</p></div>
+
+<h2 id="preguntas">Preguntas frecuentes</h2>
+<div class="faq"><b>¿Tengo que saber de publicidad?</b><p>No. Elegís tu producto y tus días, pagás y NODO arma todo. Vos solo aprobás el diseño.</p></div>
+<div class="faq"><b>¿Se publica sin que yo lo vea?</b><p>No, nunca. Te mostramos el diseño y solo se publica si decís SÍ.</p></div>
+<div class="faq"><b>¿Cómo pago?</b><p>Con el botón Pagar, con los métodos de tu país. Argentina: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, Pago TIC, dLocal.</p></div>
+<div class="faq"><b>¿Dónde llegan los clientes?</b><p>Directo a tu WhatsApp / Messenger. Sin intermediarios.</p></div>
+<div class="faq"><b>¿Qué pasa con mis contactos después de 30 días?</b><p>Tenés 30 días gratis. Después podés seguir por $2700/mes. Si no pagás, quedan pausados, seguros, no borrados.</p></div>
+<div class="faq"><b>¿Cobros guarda mi tarjeta?</b><p>No. La tarjeta la tokeniza el proveedor de pago. NODO no guarda número de tarjeta.</p></div>
+
+<div class="cta"><h2>Empezá hoy. Tu negocio merece vender más.</h2><p>Elegí Impulso o Expansión y pagá en tu moneda local.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px"><button class="btn white" onclick="document.getElementById('calculadora').scrollIntoView({behavior:'smooth'})">Pagar Impulso</button><button class="btn" style="background:#fff;color:#0f2040" onclick="document.getElementById('calculadora').scrollIntoView({behavior:'smooth'})">Pagar Expansión</button></div></div>
+</div>
+<footer><p><b>NODO Argentina</b> - Publicidad para Latinoamérica</p><p class="muted">Impulso • Expansión • Cobros</p><p class="tel">Contacto: +54 3834607740</p></footer>
 <script>
+let modoActual='todos';
+let diasIndividuales=new Set();
+let pubActual=null;
+let borradorActual='';
+function mostrarFallbackVideo(){document.getElementById('videoNodo').style.display='none';document.getElementById('fallbackVideo').style.display='block';}
+function setModo(m,btn){modoActual=m;document.querySelectorAll('#modoBtns button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcular();}
+function construirCalendario(){
+  let grid=document.getElementById('calGrid');grid.innerHTML='';
+  for(let d=1;d<=31;d++){let b=document.createElement('button');b.type='button';b.textContent=d;b.onclick=()=>{if(diasIndividuales.has(d)){diasIndividuales.delete(d);b.classList.remove('sel');}else{diasIndividuales.add(d);b.classList.add('sel');}calcular();};grid.appendChild(b);}
+}
+function contarDias(){
+  let d1=document.getElementById('fechaDesde').value;
+  let d2=document.getElementById('fechaHasta').value;
+  if(diasIndividuales.size>0) return diasIndividuales.size;
+  if(!d1||!d2) return 10;
+  let a=new Date(d1+'T12:00:00');let b=new Date(d2+'T12:00:00');
+  if(b<a) return 10;
+  let total=0;let cur=new Date(a);
+  while(cur<=b){let wd=cur.getDay();if(modoActual==='todos')total++;else if(modoActual==='lunes_viernes'&&wd>=1&&wd<=5)total++;else if(modoActual==='finde'&&(wd===0||wd===6))total++;cur.setDate(cur.getDate()+1);}
+  return total>0?total:10;
+}
 async function calcular(){
   let pais=document.getElementById('paisCalc').value;
   let prod=document.getElementById('prodCalc').value;
+  let dias=contarDias();
+  document.getElementById('infoDias').textContent='Días elegidos: '+dias+(diasIndividuales.size>0?' (individuales, suman)':modoActual==='todos'?' (todos los días)':modoActual==='lunes_viernes'?' (lunes a viernes)':' (fin de semana)');
   try{
-    let r=await fetch(`/precio?pais=${pais}&producto=${prod}&dias=10`);
+    let r=await fetch(`/api/cotizar?pais=${pais}&producto=${prod}&dias=${dias}`);
     let j=await r.json();
-    if(!r.ok) throw new Error(j.detail||'No se pudo calcular');
-    document.getElementById('resultadoCalc').textContent=`Total: ${j.total} ${j.moneda} - 10 días - Botón: Pagar`;
-    // Actualizar tarjetas
-    let ri=await (await fetch(`/precio?pais=${pais}&producto=impulso_10&dias=10`)).json();
-    let re=await (await fetch(`/precio?pais=${pais}&producto=expansion_10&dias=10`)).json();
-    document.getElementById('precioImpulsoCard').innerHTML=`${ri.total} ${ri.moneda} <small>/ 10 días</small>`;
-    document.getElementById('precioExpansionCard').innerHTML=`${re.total} ${re.moneda} <small>/ 10 días</small>`;
-  }catch(e){
-    document.getElementById('resultadoCalc').textContent='No se pudo calcular. Intentá de nuevo.';
-  }
+    document.getElementById('resultadoCalc').textContent='Total: '+j.total+' '+j.moneda+' - '+j.dias+' días - Botón: Pagar';
+    let ri=await (await fetch(`/api/cotizar?pais=${pais}&producto=impulso_10&dias=${dias}`)).json();
+    let re=await (await fetch(`/api/cotizar?pais=${pais}&producto=expansion_10&dias=${dias}`)).json();
+    document.getElementById('precioImpulsoCard').innerHTML=ri.total+' '+ri.moneda+' <small>/ '+dias+' días</small>';
+    document.getElementById('precioExpansionCard').innerHTML=re.total+' '+re.moneda+' <small>/ '+dias+' días</small>';
+  }catch(e){document.getElementById('resultadoCalc').textContent='No se pudo calcular. Intentá de nuevo.';}
 }
-function elegirYCalcular(prod){
-  document.getElementById('prodCalc').value=prod;
-  calcular();
-  document.getElementById('empezar').scrollIntoView({behavior:'smooth'});
-}
+function elegirYCalcular(prod){document.getElementById('prodCalc').value=prod;calcular();document.getElementById('calculadora').scrollIntoView({behavior:'smooth'});}
 async function irAPagar(){
-  let pais=document.getElementById('paisCalc').value;
-  let prod=document.getElementById('prodCalc').value;
-  let tipo=prod.includes('impulso')?'impulso':'expansion';
+  let pais=document.getElementById('paisCalc').value;let prod=document.getElementById('prodCalc').value;let dias=contarDias();let tipo=prod.includes('impulso')?'impulso':'expansion';
+  try{let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=${dias}`);let j=await r.json();let el=document.getElementById('msgCalc');el.style.display='block';el.textContent='Para pagar: '+j.total+' '+j.moneda+' - '+dias+' días - Métodos: '+j.metodos.join(', ')+' - Botón: Pagar';}catch(e){let el=document.getElementById('msgCalcErr');el.style.display='block';el.textContent='No se pudo calcular.';}
+}
+async function hablarNodo(){
+  let nombre=document.getElementById('chatNombre').value||'negocio';
+  let rubro=document.getElementById('chatRubro').value||'negocio';
+  let msg=document.getElementById('chatMsgs');msg.textContent='NODO está armando tu borrador...';
   try{
-    let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=10`);
+    let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,mensaje:document.getElementById('chatMensaje').value})});
     let j=await r.json();
     if(!r.ok) throw new Error(j.detail||'Error');
-    let el=document.getElementById('msgCalc'); el.style.display='block';
-    el.textContent=`Para pagar: ${j.total} ${j.moneda} - Métodos: ${j.metodos.join(', ')} - Botón: Pagar`;
-  }catch(e){
-    let el=document.getElementById('msgCalcErr'); el.style.display='block'; el.textContent=e.message;
-  }
+    borradorActual=j.respuesta||'';
+    let r2=await fetch('/api/publicaciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,texto:borradorActual})});
+    let j2=await r2.json();
+    pubActual=j2.publicacion_id;
+    msg.textContent=borradorActual+'\n\nID: '+pubActual+' - Revisalo. Si te gusta, apretá "Me gusta, publica". Si no, pedí corrección.';
+  }catch(e){msg.textContent='No se pudo crear el borrador: '+e.message;}
 }
-async function pedirCobros(){
-  let nombre=document.getElementById('cobNombre').value;
-  let whatsapp=document.getElementById('cobWhatsapp').value;
-  if(!nombre||!whatsapp){alert('Completá nombre y WhatsApp.');return;}
-  let r=await fetch('/nodo/1-recibe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre, whatsapp, rubro:'Cobros', producto:'cobros', pais:document.getElementById('paisCalc').value, fuente:'web-publica-cobros'})});
-  let j=await r.json();
-  let el=document.getElementById('msgCobros'); el.style.display='block';
-  el.textContent=r.ok?'Gracias '+nombre+'. Te contactamos por WhatsApp para activar Cobros.':'No se pudo enviar. Intentá de nuevo.';
+async function aprobarPublicacion(){
+  if(!pubActual){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent='Primero hablá con NODO para crear el borrador.';return;}
+  try{
+    let r=await fetch('/api/aprobar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publicacion_id:pubActual,aprobado:true})});
+    let j=await r.json();
+    if(!r.ok) throw new Error(j.detail||'Error');
+    let el=document.getElementById('msgChat');el.style.display='block';el.textContent='Aprobado con SÍ. Ahora podés pagar y publicar.';
+  }catch(e){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent=e.message;}
 }
+async function crearCobroPublico(){
+  let data={nombre:document.getElementById('cobNombre').value,dni:document.getElementById('cobDni').value,email:document.getElementById('cobEmail').value,whatsapp:document.getElementById('cobWhatsapp').value,monto:document.getElementById('cobMonto').value,concepto:document.getElementById('cobConcepto').value};
+  try{let r=await fetch('/api/cobros',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let j=await r.json();if(!r.ok) throw new Error(j.detail||'Error');let el=document.getElementById('msgCobros');el.style.display='block';el.textContent='Cobro creado. Se va a enviar: ¿Sos vos, DNI...? Respondé SÍ';}catch(e){let el=document.getElementById('msgCobrosErr');el.style.display='block';el.textContent=e.message;}
+}
+construirCalendario();
 calcular();
+setInterval(()=>{let t=document.getElementById('carruselTrack');if(t){t.style.animation='none';void t.offsetWidth;t.style.animation='';}},30000);
 </script>
 </body>
 </html>
