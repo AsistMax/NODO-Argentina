@@ -1,227 +1,277 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NODO Argentina - Tu negocio, con mas clientes</title>
+<title>NODO Argentina - Publicidad para Latinoamérica</title>
+<meta name="description" content="NODO Argentina - Publicidad profesional para Latinoamérica. Impulso, Expansión y Cobros.">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#111;line-height:1.5}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;position:sticky;top:0;background:#fff;z-index:10;border-bottom:1px solid #eee}
-.logo{font-weight:900;letter-spacing:1px}
-.logo span{color:#2563eb}
-nav{display:flex;gap:16px;flex-wrap:wrap}
-nav a{color:#111;text-decoration:none;font-size:14px;font-weight:600}
-.btn{background:#2563eb;color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:800;font-size:14px;border:none;cursor:pointer}
-.btn2{border:1px solid #ddd;padding:10px 18px;border-radius:999px;text-decoration:none;color:#111;font-weight:700;font-size:14px}
-.hero{text-align:center;padding:48px 20px 20px}
-.hero h1{font-size:42px;line-height:1.1}
-.hero h1 span{color:#2563eb}
-.hero p{color:#666;margin:16px auto;max-width:640px}
-.mapa{max-width:1000px;margin:24px auto;background:#eef4ff;border-radius:20px;padding:20px;text-align:center}
-.galeria-wrap{overflow:hidden;margin:24px 0}
-.galeria{display:flex;gap:12px;width:max-content;animation:mover 28s linear infinite}
-.galeria img{width:300px;height:200px;object-fit:cover;border-radius:16px}
-@keyframes mover{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.sec{max-width:1000px;margin:0 auto;padding:32px 20px}
-.sec h2{font-size:28px;margin-bottom:8px}
-.sec p{color:#666}
-.card{border:1px solid #eee;border-radius:16px;padding:20px;margin:12px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0 12px;font-size:16px}
-label{font-size:13px;color:#666}
-.total{background:#111;color:#fff;padding:20px;border-radius:14px;margin-top:12px}
-.total .num{font-size:28px;font-weight:900}
-footer{margin-top:40px;padding:24px;text-align:center;color:#888;font-size:13px;border-top:1px solid #eee}
-.cal-dia{width:36px;height:36px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-weight:700}
-.cal-dia.on{background:#2563eb;color:#fff}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.hero h1{font-size:32px}nav{display:none}}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+  body{background:#ffffff;color:#0f2040;line-height:1.6}
+  a{color:#0b4fd8;text-decoration:none}
+  header{background:#fff;border-bottom:1px solid #dbe4f0;position:sticky;top:0;z-index:10}
+  .nav{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:900;font-size:24px;color:#0b4fd8}
+  .logo span{color:#0f2040}
+  .nav-links{display:flex;gap:20px;font-size:14px;font-weight:600}
+  @media(max-width:700px){.nav-links{display:none}}
+  .btn{background:#0b4fd8;color:#fff;padding:12px 20px;border-radius:10px;font-weight:800;border:0;cursor:pointer;font-size:15px}
+  .btn.sec{background:#fff;color:#0b4fd8;border:1px solid #0b4fd8}
+  .btn.white{background:#fff;color:#0b4fd8}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  .hero{background:linear-gradient(135deg,#0b4fd8 0%,#1a6bff 55%,#eaf2ff 100%);color:#fff;border-radius:20px;padding:40px 30px;margin:20px 0;display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:center}
+  @media(max-width:800px){.hero{grid-template-columns:1fr;padding:28px 20px}}
+  .hero h1{font-size:36px;line-height:1.15;margin-bottom:12px}
+  @media(max-width:600px){.hero h1{font-size:28px}}
+  .hero p{font-size:16px;opacity:.95;margin-bottom:18px}
+  .hero-card{background:#fff;color:#0f2040;border-radius:16px;padding:20px}
+  .hero-card b{color:#0b4fd8}
+  .hero-card input,.hero-card select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0;font-size:14px}
+  .badge{display:inline-block;background:rgba(255,255,255,.22);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px}
+  h2{font-size:26px;margin:28px 0 8px}
+  .sub{color:#475569;font-size:15px;margin-bottom:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  @media(max-width:800px){.grid3{grid-template-columns:1fr}}
+  .card{border:1px solid #dbe4f0;border-radius:16px;padding:22px;background:#fff}
+  .card.feature{border-color:#0b4fd8;background:#f0f6ff}
+  .card h3{font-size:20px;margin-bottom:8px}
+  .card h3 span{color:#0b4fd8}
+  .price{font-size:28px;font-weight:900;margin:10px 0 4px}
+  .price small{font-size:13px;font-weight:600;color:#64748b}
+  ul{list-style:none;margin:12px 0}
+  ul li{padding:6px 0 6px 24px;position:relative;font-size:14px;color:#334155}
+  ul li:before{content:"✓";position:absolute;left:0;color:#0b4fd8;font-weight:900}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:800px){.steps{grid-template-columns:1fr 1fr}}
+  .step{background:#f8fbff;border:1px solid #dbe4f0;border-radius:14px;padding:18px;text-align:center}
+  .step b{font-size:28px;color:#0b4fd8;display:block}
+  .paises{background:#f8fbff;border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-top:20px}
+  .paises span{display:inline-block;background:#fff;border:1px solid #dbe4f0;padding:6px 10px;border-radius:20px;font-size:12px;margin:4px 4px 0 0}
+  .faq{border:1px solid #dbe4f0;border-radius:12px;padding:16px;margin-bottom:10px}
+  .faq b{display:block;margin-bottom:4px}
+  .faq p{font-size:14px;color:#475569}
+  .cta{background:#0f2040;color:#fff;border-radius:20px;padding:30px;text-align:center;margin:28px 0}
+  .cta h2{color:#fff;margin-top:0}
+  .cta p{opacity:.9}
+  footer{background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 20px;text-align:center}
+  footer p{font-size:13px;color:#64748b}
+  footer .tel{font-size:12px;color:#94a3b8;margin-top:6px}
+  .ok{background:#e6f7ee;color:#0a7a3d;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+  .err{background:#fdecec;color:#b91c1c;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+  .muted{color:#64748b;font-size:13px}
 </style>
 </head>
 <body>
+
 <header>
-<div class="logo">NODO <span>•</span> ARGENTINA</div>
-<nav>
-<a href="#inicio">Inicio</a>
-<a href="#servicios">Servicios</a>
-<a href="#impulso">Impulso</a>
-<a href="#expansion">Expansion</a>
-<a href="#cobros">Cobros</a>
-<a href="#como">Como funciona</a>
-<a href="#resultados">Ver mis resultados</a>
-</nav>
-<a class="btn" href="#registrar">Registrarme</a>
+  <div class="nav">
+    <div class="logo">NODO <span>Argentina</span></div>
+    <div class="nav-links"><a href="#productos">Productos</a><a href="#como-funciona">Cómo funciona</a><a href="#paises">Países</a><a href="#preguntas">Preguntas</a></div>
+    <button class="btn" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Empezar ahora</button>
+  </div>
 </header>
 
-<section id="inicio" class="hero">
-<h1>NODO.<br>Tu negocio, con mas clientes.<br><span>Y cobrando todos los meses.</span></h1>
-<p>Publicidad + Cobros, en un solo lugar. Estamos en tu barrio, en el pais entero y en toda Latinoamerica.</p>
-<div style="margin-top:16px">
-<a class="btn" href="#registrar">Registrarme y empezar</a>
-<a class="btn2" href="#como">Como funciona</a>
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <span class="badge">Publicidad profesional para Latinoamérica</span>
+      <h1>Tu negocio vendiendo en toda Latinoamérica.</h1>
+      <p>Publicidad seria, profesional y automática. Elegís tu producto, pagás, aprobás tu diseño y NODO publica por vos.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn white" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Ver productos</button>
+        <button class="btn sec" style="background:transparent;color:#fff;border-color:#fff" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">Cómo funciona</button>
+      </div>
+      <p style="font-size:13px;margin-top:14px;opacity:.9">Argentina • Brasil • México • Chile • Colombia • Perú • Uruguay • Ecuador y más.</p>
+    </div>
+    <div class="hero-card" id="empezar">
+      <b style="font-size:18px">Calculá tu precio</b>
+      <p class="muted">Elegí tu país y tu producto. El precio final ya incluye todo.</p>
+      <label style="font-size:13px;font-weight:700">País</label>
+      <select id="paisCalc" onchange="calcular()">
+        <option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">México</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Perú</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option><option value="PY">Paraguay</option><option value="BO">Bolivia</option><option value="VE">Venezuela</option><option value="CR">Costa Rica</option><option value="PA">Panamá</option><option value="ES">España</option><option value="US">Estados Unidos</option>
+      </select>
+      <label style="font-size:13px;font-weight:700">Producto</label>
+      <select id="prodCalc" onchange="calcular()">
+        <option value="impulso_10">Impulso - 10 días</option>
+        <option value="expansion_10">Expansión - 10 días</option>
+      </select>
+      <div id="resultadoCalc" style="background:#f0f6ff;border-radius:10px;padding:12px;margin:8px 0;font-weight:800">Calculando...</div>
+      <button class="btn" style="width:100%" onclick="irAPagar()">Pagar</button>
+      <p class="muted" style="margin-top:8px">El botón siempre dice Pagar. Sin sorpresas.</p>
+      <div id="msgCalc" class="ok"></div><div id="msgCalcErr" class="err"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <h2 id="productos">Solo 3 productos. Claros y profesionales.</h2>
+  <p class="sub">Sin vueltas. Elegís lo que tu negocio necesita hoy.</p>
+  <div class="grid3">
+    <div class="card feature">
+      <h3><span>Impulso</span></h3>
+      <p>Para empezar a vender ya. Ideal si es tu primera campaña.</p>
+      <div class="price" id="precioImpulsoCard">— <small>/ 10 días</small></div>
+      <ul>
+        <li>Publicidad en redes sociales</li>
+        <li>Diseño profesional incluido</li>
+        <li>Vos aprobás antes de publicar</li>
+        <li>Contactos directos a tu WhatsApp</li>
+        <li>30 días gratis para contactar tu lista</li>
+      </ul>
+      <button class="btn" style="width:100%" onclick="elegirYCalcular('impulso_10')">Pagar Impulso</button>
+    </div>
+    <div class="card feature" style="border-width:2px">
+      <h3><span>Expansión</span></h3>
+      <p>Para crecer más. Más alcance, más canales, más ventas.</p>
+      <div class="price" id="precioExpansionCard">— <small>/ 10 días</small></div>
+      <ul>
+        <li>Todo lo de Impulso</li>
+        <li>Más alcance y más canales</li>
+        <li>Diseño profesional incluido</li>
+        <li>Vos aprobás antes de publicar</li>
+        <li>30 días gratis para contactar tu lista</li>
+      </ul>
+      <button class="btn" style="width:100%" onclick="elegirYCalcular('expansion_10')">Pagar Expansión</button>
+    </div>
+    <div class="card">
+      <h3><span>Cobros</span></h3>
+      <p>Para cobrar todos los meses sin perseguir a nadie.</p>
+      <div class="price" style="font-size:20px">Cobro mensual automático</div>
+      <ul>
+        <li>Para gyms, clubes, escuelas, alquileres y comercios</li>
+        <li>Confirmación por WhatsApp con DNI</li>
+        <li>Cliente dice SÍ y recibe link de pago</li>
+        <li>Tarjeta tokenizada, débito mensual</li>
+        <li>NODO no guarda número de tarjeta</li>
+      </ul>
+      <button class="btn sec" style="width:100%" onclick="document.getElementById('cobros').scrollIntoView({behavior:'smooth'})">Ver Cobros</button>
+    </div>
+  </div>
+
+  <!-- COMO FUNCIONA -->
+  <h2 id="como-funciona">Cómo funciona</h2>
+  <p class="sub">Simple, serio y sin sorpresas. Vos tenés el control.</p>
+  <div class="steps">
+    <div class="step"><b>1</b><strong>Elegís</strong><p style="font-size:13px;color:#475569">Elegís Impulso, Expansión o Cobros.</p></div>
+    <div class="step"><b>2</b><strong>Pagás</strong><p style="font-size:13px;color:#475569">Pagás con tu método local. Botón Pagar.</p></div>
+    <div class="step"><b>3</b><strong>Aprobás</strong><p style="font-size:13px;color:#475569">Te mostramos el diseño. Si decís SÍ, se publica. Si decís NO, se corrige.</p></div>
+    <div class="step"><b>4</b><strong>Vendés</strong><p style="font-size:13px;color:#475569">Los contactos llegan directo a tu WhatsApp.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#fffbeb;border-color:#fde68a">
+    <b>Regla de oro:</b> <span style="font-size:14px">Sin tu SÍ, NO se publica nada. Nunca.</span>
+  </div>
+
+  <!-- COBROS DETALLE -->
+  <h2 id="cobros">Cobros recurrentes, sin estrés</h2>
+  <div class="card">
+    <p style="font-size:15px">¿Tenés clientes que te pagan todos los meses? Nosotros nos encargamos.</p>
+    <ol style="padding-left:18px;margin:12px 0;font-size:14px;color:#334155">
+      <li>Vos cargás: nombre, DNI, email, WhatsApp, monto y concepto.</li>
+      <li>Le escribimos por WhatsApp: <b>"¿Sos vos, DNI...? Respondé SÍ"</b></li>
+      <li>Si dice SÍ, le llega el link de pago.</li>
+      <li>Se cobra todos los meses en forma automática.</li>
+    </ol>
+    <p class="muted">Para gyms, clubes, escuelas, alquileres y comercios. Tu tarjeta la guarda el proveedor de pago, no NODO.</p>
+    <div style="margin-top:14px">
+      <label style="font-size:13px;font-weight:700">¿Querés que te contactemos por Cobros?</label>
+      <input id="cobNombre" placeholder="Nombre de tu negocio" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0">
+      <input id="cobWhatsapp" placeholder="Tu WhatsApp" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0">
+      <button class="btn" onclick="pedirCobros()">Quiero Cobros</button>
+      <div id="msgCobros" class="ok"></div>
+    </div>
+  </div>
+
+  <!-- PAISES -->
+  <div class="paises" id="paises">
+    <h2 style="margin-top:0">Trabajamos en toda Latinoamérica</h2>
+    <p class="sub">Cada país paga en su moneda local. El precio se calcula según tu país.</p>
+    <span>🇦🇷 Argentina</span><span>🇧🇷 Brasil</span><span>🇲🇽 México</span><span>🇨🇱 Chile</span><span>🇨🇴 Colombia</span><span>🇵🇪 Perú</span><span>🇺🇾 Uruguay</span><span>🇪🇨 Ecuador</span><span>🇵🇾 Paraguay</span><span>🇧🇴 Bolivia</span><span>🇻🇪 Venezuela</span><span>🇨🇷 Costa Rica</span><span>🇵🇦 Panamá</span><span>🇪🇸 España</span><span>🇺🇸 Estados Unidos</span>
+    <p class="muted" style="margin-top:12px">Métodos según país: Argentina: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, Pago TIC, dLocal. Brasil, México, Chile, Colombia, Perú, Uruguay, Ecuador: 【entity-Mercado Pago¦canonical_name=Mercado Pago】, dLocal. Resto: dLocal.</p>
+  </div>
+
+  <!-- RETENCION -->
+  <h2>Tus contactos son tuyos</h2>
+  <div class="card">
+    <p style="font-size:15px">Después de tu campaña, tenés <b>30 días gratis</b> para contactar y descargar tu lista de contactos.</p>
+    <p style="font-size:14px;color:#475569;margin-top:8px">Después, $2700/mes para seguir captando. Si no pagás, tus datos quedan pausados, seguros, NO borrados. Cuando volvés, se restaura todo.</p>
+    <p class="muted" style="margin-top:8px">Solo ves tus contactos: nombre, WhatsApp, interés, fecha. No guardamos chats, audios ni fotos. Los mensajes van directo a tu WhatsApp.</p>
+  </div>
+
+  <!-- FAQ -->
+  <h2 id="preguntas">Preguntas frecuentes</h2>
+  <div class="faq"><b>¿Tengo que saber de publicidad?</b><p>No. Elegís tu producto, pagás y NODO arma todo. Vos solo aprobás el diseño.</p></div>
+  <div class="faq"><b>¿Se publica sin que yo lo vea?</b><p>No, nunca. Te mostramos el diseño y solo se publica si decís SÍ.</p></div>
+  <div class="faq"><b>¿Cómo pago?</b><p>Con el botón Pagar, con los métodos de tu país. Argentina: Mercado Pago, Pago TIC, dLocal.</p></div>
+  <div class="faq"><b>¿Dónde llegan los clientes?</b><p>Directo a tu WhatsApp / Messenger. Sin intermediarios.</p></div>
+  <div class="faq"><b>¿Qué pasa con mis contactos después de 30 días?</b><p>Tenés 30 días gratis. Después podés seguir por $2700/mes. Si no pagás, quedan pausados, seguros, no borrados.</p></div>
+  <div class="faq"><b>¿Cobros guarda mi tarjeta?</b><p>No. La tarjeta la tokeniza el proveedor de pago. NODO no guarda número de tarjeta.</p></div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Empezá hoy. Tu negocio merece vender más.</h2>
+    <p>Elegí Impulso o Expansión y pagá en tu moneda local.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+      <button class="btn white" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Pagar Impulso</button>
+      <button class="btn" style="background:#fff;color:#0f2040" onclick="document.getElementById('empezar').scrollIntoView({behavior:'smooth'})">Pagar Expansión</button>
+    </div>
+  </div>
+
 </div>
-<div class="mapa">
-<p style="font-weight:800">Estamos en toda Latinoamerica</p>
-<p style="font-size:13px">Mexico • Costa Rica • Panama • Guatemala • Republica Dominicana • Argentina • Chile • Colombia • Peru • Uruguay • Brasil • y mas</p>
-</div>
-</section>
-
-<div class="galeria-wrap"><div class="galeria" id="galeria">
-<img src="carrusel-1-dueno-atendiendo.jpg" alt="Dueno atendiendo">
-<img src="carrusel-2-cliente-pagando.jpg" alt="Cliente pagando">
-<img src="carrusel-3-equipo-trabajando.jpg" alt="Equipo trabajando">
-<img src="carrusel-4-panaderia.jpg" alt="Panaderia">
-<img src="carrusel-5-tienda-ropa.jpg" alt="Tienda">
-<img src="carrusel-6-barberia.jpg" alt="Barberia">
-<img src="carrusel-7-verduleria.jpg" alt="Verduleria">
-<img src="carrusel-1-dueno-atendiendo.jpg" alt="Dueno atendiendo">
-<img src="carrusel-2-cliente-pagando.jpg" alt="Cliente pagando">
-<img src="carrusel-3-equipo-trabajando.jpg" alt="Equipo trabajando">
-</div></div>
-<p style="text-align:center;color:#888;font-size:13px">Se mueve solo, todo el tiempo.</p>
-<section id="servicios" class="sec">
-<h2>Nuestros servicios</h2>
-<p>Elegi lo que necesita tu negocio hoy. Podes empezar con uno y sumar despues.</p>
-<div class="grid">
-<div class="card" id="impulso"><h3>Impulso</h3><p>Publicidad para que te conozcan en tu zona.</p><p><b>Calendario que suma.</b></p></div>
-<div class="card" id="expansion"><h3>Expansion</h3><p>Publicidad en todo el pais y en varios paises.</p><p><b>Para hacer crecer el negocio.</b></p></div>
-<div class="card" id="cobros"><h3>Cobros</h3><p>Cobros recurrentes para tu institucion, comercio, club, escuela o alquiler.</p><p><b>Que te paguen todos los meses.</b></p></div>
-<div class="card"><h3>NODO te atiende</h3><p>NODO recibe tu pedido, crea el diseno, te lo muestra y solo publica si vos decis que si.</p><p><b>Sin que tengas que estar pendiente.</b></p></div>
-</div>
-</section>
-
-<section id="como" class="sec">
-<h2>Como funciona</h2>
-<p>1. Te registras. 2. Contanos que queres. 3. NODO crea tu diseno. 4. Lo ves y lo corregis cuantas veces quieras. 5. Si decis que si, NODO publica. 6. NODO cobra y te muestra resultados.</p>
-<p><b>Sin tu SI, no se publica nada.</b></p>
-</section>
-
-<section class="sec">
-<h2>Calcula tu plan</h2>
-<label>Pais</label>
-<select id="pais">
-<option value="AR">Argentina</option>
-<option value="BR">Brasil</option>
-<option value="MX">Mexico</option>
-<option value="CL">Chile</option>
-<option value="CO">Colombia</option>
-<option value="PE">Peru</option>
-<option value="UY">Uruguay</option>
-<option value="EC">Ecuador</option>
-<option value="PY">Paraguay</option>
-<option value="BO">Bolivia</option>
-<option value="VE">Venezuela</option>
-<option value="CR">Costa Rica</option>
-<option value="PA">Panama</option>
-</select>
-<label>Plan</label>
-<select id="plan">
-<option value="impulso">Impulso</option>
-<option value="expansion">Expansion</option>
-</select>
-<label>Dias de campana</label>
-<input id="dias" type="number" value="10" min="1" max="90">
-<label>Calendario - elegi los dias, se suman, no se borran</label>
-<div id="calendario" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-<div style="margin:12px 0">
-<button class="btn2" onclick="setDias('lu-vi')">Lunes a Viernes</button>
-<button class="btn2" onclick="setDias('finde')">Fin de semana</button>
-<button class="btn2" onclick="setDias('todos')">Todos los dias</button>
-</div>
-<button class="btn" onclick="calcular()">Calcular precio</button>
-<div class="total"><div>Precio final en tu moneda</div><div class="num" id="precioFinal">—</div><div id="detallePrecio" style="font-size:13px;opacity:.8"></div></div>
-<p style="font-size:13px;color:#888;margin-top:8px">El precio se muestra solo en tu moneda. El total ya incluye todo.</p>
-</section>
-
-<section id="resultados" class="sec">
-<h2>Ver mis resultados</h2>
-<p>Si ya tenes cuenta, ingresa y mira tus visitas, contactos y ventas.</p>
-<a class="btn2" href="#entrar">Entrar a mi cuenta</a>
-</section>
-<section id="registrar" class="sec">
-<h2>Registrarme</h2>
-<p>Crea tu cuenta para empezar. Si ya tenes cuenta, anda a Entrar.</p>
-<label>Nombre</label><input id="regNombre" placeholder="Tu nombre">
-<label>Correo</label><input id="regCorreo" placeholder="tu@correo.com">
-<label>Clave</label><input id="regClave" type="password" placeholder="Minimo 6 caracteres">
-<label>WhatsApp</label><input id="regWhats" placeholder="Ej: 3834000000">
-<label>Empresa / Negocio</label><input id="regEmpresa" placeholder="Nombre de tu negocio">
-<button class="btn" onclick="registrar()">Crear mi cuenta</button>
-<p id="msgReg" style="font-size:13px;margin-top:8px"></p>
-<p style="font-size:13px;margin-top:12px"><a href="#entrar" onclick="mostrarEntrar()">Ya tengo cuenta, Entrar</a> • <a href="#" onclick="mostrarRecuperar();return false">Olvide mi clave</a></p>
-</section>
-
-<section id="entrar" class="sec" style="display:none">
-<h2>Entrar a mi cuenta</h2>
-<label>Correo</label><input id="logCorreo" placeholder="tu@correo.com">
-<label>Clave</label><input id="logClave" type="password" placeholder="Tu clave">
-<button class="btn" onclick="entrar()">Entrar</button>
-<p id="msgLog" style="font-size:13px;margin-top:8px"></p>
-<p style="font-size:13px;margin-top:12px"><a href="#" onclick="mostrarRecuperar();return false">Olvide mi clave</a></p>
-</section>
-
-<section id="recuperar" class="sec" style="display:none">
-<h2>Recuperar mi clave</h2>
-<p>Para todos los usuarios. Te mandamos un codigo que vence en 30 minutos.</p>
-<label>Correo</label><input id="recCorreo" placeholder="tu@correo.com">
-<button class="btn" onclick="pedirCodigo()">Enviar codigo</button>
-<div id="pasoCodigo" style="display:none;margin-top:16px">
-<label>Codigo que te llego</label><input id="recCodigo" placeholder="123456">
-<label>Nueva clave</label><input id="recNueva" type="password" placeholder="Minimo 6">
-<button class="btn" onclick="cambiarClave()">Cambiar mi clave</button>
-</div>
-<p id="msgRec" style="font-size:13px;margin-top:8px"></p>
-</section>
-
-<section id="cobrosForm" class="sec">
-<h2>Cobros recurrentes</h2>
-<p>Si tenes institucion, comercio, club, escuela o alquiler, cargalo aca y NODO le manda el WhatsApp al cliente.</p>
-<label>Institucion / Comercio</label><input id="cobInst" placeholder="Nombre">
-<label>Nombre del cliente</label><input id="cobNombre" placeholder="Nombre">
-<label>DNI del cliente</label><input id="cobDni" placeholder="DNI">
-<label>Correo del cliente</label><input id="cobEmail" placeholder="cliente@correo.com">
-<label>WhatsApp del cliente</label><input id="cobWs" placeholder="3834000000">
-<label>Monto</label><input id="cobMonto" type="number" placeholder="0">
-<label>Concepto</label><input id="cobConcepto" placeholder="Ej: Cuota mensual">
-<button class="btn" onclick="pedirCobro()">Mandar WhatsApp de confirmacion</button>
-<p id="msgCob" style="font-size:13px;margin-top:8px"></p>
-</section>
-
-<section class="sec">
-<h2>Habla con NODO</h2>
-<p>Contale a NODO que queres publicar. NODO te crea el diseno y te lo muestra.</p>
-<textarea id="nodoMsg" placeholder="Ej: Quiero publicar mi panaderia, que se vea rico y con oferta..."></textarea>
-<button class="btn" onclick="hablarNodo()">Mandarle a NODO</button>
-<div id="nodoResp" style="margin-top:12px;background:#f6f8ff;padding:16px;border-radius:12px;display:none"></div>
-<p style="font-size:13px;color:#888;margin-top:8px">NODO te muestra el diseno. Si no te gusta, pedile que lo cambie. Solo publica si vos decis que si.</p>
-<div style="margin-top:16px">
-<button class="btn" onclick="aprobar(true)">Me gusta, publica</button>
-<button class="btn2" onclick="aprobar(false)">No me gusta, corregilo</button>
-</div>
-</section>
 
 <footer>
-<p>NODO Argentina - Publicidad + Cobros para toda Latinoamerica</p>
-<p style="margin-top:8px">WhatsApp: +54 9 383 400-0000</p>
-<p style="margin-top:8px">© 2026 NODO. Todos los derechos reservados.</p>
+  <p><b>NODO Argentina</b> - Publicidad para Latinoamérica</p>
+  <p class="muted">Impulso • Expansión • Cobros</p>
+  <p class="tel">Tel: +54 383 456-7890</p>
 </footer>
 
 <script>
-let diasSel=new Set([1,2,3,4,5,6,7,8,9,10]);
-let pubActual="";
-function dibujarCal(){let c=document.getElementById('calendario');c.innerHTML='';for(let i=1;i<=30;i++){let b=document.createElement('button');b.className='cal-dia'+(diasSel.has(i)?' on':'');b.textContent=i;b.onclick=()=>{if(diasSel.has(i))diasSel.delete(i);else diasSel.add(i);dibujarCal();document.getElementById('dias').value=diasSel.size};c.appendChild(b)}}
-function setDias(tipo){diasSel.clear();if(tipo=='lu-vi'){for(let i=1;i<=30;i++){let d=new Date(2026,0,i).getDay();if(d>=1&&d<=5)diasSel.add(i)}}if(tipo=='finde'){for(let i=1;i<=30;i++){let d=new Date(2026,0,i).getDay();if(d==0||d==6)diasSel.add(i)}}if(tipo=='todos'){for(let i=1;i<=30;i++)diasSel.add(i)}dibujarCal();document.getElementById('dias').value=diasSel.size}
-async function calcular(){let plan=document.getElementById('plan').value;let pais=document.getElementById('pais').value;let dias=parseInt(document.getElementById('dias').value)||10;try{let r=await fetch('/api/calcular-precio?plan='+plan+'&pais='+pais+'&dias='+dias);let j=await r.json();if(j.ok){document.getElementById('precioFinal').textContent=j.simbolo+' '+j.total_local.toLocaleString('es-AR');document.getElementById('detallePrecio').textContent=j.pais+' - '+j.dias+' dias - '+j.moneda}else{document.getElementById('precioFinal').textContent='Error'}}catch(e){document.getElementById('precioFinal').textContent='No se pudo calcular. Intenta de nuevo.'}}
-async function registrar(){let b={nombre:document.getElementById('regNombre').value,email:document.getElementById('regCorreo').value,clave:document.getElementById('regClave').value,whatsapp:document.getElementById('regWhats').value,empresa:document.getElementById('regEmpresa').value,tipo:'negocio',pais:document.getElementById('pais').value};let r=await fetch('/api/registro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgReg').textContent=j.ok?'Cuenta creada. Ahora entra.':(j.detail||'Error');if(j.ok)mostrarEntrar()}
-function mostrarEntrar(){document.getElementById('registrar').style.display='none';document.getElementById('entrar').style.display='block';document.getElementById('recuperar').style.display='none'}
-function mostrarRecuperar(){document.getElementById('registrar').style.display='none';document.getElementById('entrar').style.display='none';document.getElementById('recuperar').style.display='block'}
-async function entrar(){let b={email:document.getElementById('logCorreo').value,clave:document.getElementById('logClave').value};let r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgLog').textContent=j.ok?('Hola '+j.nombre+'. Ya entraste.'): (j.detail||'Error')}
-async function pedirCodigo(){let b={email:document.getElementById('recCorreo').value};let r=await fetch('/api/recuperar-clave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRec').textContent=j.mensaje||'Revisa tu correo.';document.getElementById('pasoCodigo').style.display='block'}
-async function cambiarClave(){let b={email:document.getElementById('recCorreo').value,codigo:document.getElementById('recCodigo').value,nueva_clave:document.getElementById('recNueva').value};let r=await fetch('/api/confirmar-recuperacion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRec').textContent=j.ok?j.mensaje:(j.detail||'Error')}
-async function pedirCobro(){let b={institucion:document.getElementById('cobInst').value,cliente_nombre:document.getElementById('cobNombre').value,cliente_dni:document.getElementById('cobDni').value,cliente_email:document.getElementById('cobEmail').value,cliente_whatsapp:document.getElementById('cobWs').value,monto:parseFloat(document.getElementById('cobMonto').value)||0,concepto:document.getElementById('cobConcepto').value,pais:document.getElementById('pais').value};let r=await fetch('/api/cobros/solicitar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgCob').textContent=j.ok?'Listo. NODO le mando el WhatsApp al cliente.':(j.detail||j.error||'Error')}
-async function hablarNodo(){let m=document.getElementById('nodoMsg').value;let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensaje:m})});let j=await r.json();let d=document.getElementById('nodoResp');d.style.display='block';d.textContent=j.respuesta||'NODO te va a responder.'}
-async function aprobar(si){if(!pubActual){alert('Primero habla con NODO y crea tu diseno.');return}let r=await fetch('/api/aprobar-publicacion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publicacion_id:pubActual,aprobado:si})});let j=await r.json();alert(j.mensaje||'Listo')}
-dibujarCal();calcular();
+async function calcular(){
+  let pais=document.getElementById('paisCalc').value;
+  let prod=document.getElementById('prodCalc').value;
+  try{
+    let r=await fetch(`/precio?pais=${pais}&producto=${prod}&dias=10`);
+    let j=await r.json();
+    if(!r.ok) throw new Error(j.detail||'No se pudo calcular');
+    document.getElementById('resultadoCalc').textContent=`Total: ${j.total} ${j.moneda} - 10 días - Botón: Pagar`;
+    // Actualizar tarjetas
+    let ri=await (await fetch(`/precio?pais=${pais}&producto=impulso_10&dias=10`)).json();
+    let re=await (await fetch(`/precio?pais=${pais}&producto=expansion_10&dias=10`)).json();
+    document.getElementById('precioImpulsoCard').innerHTML=`${ri.total} ${ri.moneda} <small>/ 10 días</small>`;
+    document.getElementById('precioExpansionCard').innerHTML=`${re.total} ${re.moneda} <small>/ 10 días</small>`;
+  }catch(e){
+    document.getElementById('resultadoCalc').textContent='No se pudo calcular. Intentá de nuevo.';
+  }
+}
+function elegirYCalcular(prod){
+  document.getElementById('prodCalc').value=prod;
+  calcular();
+  document.getElementById('empezar').scrollIntoView({behavior:'smooth'});
+}
+async function irAPagar(){
+  let pais=document.getElementById('paisCalc').value;
+  let prod=document.getElementById('prodCalc').value;
+  let tipo=prod.includes('impulso')?'impulso':'expansion';
+  try{
+    let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=10`);
+    let j=await r.json();
+    if(!r.ok) throw new Error(j.detail||'Error');
+    let el=document.getElementById('msgCalc'); el.style.display='block';
+    el.textContent=`Para pagar: ${j.total} ${j.moneda} - Métodos: ${j.metodos.join(', ')} - Botón: Pagar`;
+  }catch(e){
+    let el=document.getElementById('msgCalcErr'); el.style.display='block'; el.textContent=e.message;
+  }
+}
+async function pedirCobros(){
+  let nombre=document.getElementById('cobNombre').value;
+  let whatsapp=document.getElementById('cobWhatsapp').value;
+  if(!nombre||!whatsapp){alert('Completá nombre y WhatsApp.');return;}
+  let r=await fetch('/nodo/1-recibe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre, whatsapp, rubro:'Cobros', producto:'cobros', pais:document.getElementById('paisCalc').value, fuente:'web-publica-cobros'})});
+  let j=await r.json();
+  let el=document.getElementById('msgCobros'); el.style.display='block';
+  el.textContent=r.ok?'Gracias '+nombre+'. Te contactamos por WhatsApp para activar Cobros.':'No se pudo enviar. Intentá de nuevo.';
+}
+calcular();
 </script>
 </body>
 </html>
