@@ -1,551 +1,107 @@
 <!DOCTYPE html>
-<!-- saved from url=(0067)file:///C:/Users/usuario/Downloads/Privada-NODO-COMPLETA%20(1).html -->
-<html lang="es-AR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NODO Argentina - Sistema País</title>
+<title>NODO - Panel</title>
 <style>
-:root{--bg:#0a0a0a;--card:#111;--gold:#d4af37;--gold2:#b8962e;--text:#e8e8e8;--muted:#888;--border:#222}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.5}
-.header{border-bottom:1px solid var(--border);padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:800;letter-spacing:2px}.logo span{color:var(--gold)}
-.status{font-size:12px;color:var(--muted)}
-.status b{color:#2ecc71}
-.container{max-width:1200px;margin:0 auto;padding:24px}
-.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:12px}
-.tab{padding:8px 16px;border:1px solid var(--border);border-radius:20px;cursor:pointer;white-space:nowrap;font-size:13px}
-.tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
-.card h3{margin-bottom:12px;font-size:16px}
-.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
-.kpi .card{margin:0;text-align:center}
-.kpi .num{font-size:24px;font-weight:800;color:var(--gold)}
-.kpi .label{font-size:12px;color:var(--muted)}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:#0f0f0f;color:var(--text);margin:6px 0 12px}
-label{font-size:12px;color:var(--muted);margin-top:8px;display:block}
-button{background:var(--gold);color:#000;border:none;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;width:100%}
-button:hover{background:var(--gold2)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:1024px){.container{padding:16px}.kpi{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.header{flex-wrap:wrap;gap:10px;padding:12px}.header a{width:100%;text-align:center}.container{padding:12px}.kpi{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px}.tab{flex-shrink:0}table{display:block;overflow-x:auto}button{padding:14px;font-size:16px}input,select,textarea{font-size:16px;padding:12px}}
-@media(max-width:420px){.kpi{grid-template-columns:1fr}.logo{font-size:14px}}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;background:#1a1a1a;border:1px solid var(--border);font-size:11px;color:var(--muted)}
-.total-box{background:linear-gradient(135deg,#111,#1a1a1a);border:1px solid var(--gold);border-radius:12px;padding:20px;margin-top:16px}
-.total-box .total{font-size:28px;font-weight:800;color:var(--gold)}
-.empty{padding:40px;text-align:center;color:var(--muted);font-size:14px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
-th{color:var(--muted);font-weight:600}
+body{font-family:Inter,system-ui,sans-serif;background:#f6f8ff;color:#111;line-height:1.5}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0}
+.logo{font-weight:900}.logo span{color:#2563eb}
+.btn{background:#2563eb;color:#fff;padding:10px 18px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
+.btn2{border:1px solid #ddd;padding:10px 18px;border-radius:999px;background:#fff;font-weight:700;cursor:pointer}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 20px}
+.card{background:#fff;border:1px solid #eee;border-radius:16px;padding:20px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0 12px;font-size:16px}
+label{font-size:13px;color:#666}
+.kpi{font-size:28px;font-weight:900}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{border-bottom:1px solid #eee;padding:8px;text-align:left}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- LOGIN NODO - Panel Admin Oculto - Clave segura, no se muestra contraseña -->
-<div id="loginOverlay" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#111;border:2px solid #D4AF37;border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center;">
-    <h1 style="color:#D4AF37;margin:0;">NODO ARGENTINA</h1>
-    <p style="color:#aaa;font-size:13px;">Panel Administrador - Solo equipo NODO</p>
-    <input id="claveAdmin" type="password" placeholder="Clave privada" style="width:100%;padding:12px;margin:12px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff;">
-    <button onclick="loginAdmin()" style="width:100%;background:#D4AF37;color:#000;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer;">Ingresar</button>
-    <p style="font-size:12px;color:#888;margin-top:10px;">Si no tenés clave, volvé a <a href="file:///C:/" style="color:#D4AF37;">nodo-argentina.onrender.com</a> (público)</p>
-    <p id="loginError" style="color:#FF4444;font-size:12px;">Error: TypeError: Failed to fetch</p>
-  </div>
-</div>
-<script>
-async function loginAdmin(){
-  const c = document.getElementById('claveAdmin').value;
-  try{
-    const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clave:c})});
-    const j = await r.json();
-    if(j.ok){ document.getElementById('loginOverlay').style.display='none'; }
-    else{ document.getElementById('loginError').innerText='Clave incorrecta'; }
-  }catch(e){ document.getElementById('loginError').innerText='Error: '+e; }
-}
-document.getElementById('claveAdmin')?.addEventListener('keydown',e=>{ if(e.key==='Enter') loginAdmin(); });
-</script>
-
-<div class="header">
-<div class="logo">NODO <span>ARGENTINA</span> - SISTEMA PAÍS</div>
-<a href="file:///C:/" style="background:#D4AF37;color:#000;padding:8px 14px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px;white-space:nowrap">← Volver a Página Pública</a>
-<div class="status">Groq <b>Activo</b> | Meta <b>Activo</b> | Google Ads <b>Pendiente RapiPago</b></div>
-</div>
-
-<div class="container">
-<div style="margin-bottom:12px"><a id="btn-volver-publico" href="file:///C:/" style="display:inline-block;background:#D4AF37;color:#000;padding:10px 16px;border-radius:8px;font-weight:800;text-decoration:none;font-size:13px">← Volver a Página Pública (lo que ve la gente)</a> <span style="font-size:12px;color:#888">Estás en la parte privada. El público entra por / y ve otra página.</span></div>
-<div class="tabs">
-<div class="tab active" data-tab="adm">PANEL ADM</div>
-<div class="tab" data-tab="crm">CRM</div>
-<div class="tab" data-tab="area">EXPLOTACIÓN DE ÁREA</div>
-<div class="tab" data-tab="incorporacion">INCORPORACIÓN</div>
-<div class="tab" data-tab="costos">CÁLCULO COSTOS</div>
-<div class="tab" data-tab="cierre">CIERRE AUTOMÁTICO</div>
-<div class="tab" data-tab="barrio" style="background:var(--gold);color:#000;font-weight:800">MODO BARRIO - RÁPIDO</div>
-<div class="tab" data-tab="suscripciones">SUSCRIPCIONES Y PAGOS</div>
-</div>
-
-<!-- PANEL ADM -->
-<div id="tab-adm" class="tab-content">
-<div class="kpi">
-<div class="card"><div class="num" id="kpi-empresas">0</div><div class="label">Empresas activas</div></div>
-<div class="card"><div class="num" id="kpi-leads">0</div><div class="label">Contactos</div></div>
-<div class="card"><div class="num" id="kpi-area">0</div><div class="label">Áreas activas</div></div>
-<div class="card"><div class="num" id="kpi-agentes">0</div><div class="label">Agentes de área</div></div>
-</div>
-<div class="card"><h3>Empresas - Red NODO</h3><div id="lista-empresas" class="empty">No hay empresas en Red NODO - Usá Incorporación para cargar la primera</div></div>
-</div>
-
-<!-- CRM -->
-<div id="tab-crm" class="tab-content" style="display:none">
-<div class="card"><h3>Contactos - Gestión Comercial</h3><div id="lista-crm" class="empty">Sin contactos registrados - Los contactos de tus links de área aparecerán aquí con comprobante</div></div>
-</div>
-
-<!-- EXPLOTACION DE AREA -->
-<div id="tab-area" class="tab-content" style="display:none">
-<div class="grid2">
-<div class="card"><h3>Crear Agente de Área</h3>
-<label>Nombre completo</label><input id="ag-nombre" placeholder="Ej: Juan Pérez">
-<label>DNI</label><input id="ag-dni" placeholder="Ej: 30123456">
-<label>Zona / Provincia</label><select id="ag-zona"><option>Catamarca</option><option>La Rioja</option><option>Tucumán</option><option>Salta</option><option>Jujuy</option><option>Córdoba</option><option>CABA</option><option>Buenos Aires</option><option>Mendoza</option><option>Santa Fe</option><option>Entre Ríos</option><option>Corrientes</option><option>Misiones</option><option>Chaco</option><option>Formosa</option><option>Santiago del Estero</option><option>San Luis</option><option>San Juan</option><option>La Pampa</option><option>Río Negro</option><option>Neuquén</option><option>Chubut</option><option>Santa Cruz</option><option>Tierra del Fuego</option></select>
-<label>Teléfono</label><input id="ag-tel" placeholder="3834...">
-<button onclick="crearAgente()">Generar Link AGT-XXXX</button>
-</div>
-<div class="card"><h3>Calculadora de Área - Lógica Corregida</h3>
-<p style="font-size:12px;color:var(--muted);margin-bottom:12px">Valor: $800.000 por persona por 30 días. Si requiere menos días, se calcula proporcional: 10 días = $266.666 (800.000/30*10)</p>
-<label>Personas</label><input id="calc-personas" type="number" value="1" min="1">
-<label>Días (10, 12, 15, 20, 30...)</label><input id="calc-dias" type="number" value="30" min="1">
-<label>Urgencia</label><select id="calc-urgencia"><option value="normal">Normal x1</option><option value="urgente">Urgente x1.5</option><option value="express">Express x2</option></select>
-<button onclick="calcularArea()">Calcular Área</button>
-<div id="resultado-area" class="total-box" style="display:none"></div>
-</div>
-</div>
-<div class="card"><h3>Agentes de Área - País</h3><div id="lista-agentes" class="empty">Sin agentes - Creá tu primer agente para generar link AGT-XXXX</div></div>
-</div>
-
-<!-- INCORPORACION -->
-<div id="tab-incorporacion" class="tab-content" style="display:none">
-<div class="card"><h3>Incorporación de Empresa / Comercio</h3>
-<div class="grid2">
-<div>
-<label>Razón Social</label><input id="inc-razon">
-<label>CUIT / CUIL</label><input id="inc-cuit" placeholder="Ej: 20123456789 - Validación matemática automática">
-<label>Sector</label><select id="inc-sector"><option>Servicios Profesionales</option><option>Salud Privada</option><option>Real Estate</option><option>Finanzas</option><option>Educación</option><option>Automotriz</option><option>Gastronomía</option><option>Hotelería</option><option>Retail</option><option>Construcción</option><option>Agro</option><option>Tecnología</option><option>Energía</option><option>Logística</option><option>Industrial</option><option>Comercio</option><option>Institución</option></select>
-<label>Objetivo</label><input id="inc-objetivo" placeholder="Ej: Captar 50 clientes en Catamarca">
-<label>WhatsApp donde le llegan los leads</label><input id="inc-telefono-destino" placeholder="Ej: 3834607740 - Ahí le llegan los interesados directo">
-<label>Modo de gestión</label><select id="inc-modo-gestion"><option>AUTOGESTION</option><option>GESTION NODO</option></select>
-</div>
-<div>
-<label>Zona Operativa - Provincias donde operar</label>
-<div style="display:grid;grid-template-columns:1fr 1fr;font-size:12px;max-height:120px;overflow-y:auto;border:1px solid var(--border);padding:8px;border-radius:8px">
-<label><input type="checkbox" value="Catamarca"> Catamarca</label><label><input type="checkbox" value="La Rioja"> La Rioja</label><label><input type="checkbox" value="Tucuman"> Tucumán</label><label><input type="checkbox" value="Salta"> Salta</label><label><input type="checkbox" value="Jujuy"> Jujuy</label><label><input type="checkbox" value="Cordoba"> Córdoba</label><label><input type="checkbox" value="CABA"> CABA</label><label><input type="checkbox" value="Buenos Aires"> Buenos Aires</label><label><input type="checkbox" value="Mendoza"> Mendoza</label><label><input type="checkbox" value="Santa Fe"> Santa Fe</label><label><input type="checkbox" value="Todo el país"> Todo el país</label>
-</div>
-<label>Descripción detallada</label><textarea id="inc-desc" rows="3" placeholder="Servicios, promociones, horarios..."></textarea>
-<label>Archivos (fotos, videos, catálogo)</label><input type="file" multiple="">
-</div>
-</div>
-<button onclick="crearEmpresa()">Activar en Red NODO</button>
-</div>
-</div>
-
-<!-- COSTOS -->
-<div id="tab-costos" class="tab-content" style="display:none">
-<div class="card"><h3>Cálculo de Costos - Organizado y Prolijo</h3>
-<p style="font-size:12px;color:var(--muted)">Los bots calculan según montos actualizados de cada integración. Si cambia precio de integración, se recalcula automático.</p>
-<div class="grid2">
-<div>
-<label>Personas para explotar área</label><input id="costo-personas" type="number" value="3">
-<label>Días (10,12,15,20,30)</label><input id="costo-dias" type="number" value="15">
-<label>Urgencia</label><select id="costo-urgencia"><option value="normal">Normal x1</option><option value="urgente">Urgente x1.5</option><option value="express">Express x2</option></select>
-<label><input type="checkbox" id="costo-google"> Google Ads (costo por días + presupuesto diario)</label>
-<label>Presupuesto diario Google Ads ($)</label><input id="costo-google-ppto" type="number" value="5000">
-<label><input type="checkbox" id="costo-meta"> Meta Ads</label>
-<label>Presupuesto diario Meta ($)</label><input id="costo-meta-ppto" type="number" value="3000">
-</div>
-<div>
-<label><input type="checkbox" id="costo-audio"> Mensajes con audio</label>
-<label>Cantidad de mensajes</label><input id="costo-cant-audio" type="number" value="100">
-<label>Valor unitario por audio: $150 (actualizado por bots)</label>
-<label><input type="checkbox" id="costo-voz"> Voz institucional (opcional) +$15.000</label>
-<label>Provincias</label><input id="costo-provincias" placeholder="Ej: Catamarca, Todo el país">
-</div>
-</div>
-<button onclick="calcularPresupuestoCompleto()">Calcular Presupuesto Final</button>
-<div id="resultado-costos" class="total-box" style="display:none"></div>
-<button id="btn-pagar" style="display:none;margin-top:12px;background:#2ecc71;color:#000" onclick="generarPago()">Pagar con Mercado Pago - Monto Variable</button>
-</div>
-</div>
-
-
-<!-- CIERRE AUTOMATICO 24/7 -->
-<div id="tab-cierre" class="tab-content" style="display:none">
-<div class="grid2">
-<div class="card"><h3>Bot 24/7 - Cierre Automático de Convenio</h3>
-<p style="font-size:12px;color:var(--muted)">Bots cierran convenios 24/7 con T&amp;C + tarjeta tokenizada. Débito automático fecha límite + reintentos diarios.</p>
-<label>Razón Social</label><input id="cierre-razon">
-<label>CUIT (validación matemática)</label><input id="cierre-cuit" placeholder="20123456789">
-<label>Email</label><input id="cierre-email">
-<label>Teléfono</label><input id="cierre-telefono" placeholder="3834...">
-<label>Provincias</label><input id="cierre-provincias" placeholder="Catamarca, Todo el país">
-<label>Monto Total (calculado por bots)</label><input id="cierre-monto" type="number" value="1200000">
-<label><input type="checkbox" id="cierre-terminos"> Acepto Términos y Condiciones <a href="file:///C:/Users/usuario/Downloads/Privada-NODO-COMPLETA%20(1).html#" onclick="verTerminos();return false;" style="color:var(--gold)">Ver T&amp;C</a></label>
-<label>Token Tarjeta (Mercado Pago tokenizado - simulado)</label><input id="cierre-token" placeholder="tok_... (MP tokeniza automáticamente)">
-<button onclick="cerrarConvenio()">Cerrar Convenio Automático</button>
-<div id="resultado-cierre" class="total-box" style="display:none"></div>
-</div>
-<div class="card"><h3>Centro de Atención NODO</h3>
-<div style="font-size:13px;line-height:2">
-<div>📞 Tel: <b>3834607740</b></div>
-<div>✉️ Email: <b>nodo.empresas@gmail.com</b></div>
-<div>🌐 Web: nodo.ar</div>
-<div>🤖 Bots: 24/7 cierre y cobranza</div>
-</div>
-<h3 style="margin-top:16px">Bot Búsqueda Empresas</h3>
-<label>Buscar empresas/comercios/instituciones</label>
-<input id="bot-busqueda" placeholder="Ej: clínica, ferretería, colegio...">
-<label>Provincia</label><select id="bot-provincia"><option>Todo el país</option><option>Catamarca</option><option>La Rioja</option><option>Tucumán</option><option>Córdoba</option><option>CABA</option><option>Buenos Aires</option></select>
-<label>Rubro</label><input id="bot-rubro" placeholder="Salud, educación, retail...">
-<button onclick="buscarEmpresas()">Buscar con Bots 24/7</button>
-<div id="resultado-busqueda"></div>
-<h3 style="margin-top:16px">Estado Bots</h3>
-<button onclick="verBots()">Ver Estado de Todos los Bots</button>
-<div id="resultado-bots"></div>
-</div>
-</div>
-</div>
-
-
-<!-- MODO BARRIO - PUBLICACIÓN RÁPIDA -->
-<div id="tab-barrio" class="tab-content" style="display:none">
-<div class="grid2">
-<div class="card" style="border:1px solid var(--gold)">
-<h3>🚀 MODO BARRIO - Publicación Rápida (Sin tanto formulario)</h3>
-<div class="mono" style="font-size:10px;color:var(--muted)">Para el que vende zapatos HOY con $2000. Sin CUIT, sin tanta info. Publica YA en el barrio. Barra tipo Facebook que calcula días y alcance automático.</div>
-
-<label>¿Qué vendés? (Título)</label><input id="barrio-titulo" placeholder="Ej: Vendo par de zapatos Nike 42 - Nuevos">
-
-<label>Descripción corta</label><textarea id="barrio-desc" rows="2" placeholder="Ej: Zapatos nuevos, talle 42, $15.000, barrio Centro"></textarea>
-
-<label>Presupuesto total que tenés ($)</label>
-<input type="range" id="barrio-presupuesto-range" min="500" max="20000" step="500" value="2000" oninput="actualizarBarra()">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-<span class="badge">$500</span>
-<input id="barrio-presupuesto" type="number" value="2000" style="width:100px;text-align:center;font-weight:800" oninput="document.getElementById('barrio-presupuesto-range').value=this.value; actualizarBarra()">
-<span class="badge">$20.000</span>
-</div>
-
-<div style="margin-top:12px">
-<label>Barra Facebook - Días calculados automáticamente según monto</label>
-<div style="height:8px;background:#111;border-radius:4px;overflow:hidden;border:1px solid var(--border)">
-<div id="barra-progreso" style="height:100%;background:var(--gold);width:20%;transition:width 0.3s"></div>
-</div>
-<div style="display:flex;justify-content:space-between;font-size:9px;margin-top:4px" class="mono">
-<span>1 día</span><span id="barra-dias" style="font-weight:800">6 días</span><span>30 días</span>
-</div>
-</div>
-
-<label>Zona - Barrio / Ciudad</label><select id="barrio-zona" onchange="actualizarBarra()"><option>Barrio - 2km a la redonda</option><option>Catamarca - Ciudad</option><option>Catamarca - Todo</option><option>La Rioja</option><option>Todo el país</option></select>
-
-<label>WhatsApp destino (donde le llegan interesados directo - AUTOGESTION)</label><input id="barrio-wsp" placeholder="3834...">
-
-<button class="gold" onclick="publicarBarrio()" style="margin-top:12px">PUBLICAR YA EN EL BARRIO - MODO RÁPIDO</button>
-
-<div id="resultado-barrio" class="total-box" style="display:none"></div>
-</div>
-
-<div>
+<header><div class="logo">NODO <span>PANEL</span></div><div><button class="btn2" onclick="irPublica()">Ver sitio publico</button></div></header>
+<div class="wrap" id="pantallaLogin">
 <div class="card">
-<h3>📊 Cálculo Barra Tipo Facebook - En Tiempo Real</h3>
-<div id="calculo-barrio" class="config">
-Mueve la barra de presupuesto y ve cómo cambia automáticamente días y alcance.<br><br>
-Ejemplo $2000 en barrio: 6 días x $333/día = 15.000-25.000 personas ven tu publicación, 300-600 interesados.
+<h2>Entrar al panel</h2>
+<p style="color:#666">Admin entra con su clave. Negocios e instituciones entran con su correo y clave.</p>
+<label>Correo</label><input id="lCorreo" placeholder="tu@correo.com">
+<label>Clave</label><input id="lClave" type="password" placeholder="Tu clave o clave admin">
+<button class="btn" onclick="entrarPanel()">Entrar</button>
+<p id="msgLogin" style="font-size:13px;margin-top:8px"></p>
+<p style="font-size:13px;margin-top:12px"><a href="#" onclick="mostrarRec();return false">Olvide mi clave - recuperar para todos</a></p>
 </div>
-<div id="detalle-barrio" style="margin-top:10px"></div>
+<div class="card" id="cajaRec" style="display:none">
+<h3>Recuperar mi clave</h3>
+<p>Te mandamos un codigo que vence en 30 minutos.</p>
+<label>Correo</label><input id="rCorreo" placeholder="tu@correo.com">
+<button class="btn" onclick="pedirCodigoPanel()">Enviar codigo</button>
+<div id="pasoCod" style="display:none;margin-top:12px">
+<label>Codigo</label><input id="rCodigo" placeholder="123456">
+<label>Nueva clave</label><input id="rNueva" type="password" placeholder="Minimo 6">
+<button class="btn" onclick="cambiarClavePanel()">Cambiar mi clave</button>
 </div>
-
-<div class="card" style="margin-top:10px">
-<h3>🛠️ Herramientas que usamos para no gastar fortuna</h3>
-<div style="font-size:10px" class="mono">
-<div style="padding:6px;border-bottom:1px solid #111"><b>WhatsApp 3834607740</b> - Gratis 30/día + estados - Audio voz argentina Groq (no texto frío)</div>
-<div style="padding:6px;border-bottom:1px solid #111"><b>Facebook Marketplace + Grupos</b> - Gratis - Publica en grupos compra/venta Catamarca</div>
-<div style="padding:6px;border-bottom:1px solid #111"><b>Google My Business</b> - Gratis - Aparece en Maps cuando buscan "zapatos cerca"</div>
-<div style="padding:6px;border-bottom:1px solid #111"><b>Instagram Orgánico</b> - Gratis - Stories con #Catamarca</div>
-<div style="padding:6px;border-bottom:1px solid #111"><b>TikTok Orgánico</b> - Gratis - Video 15seg con audio Groq</div>
-<div style="padding:6px;background:rgba(212,175,55,0.1);border:1px solid var(--gold);border-radius:6px;margin-top:6px"><b>Meta Ads Hiperlocal</b> - Desde $300/día - Solo 2km barrio - CPM $80 barrio vs $400 CABA - Muy barato</div>
-</div>
-<div class="config" style="margin-top:8px">Estrategia: 80% herramientas gratis + 20% Meta barato. No pagas TikTok Ads caro. Costo NODO casi $0, solo lo que paga cliente en Meta.</div>
-</div>
-
-<div class="card" style="margin-top:10px;border:1px solid var(--gold)">
-<h3>⭐ Diferencial NODO - Por qué no somos uno más</h3>
-<div class="mono" style="font-size:10px;line-height:1.6">
-● No solo publicación: damos comprobante con link, ID, foto, GPS del interesado<br>
-● Audio WhatsApp con voz argentina, no texto frío<br>
-● Hiperlocal real 2km, no toda la provincia<br>
-● Si vende, escala a MODO TOP programable por provincia/país con calendario<br>
-● Publica en 5 lugares a la vez sin costo extra
-</div>
-</div>
-</div>
+<p id="msgRecPanel" style="font-size:13px;margin-top:8px"></p>
 </div>
 </div>
 
-<!-- SUSCRIPCIONES -->
-<div id="tab-suscripciones" class="tab-content" style="display:none">
-<div class="card"><h3>Suscripciones y Pagos - Sistema País</h3><p style="font-size:12px;color:var(--muted)">Bots calculan vencimientos automáticamente. Pago tokenizado con MP, nunca sin crédito.</p><div id="lista-suscripciones"></div></div>
+<div class="wrap" id="pantallaPanel" style="display:none">
+<div class="card"><h2 id="saludo">Hola</h2><p id="rolTxt" style="color:#666"></p><button class="btn2" onclick="salir()">Salir</button></div>
+<div class="grid">
+<div class="card"><div>Contactos</div><div class="kpi" id="kContactos">0</div></div>
+<div class="card"><div>Cobros</div><div class="kpi" id="kCobros">0</div></div>
+<div class="card"><div>Publicaciones</div><div class="kpi" id="kPubs">0</div></div>
+<div class="card"><div>Usuarios</div><div class="kpi" id="kUsuarios">0</div></div>
+</div>
+<div class="card"><h3>Estado de NODO</h3><p id="estadoNodo">Cargando...</p><button class="btn2" onclick="verEstado()">Ver estado</button></div>
+<div class="card"><h3>Mis contactos</h3><p style="color:#666;font-size:13px">Cada negocio ve solo sus contactos. Admin ve todos.</p><label>Mi ID de negocio (si sos admin, escribi admin)</label><input id="miNegocio" placeholder="Tu ID o admin"><button class="btn2" onclick="cargarContactos()">Ver mis contactos</button><div id="listaContactos"></div></div>
+</div>
+<div class="card"><h3>Crear un cobro</h3>
+<label>Institucion / Comercio</label><input id="nCobInst" placeholder="Nombre">
+<label>Nombre del cliente</label><input id="nCobNombre" placeholder="Nombre">
+<label>DNI</label><input id="nCobDni" placeholder="DNI">
+<label>Correo cliente</label><input id="nCobEmail" placeholder="cliente@correo.com">
+<label>WhatsApp cliente</label><input id="nCobWs" placeholder="3834000000">
+<label>Monto</label><input id="nCobMonto" type="number" placeholder="0">
+<label>Concepto</label><input id="nCobConcepto" placeholder="Cuota mensual">
+<button class="btn" onclick="crearCobroPanel()">Mandar WhatsApp</button>
+<p id="msgCobPanel" style="font-size:13px;margin-top:8px"></p>
 </div>
 
+<div class="card"><h3>Hablar con NODO</h3>
+<textarea id="nodoMsgPanel" placeholder="Ej: Quiero publicar mi negocio..."></textarea>
+<button class="btn" onclick="hablarNodoPanel()">Mandarle a NODO</button>
+<div id="nodoRespPanel" style="margin-top:12px;background:#f6f8ff;padding:12px;border-radius:10px;display:none"></div>
+</div>
+
+<div class="card"><h3>Pagar</h3>
+<p>El boton siempre dice Pagar. Adentro elegis pais y medio de pago.</p>
+<label>Pais</label><select id="paisPago"><option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">Mexico</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Peru</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option></select>
+<label>Monto</label><input id="montoPago" type="number" placeholder="0">
+<label>Concepto</label><input id="conceptoPago" placeholder="NODO Publicidad">
+<button class="btn" onclick="verMetodos()">Pagar</button>
+<div id="listaMetodos" style="margin-top:12px"></div>
+</div>
 </div>
 
 <script>
-const API = '';
-// Tabs
-document.querySelectorAll('.tab').forEach(t=>{
- t.addEventListener('click',()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
-  document.getElementById('tab-'+t.dataset.tab).style.display='block';
-  if(t.dataset.tab==='suscripciones') cargarSuscripciones();
- });
-});
-
-async function cargarDatos(){
- try{
-  let r = await fetch('/api/empresas'); let _e = await r.json(); let empresas = Array.isArray(_e) ? _e : (_e.empresas || []);
-  document.getElementById('kpi-empresas').innerText = empresas.length || 0;
-  if(empresas.length>0){
-   let html='<table><tr><th>Razón Social</th><th>CUIT</th><th>Zona</th></tr>';
-   empresas.forEach(e=>{html+=`<tr><td>${e.razon_social||e.nombre||''}</td><td>${e.cuit||''}</td><td>${(e.provincias||[]).join(', ')}</td></tr>`});
-   html+='</table>'; document.getElementById('lista-empresas').innerHTML=html;
-  }
-  r = await fetch('/api/crm'); let _c = await r.json(); let crm = Array.isArray(_c) ? _c : (_c.leads || []);
-  document.getElementById('kpi-leads').innerText = crm.length || 0;
-  r = await fetch('/api/equipo-campo'); let _q = await r.json(); let equipo = Array.isArray(_q) ? _q : (_q.equipo || []);
-  document.getElementById('kpi-agentes').innerText = equipo.length || 0;
-  document.getElementById('kpi-area').innerText = equipo.length || 0;
- }catch(e){console.log(e); ['kpi-empresas','kpi-leads','kpi-area','kpi-agentes'].forEach(id=>{let el=document.getElementById(id); if(el && (el.innerText==='undefined'||!el.innerText)) el.innerText='0';});}
-}
-
-async function crearAgente(){
- let data={nombre:document.getElementById('ag-nombre').value, dni:document.getElementById('ag-dni').value, zona:document.getElementById('ag-zona').value, telefono:document.getElementById('ag-tel').value};
- let r=await fetch('/api/equipo-campo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- alert('Agente creado: '+ (j[0]?.codigo || j.codigo || 'AGT-XXXX') + ' Link: nodo.ar/r/'+(j[0]?.codigo||''));
- 
-async function cerrarConvenio(){
- let data={
-  razon_social:document.getElementById('cierre-razon').value,
-  cuit:document.getElementById('cierre-cuit').value,
-  email:document.getElementById('cierre-email').value,
-  telefono:document.getElementById('cierre-telefono').value,
-  provincias:document.getElementById('cierre-provincias').value.split(',').map(s=>s.trim()).filter(Boolean),
-  monto_total:parseFloat(document.getElementById('cierre-monto').value)||0,
-  acepta_terminos:document.getElementById('cierre-terminos').checked,
-  tarjeta_token:document.getElementById('cierre-token').value||'tok_simulado_'+Date.now()
- };
- let r=await fetch('/api/cerrar-convenio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- document.getElementById('resultado-cierre').style.display='block';
- if(r.ok){
-  document.getElementById('resultado-cierre').innerHTML=`
-   <div style="color:#2ecc71;font-weight:700">${j.mensaje}</div>
-   <div>Monto: $${j.monto.toLocaleString()}</div>
-   <div>${j.debito_automatico}</div>
-   <div style="margin-top:12px"><b>Centro Atención:</b><br>Tel: ${j.centro_atencion.telefono}<br>Email: ${j.centro_atencion.email}</div>
-   <div style="margin-top:8px;font-size:11px">${j.proximos_pasos.join('<br>')}</div>
-  `;
- } else {
-  document.getElementById('resultado-cierre').innerHTML=`<div style="color:#e74c3c">${j.detail||'Error'}</div>`;
- }
-}
-
-async function verTerminos(){
- let r=await fetch('/api/terminos-condiciones'); let j=await r.json();
- alert(j.terminos.join('\n\n'));
-}
-
-async function buscarEmpresas(){
- let q=document.getElementById('bot-busqueda').value;
- let prov=document.getElementById('bot-provincia').value;
- let rubro=document.getElementById('bot-rubro').value;
- let r=await fetch(`/api/bot/buscar-empresas?q=${q}&provincia=${prov}&rubro=${rubro}`);
- let j=await r.json();
- document.getElementById('resultado-busqueda').innerHTML=`<div style="margin-top:12px;font-size:12px"><b>${j.bots_activos}</b><br>${j.resultados.map(x=>`- ${x.razon} (${x.tipo}) - Potencial ${x.potencial}`).join('<br>')}<br><br><small>${j.nota}</small></div>`;
-}
-
-async function verBots(){
- let r=await fetch('/api/bot/estado'); let j=await r.json();
- document.getElementById('resultado-bots').innerHTML=`<div style="margin-top:12px;font-size:11px">${j.bots.map(b=>`<div><b>${b.nombre}</b>: ${b.estado} - ${b.funcion}</div>`).join('')}<br><b>Centro:</b> ${j.centro_atencion.telefono} / ${j.centro_atencion.email}</div>`;
-}
-
-actualizarBarra();
-cargarDatos();
-}
-
-function calcularArea(){
- let personas=parseInt(document.getElementById('calc-personas').value)||1;
- let dias=parseInt(document.getElementById('calc-dias').value)||30;
- let urg=document.getElementById('calc-urgencia').value;
- let factor={normal:1,urgente:1.5,express:2}[urg]||1;
- let base=800000;
- let total=base*personas*(dias/30)*factor;
- let proporcional = base*(dias/30);
- document.getElementById('resultado-area').style.display='block';
- document.getElementById('resultado-area').innerHTML=`
-  <div>Base 30 días: $${base.toLocaleString()}</div>
-  <div>Proporcional ${dias} días: $${Math.round(proporcional).toLocaleString()} (800.000/30 x ${dias})</div>
-  <div>Personas: ${personas} | Urgencia: ${urg} x${factor}</div>
-  <div class="total">Total Área: $${Math.round(total).toLocaleString()}</div>
-  <div style="font-size:11px;color:#888;margin-top:8px">Ejemplo: 3 personas x 15 días Normal = $1.200.000</div>
- `;
-}
-
-async function calcularPresupuestoCompleto(){
- let data={
-  personas: parseInt(document.getElementById('costo-personas').value)||1,
-  dias: parseInt(document.getElementById('costo-dias').value)||30,
-  urgencia: document.getElementById('costo-urgencia').value,
-  google_ads: document.getElementById('costo-google').checked,
-  google_ads_presupuesto_diario: parseFloat(document.getElementById('costo-google-ppto').value)||0,
-  meta_ads: document.getElementById('costo-meta').checked,
-  meta_ads_presupuesto_diario: parseFloat(document.getElementById('costo-meta-ppto').value)||0,
-  audio_mensajes: document.getElementById('costo-audio').checked,
-  cantidad_audios: parseInt(document.getElementById('costo-cant-audio').value)||0,
-  voz_institucional: document.getElementById('costo-voz').checked,
-  provincias: document.getElementById('costo-provincias').value.split(',').map(s=>s.trim()).filter(Boolean)
- };
- let r=await fetch('/api/calcular-presupuesto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- let d=j.desglose;
- document.getElementById('resultado-costos').style.display='block';
- document.getElementById('resultado-costos').innerHTML=`
-  <div><b>Explotación de Área:</b> ${d.explotacion_area.formula} = $${d.explotacion_area.subtotal.toLocaleString()}</div>
-  <div><b>Google Ads:</b> ${d.google_ads.activo?`$${d.google_ads.presupuesto_diario_cliente} x ${d.google_ads.dias} días = $${d.google_ads.subtotal.toLocaleString()}`:'No seleccionado'}</div>
-  <div><b>Meta Ads:</b> ${d.meta_ads.activo?`$${d.meta_ads.presupuesto_diario_cliente} x ${d.meta_ads.dias} días = $${d.meta_ads.subtotal.toLocaleString()}`:'No seleccionado'}</div>
-  <div><b>Audio mensajes:</b> ${d.audio_mensajes.activo?`${d.audio_mensajes.cantidad} x $${d.audio_mensajes.valor_unitario} = $${d.audio_mensajes.subtotal.toLocaleString()}`:'No seleccionado'}</div>
-  <div><b>Voz institucional:</b> $${d.voz_institucional.subtotal.toLocaleString()}</div>
-  <div class="total">TOTAL: $${j.total.toLocaleString()}</div>
-  <div style="font-size:11px;color:#888;margin-top:8px">${j.nota}</div>
- `;
- document.getElementById('btn-pagar').style.display='block';
- document.getElementById('btn-pagar').dataset.monto=j.total;
-}
-
-async function generarPago(){
- let monto=document.getElementById('btn-pagar').dataset.monto;
- let r=await fetch('/api/crear-pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({monto:parseFloat(monto), descripcion:'Servicio NODO Argentina - Sistema País'})});
- let j=await r.json();
- if(j.init_point) window.open(j.init_point,'_blank');
- else alert('Error generando pago: '+(j.detail||''));
-}
-
-async function crearEmpresa(){
- let provincias=[];
- document.querySelectorAll('#tab-incorporacion input[type=checkbox]:checked').forEach(c=>provincias.push(c.value));
- let data={
-  razon_social:document.getElementById('inc-razon').value,
-  cuit:document.getElementById('inc-cuit').value,
-  sector:document.getElementById('inc-sector').value,
-  objetivo:document.getElementById('inc-objetivo').value,
-  descripcion:document.getElementById('inc-desc').value,
-  telefono_destino_leads:document.getElementById('inc-telefono-destino').value, modo_gestion:document.getElementById('inc-modo-gestion').value, whatsapp_destino:document.getElementById('inc-telefono-destino').value, provincias:provincias,
-  created_at:new Date().toISOString()
- };
- // Validación CUIT/CUIL matemática
- let cuit=data.cuit.replace(/[^0-9]/g,'');
- if(cuit.length!==11){alert('CUIT/CUIL debe tener 11 dígitos'); return;}
- // Dígito verificador
- let mult=[5,4,3,2,7,6,5,4,3,2];
- let suma=0;
- for(let i=0;i<10;i++) suma+=parseInt(cuit[i])*mult[i];
- let mod=suma%11;
- let verif=11-mod; if(verif===11) verif=0; if(verif===10) verif=9;
- if(verif!==parseInt(cuit[10])){alert('CUIT/CUIL inválido (dígito verificador)'); return;}
- let r=await fetch('/api/empresas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- if(r.ok){alert('Empresa activada en Red NODO'); 
-
-
-
-
-
-
-
-
-async function cargarSuscripciones(){
- let r=await fetch('/api/suscripciones'); let j=await r.json();
- let html='<table><tr><th>Servicio</th><th>Costo</th><th>Vencimiento</th><th>Auto-pago</th><th>Estado</th></tr>';
- j.servicios.forEach(s=>{
-  html+=`<tr><td>${s.nombre}</td><td>${s.costo}${s.unidad?' '+s.unidad:''}</td><td>${s.vencimiento}${s.codigo?' - Código: '+s.codigo:''}</td><td>${s.auto_pago}</td><td><span class="badge">${s.estado}</span></td></tr>`;
- });
- html+='</table><p style="font-size:11px;color:#888;margin-top:8px">'+j.nota+'</p>';
- document.getElementById('lista-suscripciones').innerHTML=html;
-}
-
-
-
-
-
-
-
-
-
-
-async function publicarBarrio(){
- let data={
-  titulo:document.getElementById('barrio-titulo').value,
-  descripcion:document.getElementById('barrio-desc').value,
-  presupuesto_total:parseFloat(document.getElementById('barrio-presupuesto').value)||2000,
-  zona:document.getElementById('barrio-zona').value,
-  whatsapp:document.getElementById('barrio-wsp').value,
-  tipo:'producto',
-  modo:'barrio'
- };
- if(!data.titulo){ alert('Poné qué vendés'); return; }
- let r=await fetch('/api/campana-rapida',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
- let j=await r.json();
- document.getElementById('resultado-barrio').style.display='block';
- document.getElementById('resultado-barrio').innerHTML=`
-  <div class="mono" style="font-size:11px"><b>${j.modo}</b><br>Título: ${j.datos.titulo}<br>Zona: ${j.datos.zona}<br>Total cliente: $${j.datos.presupuesto_total_cliente} (Ads $${j.datos.ads_real} + Comisión $${j.datos.comision_nodo_20_adentro} 20% adentro) - ${j.datos.dias} días x $${j.datos.presupuesto_diario_total}/día total</div>
-  <div style="margin-top:8px"><b>Alcance:</b> ${j.calculo_barra_facebook.alcance_estimado} personas<br><b>Interesados:</b> ${j.calculo_barra_facebook.personas_interesadas}</div>
-  <div style="margin-top:8px;font-size:10px" class="mono"><b>Herramientas:</b><br>${j.herramientas_recomendadas.map(h=>`● ${h.nombre} - $${h.costo} - ${h.alcance}`).join('<br>')}</div>
-  <div style="margin-top:8px;font-size:10px;background:rgba(212,175,55,0.1);padding:8px;border-radius:6px" class="mono"><b>Diferencial:</b><br>${j.diferencial_nodo.join('<br>')}</div>
- `;
- document.getElementById('detalle-barrio').innerHTML=`<div class="total-box"><div class="mono" style="font-size:10px">Alcance: ${j.calculo_barra_facebook.alcance_estimado}<br>Interesados: ${j.calculo_barra_facebook.personas_interesadas}<br>CPM: $${j.calculo_barra_facebook.cpm}</div><div class="total">$${j.datos.presupuesto_total} - ${j.datos.dias} días</div></div>`;
-}
-
-function actualizarBarra(){
- let presupuesto = parseFloat(document.getElementById('barrio-presupuesto').value)||2000;
- let zona = document.getElementById('barrio-zona').value;
- // Lógica simple barra Facebook
- let diario_min = 300;
- if(zona.includes('Catamarca')) diario_min = 400;
- if(zona.includes('Todo')) diario_min = 800;
- let dias = Math.max(1, Math.min(30, Math.floor(presupuesto / diario_min)));
- let porcentaje = (dias/30)*100;
- document.getElementById('barra-progreso').style.width = porcentaje + '%';
- document.getElementById('barra-dias').innerText = dias + ' días';
- 
- // Estimación alcance
- let cpm = 80;
- if(zona.includes('Catamarca')) cpm = 120;
- if(zona.includes('Todo')) cpm = 350;
- let total_cliente = presupuesto; // Presupuesto total ya incluye 20%
- let ads_real = total_cliente / 1.2;
- let comision = total_cliente - ads_real;
- let alcance_min = Math.floor((ads_real / cpm) * 1000 * 0.7);
- let alcance_max = Math.floor((ads_real / cpm) * 1000 * 1.3);
- 
- document.getElementById('calculo-barrio').innerHTML=`
-  <b>$${presupuesto} total (ya con 20% adentro)</b> en <b>${zona}</b><br>
-  → Ads real: $${Math.round(ads_real)} + Comisión NODO 20%: $${Math.round(comision)} = Total $${presupuesto}<br>
-  → ${dias} días x $${Math.round(presupuesto/dias)}/día total (ads real $${Math.round(ads_real/dias)}/día)<br>
-  → Alcance: ${alcance_min.toLocaleString()} - ${alcance_max.toLocaleString()} personas<br>
-  → Interesados: ${Math.floor(alcance_min*0.02)} - ${Math.floor(alcance_max*0.04)}<br>
-  → CPM: $${cpm} | Km: según segmentación
- `;
-}
-
+let sesion=null;let claveAdmin="";
+function irPublica(){window.location.href='/'}
+function mostrarRec(){document.getElementById('cajaRec').style.display='block'}
+async function entrarPanel(){let b={email:document.getElementById('lCorreo').value,clave:document.getElementById('lClave').value};let r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();if(j.ok){sesion=j;claveAdmin=document.getElementById('lClave').value;document.getElementById('pantallaLogin').style.display='none';document.getElementById('pantallaPanel').style.display='block';document.getElementById('saludo').textContent='Hola '+j.nombre;document.getElementById('rolTxt').textContent='Rol: '+j.rol;cargarResumen()}else{document.getElementById('msgLogin').textContent=j.detail||'Error'}}
+function salir(){sesion=null;document.getElementById('pantallaLogin').style.display='block';document.getElementById('pantallaPanel').style.display='none'}
+async function pedirCodigoPanel(){let b={email:document.getElementById('rCorreo').value};let r=await fetch('/api/recuperar-clave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRecPanel').textContent=j.mensaje||'Revisa tu correo.';document.getElementById('pasoCod').style.display='block'}
+async function cambiarClavePanel(){let b={email:document.getElementById('rCorreo').value,codigo:document.getElementById('rCodigo').value,nueva_clave:document.getElementById('rNueva').value};let r=await fetch('/api/confirmar-recuperacion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRecPanel').textContent=j.ok?j.mensaje:(j.detail||'Error')}
+async function cargarResumen(){let r=await fetch('/api/admin/resumen?clave='+encodeURIComponent(claveAdmin));let j=await r.json();if(j.ok){document.getElementById('kContactos').textContent=j.total_contactos;document.getElementById('kCobros').textContent=j.total_cobros;document.getElementById('kPubs').textContent=j.total_publicaciones;document.getElementById('kUsuarios').textContent=j.total_usuarios}}
+async function verEstado(){let r=await fetch('/api/nodo/estado');let j=await r.json();document.getElementById('estadoNodo').textContent='NODO 1 recibe: SI. NODO 2 disena: '+(j.nodo_2_disena?'SI':'Falta clave Groq')+'. NODO 4 publica: '+(j.nodo_4_publica?'SI':'Falta clave Meta/Google')+'. NODO 5 cobra: '+(j.nodo_5_cobra?'SI':'Falta clave MP/dLocal')+'.'}
+async function cargarContactos(){let id=document.getElementById('miNegocio').value||'admin';let r=await fetch('/api/contactos?negocio_id='+encodeURIComponent(id));let j=await r.json();let d=document.getElementById('listaContactos');if(!j.ok){d.textContent='Error';return}if(j.contactos.length==0){d.innerHTML='<p>No hay contactos todavia.</p>';return}d.innerHTML='<table><tr><th>Nombre</th><th>WhatsApp</th><th>Interes</th></tr>'+j.contactos.map(c=>'<tr><td>'+c.nombre+'</td><td>'+c.whatsapp+'</td><td>'+c.interes+'</td></tr>').join('')+'</table>'}
+async function crearCobroPanel(){let b={institucion:document.getElementById('nCobInst').value,cliente_nombre:document.getElementById('nCobNombre').value,cliente_dni:document.getElementById('nCobDni').value,cliente_email:document.getElementById('nCobEmail').value,cliente_whatsapp:document.getElementById('nCobWs').value,monto:parseFloat(document.getElementById('nCobMonto').value)||0,concepto:document.getElementById('nCobConcepto').value,pais:'AR'};let r=await fetch('/api/cobros/solicitar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgCobPanel').textContent=j.ok?'Listo. NODO mando el WhatsApp.':(j.detail||'Error')}
+async function hablarNodoPanel(){let m=document.getElementById('nodoMsgPanel').value;let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensaje:m})});let j=await r.json();let d=document.getElementById('nodoRespPanel');d.style.display='block';d.textContent=j.respuesta||'NODO te va a responder.'}
+async function verMetodos(){let pais=document.getElementById('paisPago').value;let r=await fetch('/api/metodos-pago?pais='+pais);let j=await r.json();let d=document.getElementById('listaMetodos');d.innerHTML=j.metodos.map(m=>'<button class="btn2" style="margin:4px" onclick="pagarAhora(\''+m+'\')">'+m+'</button>').join('')}
+async function pagarAhora(metodo){let monto=parseFloat(document.getElementById('montoPago').value)||0;let concepto=document.getElementById('conceptoPago').value||'NODO Publicidad';if(metodo=='【entity-Mercado Pago¦canonical_name=Mercado Pago】'){let r=await fetch('/api/crear-pago-mercadopago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({monto:monto,concepto:concepto,email:sesion?sesion.email:''})});let j=await r.json();if(j.ok&&j.link_pago){window.location.href=j.link_pago}else{alert(j.error||'Error')}}else if(metodo=='dLocal'){alert('dLocal: falta DLOCAL_API_KEY y DLOCAL_API_SECRET en Render. Cuando esten, se activa solo.')}else{alert(metodo+': se activa cuando tengas la clave en Render.')}}
 </script>
-
-
-</body></html>
+</body>
+</html>
