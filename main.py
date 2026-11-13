@@ -106,15 +106,15 @@ class Aprob(BaseModel):
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
             s.starttls(context=ctx)
             s.login(SMTP_CORREO, SMTP_PASSWORD)
-            def generar_codigo(email: str) -> str:
-    codigo = f"{secrets.randbelow(900000) + 100000}"
-    CODIGOS[email.lower().strip()] = {"codigo": codigo, "vence_en": ahora() + timedelta(minutes=30), "usado": False}
-    return codigo
+            s.sendmail(SMTP_CORREO, dest, m.as_string())
+        return True
+    except Exception:
+        return False
+
 def generar_codigo(email: str) -> str:
     codigo = f"{secrets.randbelow(900000) + 100000}"
     CODIGOS[email.lower().strip()] = {"codigo": codigo, "vence_en": ahora() + timedelta(minutes=30), "usado": False}
     return codigo
-
 async def enviar_whatsapp(numero: str, mensaje: str):
     if not WHATSAPP_CLOUD_TOKEN or not WHATSAPP_PHONE_ID:
         return {"ok": False, "error": "WhatsApp no configurado en Render"}
