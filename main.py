@@ -97,15 +97,19 @@ class Aprob(BaseModel):
     if not SMTP_CORREO or not SMTP_PASSWORD:
         return False
     try:
-        m = MIMEMultipart("alternative"); m["From"] = SMTP_CORREO; m["To"] = dest; m["Subject"] = asunto
+        m = MIMEMultipart("alternative")
+        m["From"] = SMTP_CORREO
+        m["To"] = dest
+        m["Subject"] = asunto
         m.attach(MIMEText(cuerpo, "html", "utf-8"))
         ctx = ssl.create_default_context()
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-            s.starttls(context=ctx); s.login(SMTP_CORREO, SMTP_PASSWORD); s.sendmail(SMTP_CORREO, dest, m.as_string())
-        return True
-    except Exception:
-        return False
-
+            s.starttls(context=ctx)
+            s.login(SMTP_CORREO, SMTP_PASSWORD)
+            def generar_codigo(email: str) -> str:
+    codigo = f"{secrets.randbelow(900000) + 100000}"
+    CODIGOS[email.lower().strip()] = {"codigo": codigo, "vence_en": ahora() + timedelta(minutes=30), "usado": False}
+    return codigo
 def generar_codigo(email: str) -> str:
     codigo = f"{secrets.randbelow(900000) + 100000}"
     CODIGOS[email.lower().strip()] = {"codigo": codigo, "vence_en": ahora() + timedelta(minutes=30), "usado": False}
