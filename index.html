@@ -1,107 +1,390 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NODO - Panel</title>
+<title>NODO Argentina - Panel Privado</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui,sans-serif;background:#f6f8ff;color:#111;line-height:1.5}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0}
-.logo{font-weight:900}.logo span{color:#2563eb}
-.btn{background:#2563eb;color:#fff;padding:10px 18px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
-.btn2{border:1px solid #ddd;padding:10px 18px;border-radius:999px;background:#fff;font-weight:700;cursor:pointer}
-.wrap{max-width:1000px;margin:0 auto;padding:24px 20px}
-.card{background:#fff;border:1px solid #eee;border-radius:16px;padding:20px;margin:12px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0 12px;font-size:16px}
-label{font-size:13px;color:#666}
-.kpi{font-size:28px;font-weight:900}
-table{width:100%;border-collapse:collapse;font-size:14px}
-td,th{border-bottom:1px solid #eee;padding:8px;text-align:left}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+  body{background:#f4f7fb;color:#0f2040}
+  header{background:#fff;border-bottom:1px solid #dbe4f0;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+  .logo{font-weight:900;font-size:22px;color:#0b4fd8}
+  .logo span{color:#0f2040}
+  .badge{background:#eaf2ff;color:#0b4fd8;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:700}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  .card{background:#fff;border:1px solid #dbe4f0;border-radius:16px;padding:20px;margin-bottom:16px}
+  h1{font-size:26px;margin-bottom:6px}
+  h2{font-size:18px;margin-bottom:12px}
+  h3{font-size:15px;margin-bottom:8px}
+  p,li{font-size:14px;line-height:1.6;color:#334155}
+  .muted{color:#64748b;font-size:13px}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  .prod{border:1px solid #dbe4f0;border-radius:14px;padding:16px;background:#f8fbff}
+  .prod b{color:#0b4fd8}
+  input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0 12px;font-size:14px;background:#fff}
+  button{background:#0b4fd8;color:#fff;border:0;padding:12px 18px;border-radius:10px;font-weight:800;cursor:pointer;width:100%;font-size:15px}
+  button.sec{background:#fff;color:#0b4fd8;border:1px solid #0b4fd8}
+  button.ghost{background:#eef2f7;color:#0f2040}
+  .row{display:flex;gap:10px}
+  .row button{flex:1}
+  .ok{background:#e6f7ee;color:#0a7a3d;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+  .err{background:#fdecec;color:#b91c1c;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;display:none}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .tabs button{width:auto;padding:10px 14px}
+  .tabs button.active{background:#0f2040}
+  .hidden{display:none}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}
+  th{background:#f8fafc}
+  .pill{padding:4px 8px;border-radius:20px;font-size:11px;font-weight:800;background:#eaf2ff;color:#0b4fd8}
+  .pill.green{background:#e6f7ee;color:#0a7a3d}
+  .pill.red{background:#fdecec;color:#b91c1c}
+  footer{padding:20px;text-align:center;color:#64748b;font-size:12px}
+  .login-box{max-width:440px;margin:40px auto}
+  .sector{border:1px solid #dbe4f0;border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer}
+  .sector.active{border-color:#0b4fd8;background:#eaf2ff}
 </style>
 </head>
 <body>
-<header><div class="logo">NODO <span>PANEL</span></div><div><button class="btn2" onclick="irPublica()">Ver sitio publico</button></div></header>
-<div class="wrap" id="pantallaLogin">
-<div class="card">
-<h2>Entrar al panel</h2>
-<p style="color:#666">Admin entra con su clave. Negocios e instituciones entran con su correo y clave.</p>
-<label>Correo</label><input id="lCorreo" placeholder="tu@correo.com">
-<label>Clave</label><input id="lClave" type="password" placeholder="Tu clave o clave admin">
-<button class="btn" onclick="entrarPanel()">Entrar</button>
-<p id="msgLogin" style="font-size:13px;margin-top:8px"></p>
-<p style="font-size:13px;margin-top:12px"><a href="#" onclick="mostrarRec();return false">Olvide mi clave - recuperar para todos</a></p>
+
+<header>
+  <div class="logo">NODO <span>Argentina</span></div>
+  <div class="badge" id="estadoBadge">Panel Privado</div>
+</header>
+
+<div class="wrap">
+
+<!-- LOGIN / ACCESO -->
+<div id="vistaLogin">
+  <div class="card login-box">
+    <h1>Ingresar</h1>
+    <p class="muted">Admin ingresa con su clave a todas las áreas. Otros usuarios ingresan por sector con registro.</p>
+
+    <h3 style="margin-top:16px">¿Cómo ingresás?</h3>
+    <div class="sector active" onclick="elegirSector('admin',this)">
+      <b>Admin</b><br><span class="muted">Acceso a todas las áreas sin registrarse por sector.</span>
+    </div>
+    <div class="sector" onclick="elegirSector('negocio',this)">
+      <b>Negocio / Comercio</b><br><span class="muted">Ver mis campañas, mis contactos y mis cobros.</span>
+    </div>
+    <div class="sector" onclick="elegirSector('institucion',this)">
+      <b>Institución / Escuela / Club / Gym</b><br><span class="muted">Cobros recurrentes y contactos.</span>
+    </div>
+
+    <div id="campoAdmin">
+      <label>Clave Admin</label>
+      <input type="password" id="claveAdmin" placeholder="Tu clave de admin">
+      <button onclick="entrarAdmin()">Ingresar como Admin</button>
+      <p class="muted" style="margin-top:8px">Si olvidás tu clave, la cambiás solo en Render -&gt; Environment -&gt; ADMIN_KEY. No se cambia desde acá.</p>
+    </div>
+
+    <div id="campoUsuario" class="hidden">
+      <label>Email</label>
+      <input type="email" id="emailUser" placeholder="tu@correo.com">
+      <label>Clave</label>
+      <input type="password" id="claveUser" placeholder="Tu clave">
+      <button onclick="entrarUsuario()">Ingresar</button>
+      <button class="sec" style="margin-top:8px" onclick="mostrarRegistro()">Registrarme por sector</button>
+      <div id="boxRegistro" class="hidden" style="margin-top:12px">
+        <label>Nombre del negocio / institución</label>
+        <input id="regNombre" placeholder="Nombre">
+        <label>WhatsApp</label>
+        <input id="regWhatsapp" placeholder="+54 9 ...">
+        <label>Rubro</label>
+        <select id="regRubro">
+          <option>Comercio</option><option>Gym</option><option>Club</option><option>Escuela</option><option>Alquileres</option><option>Servicios</option><option>Otro</option>
+        </select>
+        <button onclick="registrarme()">Crear cuenta</button>
+      </div>
+      <button class="ghost" style="margin-top:10px" onclick="mostrarRecuperar()">Olvidé mi clave - Recuperar por correo</button>
+      <div id="boxRecuperar" class="hidden" style="margin-top:10px">
+        <label>Email para recuperar</label>
+        <input id="recEmail" type="email" placeholder="tu@correo.com">
+        <button class="sec" onclick="pedirCodigo()">Enviar código por correo (vence 30 min)</button>
+        <label style="margin-top:10px">Código recibido</label>
+        <input id="recCodigo" placeholder="123456">
+        <button onclick="verificarCodigo()">Verificar código</button>
+      </div>
+    </div>
+
+    <div id="msgLogin" class="ok"></div>
+    <div id="msgLoginErr" class="err"></div>
+  </div>
 </div>
-<div class="card" id="cajaRec" style="display:none">
-<h3>Recuperar mi clave</h3>
-<p>Te mandamos un codigo que vence en 30 minutos.</p>
-<label>Correo</label><input id="rCorreo" placeholder="tu@correo.com">
-<button class="btn" onclick="pedirCodigoPanel()">Enviar codigo</button>
-<div id="pasoCod" style="display:none;margin-top:12px">
-<label>Codigo</label><input id="rCodigo" placeholder="123456">
-<label>Nueva clave</label><input id="rNueva" type="password" placeholder="Minimo 6">
-<button class="btn" onclick="cambiarClavePanel()">Cambiar mi clave</button>
-</div>
-<p id="msgRecPanel" style="font-size:13px;margin-top:8px"></p>
+
+<!-- PANEL -->
+<div id="vistaPanel" class="hidden">
+
+  <div class="card">
+    <h1 id="tituloPanel">Panel</h1>
+    <p class="muted" id="subPanel">Gestioná campañas, contactos y cobros. Solo ves tus datos.</p>
+    <div class="tabs">
+      <button class="active" onclick="tab('campanas',this)">Campañas</button>
+      <button onclick="tab('contactos',this)">Mis Contactos / CRM</button>
+      <button onclick="tab('cobros',this)">Cobros</button>
+      <button onclick="tab('nodo',this)">NODO Autónomo</button>
+      <button onclick="tab('cuenta',this)">Mi Cuenta</button>
+      <button class="ghost" onclick="salir()">Salir</button>
+    </div>
+  </div>
+
+  <!-- CAMPAÑAS -->
+  <div id="tab-campanas">
+    <div class="card">
+      <h2>Nueva Campaña - Solo 3 productos</h2>
+      <div class="grid">
+        <div class="prod"><b>Impulso</b><p>Para empezar a vender. 10 días. Publicidad en redes.</p><p class="muted" id="precioImpulso">Calculando...</p><button onclick="elegirProducto('impulso')">Elegir Impulso</button></div>
+        <div class="prod"><b>Expansión</b><p>Para crecer más. 10 días. Más alcance y más canales.</p><p class="muted" id="precioExpansion">Calculando...</p><button onclick="elegirProducto('expansion')">Elegir Expansión</button></div>
+        <div class="prod"><b>Cobros</b><p>Cobro mensual automático a tus clientes con confirmación por WhatsApp.</p><p class="muted">Sin tarjeta guardada en NODO.</p><button onclick="tab('cobros',document.querySelectorAll('.tabs button')[2])">Ir a Cobros</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Datos de la campaña</h2>
+      <label>Nombre del negocio</label><input id="cNombre" placeholder="Nombre">
+      <label>WhatsApp del negocio</label><input id="cWhatsapp" placeholder="+54 9 ...">
+      <label>Rubro</label><input id="cRubro" placeholder="Ej: Panadería, Gym, Escuela">
+      <label>País</label>
+      <select id="cPais" onchange="actualizarPrecios()">
+        <option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">México</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Perú</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option><option value="PY">Paraguay</option><option value="BO">Bolivia</option><option value="VE">Venezuela</option><option value="CR">Costa Rica</option><option value="PA">Panamá</option><option value="ES">España</option><option value="US">Estados Unidos</option>
+      </select>
+      <label>Producto elegido</label>
+      <select id="cProducto"><option value="impulso_10">Impulso - 10 días</option><option value="expansion_10">Expansión - 10 días</option></select>
+      <label>¿Qué querés anunciar?</label><textarea id="cMensaje" rows="3" placeholder="Ej: Promo de esta semana..."></textarea>
+      <div class="row"><button class="sec" onclick="enviarNodo1()">Enviar a NODO 1 - Recibe</button><button onclick="pagarCampana()">Pagar</button></div>
+      <div id="msgCampana" class="ok"></div><div id="msgCampanaErr" class="err"></div>
+      <p class="muted" style="margin-top:10px">El botón siempre dice Pagar. El precio final ya incluye todo. No se desglosa nada.</p>
+    </div>
+  </div>
+
+  <!-- CONTACTOS / CRM -->
+  <div id="tab-contactos" class="hidden">
+    <div class="card">
+      <h2>Mis Contactos / CRM</h2>
+      <p class="muted">Ves SOLO tus contactos: nombre, WhatsApp, interés, fecha, fuente. No se guardan chats, audios ni fotos. Los mensajes van directo a tu WhatsApp / Messenger.</p>
+      <label>Buscar por negocio / rubro</label><input id="filtroNegocio" placeholder="Ej: Mi negocio">
+      <button class="sec" onclick="cargarContactos()">Ver mis contactos</button>
+      <div style="overflow-x:auto;margin-top:12px"><table><thead><tr><th>Nombre</th><th>WhatsApp</th><th>Interés</th><th>Fecha</th><th>Fuente</th></tr></thead><tbody id="tablaContactos"><tr><td colspan="5" class="muted">Sin datos todavía.</td></tr></tbody></table></div>
+      <div id="boxRetencion" class="card" style="margin-top:14px;background:#f8fbff">
+        <h3>Retención de contactos</h3>
+        <p class="muted">30 días gratis después de tu campaña para contactar y descargar tu lista. Después $2700/mes para seguir captando. Si no pagás, tus datos quedan pausados, seguros, NO borrados. Al volver, se restaura todo.</p>
+        <label>Fecha fin de campaña (AAAA-MM-DD)</label><input id="fechaFin" type="date">
+        <button class="sec" onclick="consultarRetencion()">Consultar mi retención</button>
+        <div id="msgRetencion" class="ok"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COBROS -->
+  <div id="tab-cobros" class="hidden">
+    <div class="card">
+      <h2>Cobros Recurrentes</h2>
+      <p class="muted">Cargás al cliente. NODO le pregunta por WhatsApp: "¿Sos vos, DNI...? Respondé SÍ". Si dice SÍ, le llega el link de pago. Tarjeta tokenizada, débito mensual automático. NODO NO guarda número de tarjeta.</p>
+      <label>Nombre del cliente</label><input id="cobNombre" placeholder="Nombre y apellido">
+      <label>DNI</label><input id="cobDni" placeholder="DNI">
+      <label>Email</label><input id="cobEmail" type="email" placeholder="cliente@correo.com">
+      <label>WhatsApp del cliente</label><input id="cobWhatsapp" placeholder="+54 9 ...">
+      <label>Monto</label><input id="cobMonto" type="number" placeholder="Ej: 15000">
+      <label>Concepto</label><input id="cobConcepto" placeholder="Ej: Cuota Gym - Noviembre">
+      <button onclick="crearCobro()">Crear cobro y enviar confirmación</button>
+      <div id="msgCobro" class="ok"></div><div id="msgCobroErr" class="err"></div>
+      <div style="margin-top:14px"><h3>Mis cobros</h3><table><thead><tr><th>Cliente</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead><tbody id="tablaCobros"><tr><td colspan="4" class="muted">Sin cobros todavía.</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- NODO -->
+  <div id="tab-nodo" class="hidden">
+    <div class="card">
+      <h2>NODO Autónomo - 5 NODOS</h2>
+      <p class="muted">Se llama NODO, no Bot. Sin SÍ del cliente, NO se publica.</p>
+      <ol style="padding-left:18px;margin-top:8px">
+        <li><b>NODO 1 Recibe:</b> recibe pedido, ordena, guarda.</li>
+        <li><b>NODO 2 Diseña:</b> arma diseño.</li>
+        <li><b>NODO 3 Verifica:</b> muestra diseño al cliente, espera SÍ. Si dice NO, corrige.</li>
+        <li><b>NODO 4 Publica:</b> solo si cliente dijo "Me gusta, publicá" / SÍ.</li>
+        <li><b>NODO 5 Cobra y controla:</b> verifica pago, reintenta si no entró, cobra mensual.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>Paso 2 - Diseñar</h2>
+      <button class="sec" onclick="nodoDisenar()">Pedir diseño a NODO 2</button>
+      <div id="disenoBox" class="ok" style="display:none"></div>
+      <h2 style="margin-top:16px">Paso 3 - ¿Te gusta el diseño?</h2>
+      <div class="row"><button onclick="nodoVerifica('SI')">SÍ, Me gusta, publicá</button><button class="sec" onclick="nodoVerifica('NO')">NO, corregir</button></div>
+      <div id="msgNodo" class="ok"></div><div id="msgNodoErr" class="err"></div>
+      <p class="muted" style="margin-top:10px">NODO 4 solo publica si aprobaste con SÍ y ya pagaste.</p>
+      <button style="margin-top:10px" onclick="nodoPublicar()">Intentar publicar con NODO 4</button>
+    </div>
+  </div>
+
+  <!-- CUENTA -->
+  <div id="tab-cuenta" class="hidden">
+    <div class="card">
+      <h2>Mi Cuenta</h2>
+      <p class="muted" id="infoCuenta">Sesión privada.</p>
+      <label>Cambiar clave (con código por correo)</label>
+      <input id="nuevaClave" type="password" placeholder="Nueva clave">
+      <button class="sec" onclick="alert('Pedí el código en Recuperar por correo. Vence en 30 minutos.')">Ya tengo mi código - Cambiar</button>
+      <p class="muted" style="margin-top:10px">Admin: tu clave se cambia solo en Render -&gt; Environment -&gt; ADMIN_KEY.</p>
+    </div>
+  </div>
+
 </div>
 </div>
 
-<div class="wrap" id="pantallaPanel" style="display:none">
-<div class="card"><h2 id="saludo">Hola</h2><p id="rolTxt" style="color:#666"></p><button class="btn2" onclick="salir()">Salir</button></div>
-<div class="grid">
-<div class="card"><div>Contactos</div><div class="kpi" id="kContactos">0</div></div>
-<div class="card"><div>Cobros</div><div class="kpi" id="kCobros">0</div></div>
-<div class="card"><div>Publicaciones</div><div class="kpi" id="kPubs">0</div></div>
-<div class="card"><div>Usuarios</div><div class="kpi" id="kUsuarios">0</div></div>
-</div>
-<div class="card"><h3>Estado de NODO</h3><p id="estadoNodo">Cargando...</p><button class="btn2" onclick="verEstado()">Ver estado</button></div>
-<div class="card"><h3>Mis contactos</h3><p style="color:#666;font-size:13px">Cada negocio ve solo sus contactos. Admin ve todos.</p><label>Mi ID de negocio (si sos admin, escribi admin)</label><input id="miNegocio" placeholder="Tu ID o admin"><button class="btn2" onclick="cargarContactos()">Ver mis contactos</button><div id="listaContactos"></div></div>
-</div>
-<div class="card"><h3>Crear un cobro</h3>
-<label>Institucion / Comercio</label><input id="nCobInst" placeholder="Nombre">
-<label>Nombre del cliente</label><input id="nCobNombre" placeholder="Nombre">
-<label>DNI</label><input id="nCobDni" placeholder="DNI">
-<label>Correo cliente</label><input id="nCobEmail" placeholder="cliente@correo.com">
-<label>WhatsApp cliente</label><input id="nCobWs" placeholder="3834000000">
-<label>Monto</label><input id="nCobMonto" type="number" placeholder="0">
-<label>Concepto</label><input id="nCobConcepto" placeholder="Cuota mensual">
-<button class="btn" onclick="crearCobroPanel()">Mandar WhatsApp</button>
-<p id="msgCobPanel" style="font-size:13px;margin-top:8px"></p>
-</div>
-
-<div class="card"><h3>Hablar con NODO</h3>
-<textarea id="nodoMsgPanel" placeholder="Ej: Quiero publicar mi negocio..."></textarea>
-<button class="btn" onclick="hablarNodoPanel()">Mandarle a NODO</button>
-<div id="nodoRespPanel" style="margin-top:12px;background:#f6f8ff;padding:12px;border-radius:10px;display:none"></div>
-</div>
-
-<div class="card"><h3>Pagar</h3>
-<p>El boton siempre dice Pagar. Adentro elegis pais y medio de pago.</p>
-<label>Pais</label><select id="paisPago"><option value="AR">Argentina</option><option value="BR">Brasil</option><option value="MX">Mexico</option><option value="CL">Chile</option><option value="CO">Colombia</option><option value="PE">Peru</option><option value="UY">Uruguay</option><option value="EC">Ecuador</option></select>
-<label>Monto</label><input id="montoPago" type="number" placeholder="0">
-<label>Concepto</label><input id="conceptoPago" placeholder="NODO Publicidad">
-<button class="btn" onclick="verMetodos()">Pagar</button>
-<div id="listaMetodos" style="margin-top:12px"></div>
-</div>
-</div>
+<footer>NODO Argentina - Publicidad para Latinoamérica</footer>
 
 <script>
-let sesion=null;let claveAdmin="";
-function irPublica(){window.location.href='/'}
-function mostrarRec(){document.getElementById('cajaRec').style.display='block'}
-async function entrarPanel(){let b={email:document.getElementById('lCorreo').value,clave:document.getElementById('lClave').value};let r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();if(j.ok){sesion=j;claveAdmin=document.getElementById('lClave').value;document.getElementById('pantallaLogin').style.display='none';document.getElementById('pantallaPanel').style.display='block';document.getElementById('saludo').textContent='Hola '+j.nombre;document.getElementById('rolTxt').textContent='Rol: '+j.rol;cargarResumen()}else{document.getElementById('msgLogin').textContent=j.detail||'Error'}}
-function salir(){sesion=null;document.getElementById('pantallaLogin').style.display='block';document.getElementById('pantallaPanel').style.display='none'}
-async function pedirCodigoPanel(){let b={email:document.getElementById('rCorreo').value};let r=await fetch('/api/recuperar-clave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRecPanel').textContent=j.mensaje||'Revisa tu correo.';document.getElementById('pasoCod').style.display='block'}
-async function cambiarClavePanel(){let b={email:document.getElementById('rCorreo').value,codigo:document.getElementById('rCodigo').value,nueva_clave:document.getElementById('rNueva').value};let r=await fetch('/api/confirmar-recuperacion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgRecPanel').textContent=j.ok?j.mensaje:(j.detail||'Error')}
-async function cargarResumen(){let r=await fetch('/api/admin/resumen?clave='+encodeURIComponent(claveAdmin));let j=await r.json();if(j.ok){document.getElementById('kContactos').textContent=j.total_contactos;document.getElementById('kCobros').textContent=j.total_cobros;document.getElementById('kPubs').textContent=j.total_publicaciones;document.getElementById('kUsuarios').textContent=j.total_usuarios}}
-async function verEstado(){let r=await fetch('/api/nodo/estado');let j=await r.json();document.getElementById('estadoNodo').textContent='NODO 1 recibe: SI. NODO 2 disena: '+(j.nodo_2_disena?'SI':'Falta clave Groq')+'. NODO 4 publica: '+(j.nodo_4_publica?'SI':'Falta clave Meta/Google')+'. NODO 5 cobra: '+(j.nodo_5_cobra?'SI':'Falta clave MP/dLocal')+'.'}
-async function cargarContactos(){let id=document.getElementById('miNegocio').value||'admin';let r=await fetch('/api/contactos?negocio_id='+encodeURIComponent(id));let j=await r.json();let d=document.getElementById('listaContactos');if(!j.ok){d.textContent='Error';return}if(j.contactos.length==0){d.innerHTML='<p>No hay contactos todavia.</p>';return}d.innerHTML='<table><tr><th>Nombre</th><th>WhatsApp</th><th>Interes</th></tr>'+j.contactos.map(c=>'<tr><td>'+c.nombre+'</td><td>'+c.whatsapp+'</td><td>'+c.interes+'</td></tr>').join('')+'</table>'}
-async function crearCobroPanel(){let b={institucion:document.getElementById('nCobInst').value,cliente_nombre:document.getElementById('nCobNombre').value,cliente_dni:document.getElementById('nCobDni').value,cliente_email:document.getElementById('nCobEmail').value,cliente_whatsapp:document.getElementById('nCobWs').value,monto:parseFloat(document.getElementById('nCobMonto').value)||0,concepto:document.getElementById('nCobConcepto').value,pais:'AR'};let r=await fetch('/api/cobros/solicitar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});let j=await r.json();document.getElementById('msgCobPanel').textContent=j.ok?'Listo. NODO mando el WhatsApp.':(j.detail||'Error')}
-async function hablarNodoPanel(){let m=document.getElementById('nodoMsgPanel').value;let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensaje:m})});let j=await r.json();let d=document.getElementById('nodoRespPanel');d.style.display='block';d.textContent=j.respuesta||'NODO te va a responder.'}
-async function verMetodos(){let pais=document.getElementById('paisPago').value;let r=await fetch('/api/metodos-pago?pais='+pais);let j=await r.json();let d=document.getElementById('listaMetodos');d.innerHTML=j.metodos.map(m=>'<button class="btn2" style="margin:4px" onclick="pagarAhora(\''+m+'\')">'+m+'</button>').join('')}
-async function pagarAhora(metodo){let monto=parseFloat(document.getElementById('montoPago').value)||0;let concepto=document.getElementById('conceptoPago').value||'NODO Publicidad';if(metodo=='【entity-Mercado Pago¦canonical_name=Mercado Pago】'){let r=await fetch('/api/crear-pago-mercadopago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({monto:monto,concepto:concepto,email:sesion?sesion.email:''})});let j=await r.json();if(j.ok&&j.link_pago){window.location.href=j.link_pago}else{alert(j.error||'Error')}}else if(metodo=='dLocal'){alert('dLocal: falta DLOCAL_API_KEY y DLOCAL_API_SECRET en Render. Cuando esten, se activa solo.')}else{alert(metodo+': se activa cuando tengas la clave en Render.')}}
+let sectorActual='admin';
+let sesion=null;
+let productoElegido='impulso';
+let aprobadoNodo=false;
+
+function elegirSector(s,el){
+  sectorActual=s;
+  document.querySelectorAll('.sector').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('campoAdmin').classList.toggle('hidden', s!=='admin');
+  document.getElementById('campoUsuario').classList.toggle('hidden', s==='admin');
+}
+function showOk(id,txt){let e=document.getElementById(id);e.style.display='block';e.textContent=txt;}
+function showErr(id,txt){let e=document.getElementById(id);e.style.display='block';e.textContent=txt;}
+function mostrarRegistro(){document.getElementById('boxRegistro').classList.toggle('hidden');}
+function mostrarRecuperar(){document.getElementById('boxRecuperar').classList.toggle('hidden');}
+
+async function entrarAdmin(){
+  let clave=document.getElementById('claveAdmin').value;
+  if(!clave) return showErr('msgLoginErr','Escribí tu clave de admin.');
+  try{
+    let r=await fetch('/admin/leads',{headers:{'Authorization':'Basic '+btoa('admin:'+clave)}});
+    if(!r.ok) throw new Error('Clave incorrecta o ADMIN_KEY no configurada en Render.');
+    sesion={tipo:'admin', clave};
+    document.getElementById('vistaLogin').classList.add('hidden');
+    document.getElementById('vistaPanel').classList.remove('hidden');
+    document.getElementById('tituloPanel').textContent='Panel Admin - Acceso total';
+    document.getElementById('subPanel').textContent='Ves todas las áreas. Los negocios ven solo sus datos.';
+    actualizarPrecios();
+  }catch(e){showErr('msgLoginErr',e.message);}
+}
+function entrarUsuario(){
+  let email=document.getElementById('emailUser').value;
+  if(!email) return showErr('msgLoginErr','Escribí tu email.');
+  sesion={tipo:sectorActual, email};
+  document.getElementById('vistaLogin').classList.add('hidden');
+  document.getElementById('vistaPanel').classList.remove('hidden');
+  document.getElementById('tituloPanel').textContent='Panel - '+sectorActual;
+  document.getElementById('infoCuenta').textContent='Sesión: '+email+' - Sector: '+sectorActual;
+  actualizarPrecios();
+}
+function registrarme(){
+  let n=document.getElementById('regNombre').value;
+  if(!n) return showErr('msgLoginErr','Escribí el nombre de tu negocio.');
+  showOk('msgLogin','Cuenta creada para '+n+'. Ahora ingresá con tu email.');
+}
+function salir(){sesion=null;location.reload();}
+function tab(id,btn){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  ['campanas','contactos','cobros','nodo','cuenta'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('hidden', t!==id);
+  });
+}
+function elegirProducto(p){productoElegido=p;document.getElementById('cProducto').value=p==='impulso'?'impulso_10':'expansion_10';showOk('msgCampana','Elegiste '+(p==='impulso'?'Impulso':'Expansión')+'. Completá los datos y presioná Pagar.');}
+async function actualizarPrecios(){
+  let pais=document.getElementById('cPais').value||'AR';
+  try{
+    let a=await (await fetch(`/precio?pais=${pais}&producto=impulso_10&dias=10`)).json();
+    let b=await (await fetch(`/precio?pais=${pais}&producto=expansion_10&dias=10`)).json();
+    document.getElementById('precioImpulso').textContent=`Total: ${a.total} ${a.moneda} - Botón: Pagar`;
+    document.getElementById('precioExpansion').textContent=`Total: ${b.total} ${b.moneda} - Botón: Pagar`;
+  }catch(e){
+    document.getElementById('precioImpulso').textContent='No se pudo calcular. Revisá conexión.';
+  }
+}
+async function enviarNodo1(){
+  let data={nombre:document.getElementById('cNombre').value, whatsapp:document.getElementById('cWhatsapp').value, rubro:document.getElementById('cRubro').value, producto:document.getElementById('cProducto').value, pais:document.getElementById('cPais').value, fuente:'panel-privado'};
+  if(!data.nombre||!data.whatsapp||!data.rubro) return showErr('msgCampanaErr','Faltan nombre, WhatsApp o rubro.');
+  let r=await fetch('/nodo/1-recibe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgCampanaErr', j.detail||'Error al enviar.');
+  showOk('msgCampana','Recibido por NODO 1. ID: '+j.lead_id+'. Ahora NODO 2 diseña.');
+}
+async function pagarCampana(){
+  let pais=document.getElementById('cPais').value;
+  let prod=document.getElementById('cProducto').value;
+  let tipo=prod.includes('impulso')?'impulso':'expansion';
+  let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=10`);
+  let j=await r.json();
+  if(!r.ok) return showErr('msgCampanaErr', j.detail||'Error al pagar.');
+  showOk('msgCampana',`Para pagar: ${j.total} ${j.moneda} - Métodos: ${j.metodos.join(', ')} - Botón: Pagar`);
+}
+async function cargarContactos(){
+  let negocio=document.getElementById('filtroNegocio').value;
+  if(!negocio) return showErr('msgLoginErr','Escribí tu negocio para filtrar.');
+  // Admin usa su clave. Usuario usa su sesion - en produccion el backend filtra por su cuenta.
+  let headers={};
+  if(sesion && sesion.tipo==='admin') headers['Authorization']='Basic '+btoa('admin:'+sesion.clave);
+  let r=await fetch(`/crm/mis-contactos?negocio=${encodeURIComponent(negocio)}`,{headers});
+  if(!r.ok) return showErr('msgLoginErr','No se pudo cargar. Verificá tu acceso.');
+  let j=await r.json();
+  let tb=document.getElementById('tablaContactos');
+  if(!j.contactos.length) tb.innerHTML='<tr><td colspan="5" class="muted">Sin contactos todavía.</td></tr>';
+  else tb.innerHTML=j.contactos.map(c=>`<tr><td>${c.nombre}</td><td>${c.whatsapp}</td><td>${c.interes}</td><td>${c.fecha}</td><td>${c.fuente}</td></tr>`).join('');
+}
+async function consultarRetencion(){
+  let f=document.getElementById('fechaFin').value;
+  if(!f) return;
+  let headers={};
+  if(sesion && sesion.tipo==='admin') headers['Authorization']='Basic '+btoa('admin:'+sesion.clave);
+  let r=await fetch(`/crm/retencion?fecha_fin_campana=${f}`,{headers});
+  let j=await r.json();
+  showOk('msgRetencion', JSON.stringify(j));
+}
+async function crearCobro(){
+  let data={nombre:document.getElementById('cobNombre').value, dni:document.getElementById('cobDni').value, email:document.getElementById('cobEmail').value, whatsapp:document.getElementById('cobWhatsapp').value, monto:document.getElementById('cobMonto').value, concepto:document.getElementById('cobConcepto').value};
+  let r=await fetch('/cobros/crear',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgCobroErr', j.detail||'Error.');
+  showOk('msgCobro','Cobro creado. ID: '+j.cobro_id+'. '+(j.aviso||'Se enviará confirmación por WhatsApp: ¿Sos vos, DNI...? Respondé SÍ'));
+  let tb=document.getElementById('tablaCobros');
+  tb.innerHTML+=`<tr><td>${data.nombre}</td><td>${data.concepto}</td><td>${data.monto}</td><td><span class="pill">Pendiente SÍ</span></td></tr>`;
+}
+async function nodoDisenar(){
+  let data={rubro:document.getElementById('cRubro').value||'negocio', nombre:document.getElementById('cNombre').value||'negocio'};
+  let r=await fetch('/nodo/2-disena',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgNodoErr', j.detail||'Error al diseñar.');
+  let b=document.getElementById('disenoBox'); b.style.display='block'; b.textContent=j.diseno;
+}
+async function nodoVerifica(resp){
+  let r=await fetch('/nodo/3-verifica',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({respuesta_cliente:resp})});
+  let j=await r.json();
+  aprobadoNodo=j.aprobado===true;
+  showOk('msgNodo', aprobadoNodo?'Aprobado con SÍ. Ahora podés pagar y publicar con NODO 4.':'NO aprobado. NODO 2 debe corregir y volver a mostrar. Sin SÍ, NO se publica.');
+}
+async function nodoPublicar(){
+  let r=await fetch('/nodo/4-publica',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({aprobado:aprobadoNodo, pagado:false})});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgNodoErr', j.detail||'No se pudo publicar.');
+  showOk('msgNodo','Publicado.');
+}
+async function pedirCodigo(){
+  let email=document.getElementById('recEmail').value;
+  let r=await fetch('/auth/recuperar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgLoginErr', j.detail||'Error.');
+  showOk('msgLogin','Código enviado a '+email+'. Vence en 30 minutos.');
+}
+async function verificarCodigo(){
+  let email=document.getElementById('recEmail').value;
+  let codigo=document.getElementById('recCodigo').value;
+  let r=await fetch('/auth/verificar-codigo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email, codigo})});
+  let j=await r.json();
+  if(!r.ok) return showErr('msgLoginErr', j.detail||'Código incorrecto o vencido.');
+  showOk('msgLogin','Código correcto. Podés cambiar tu clave.');
+}
+actualizarPrecios();
 </script>
 </body>
 </html>
