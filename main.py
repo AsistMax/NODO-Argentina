@@ -93,7 +93,7 @@ class Pub(BaseModel):
     negocio_id: str; titulo: str; descripcion: str; plan: str = "impulso"; pais: str = "AR"; dias: int = 10
 class Aprob(BaseModel):
     publicacion_id: str; aprobado: bool; comentario: Optional[str] = ""
-    def enviar_correo(dest: str, asunto: str, cuerpo: str) -> bool:
+def enviar_correo(dest: str, asunto: str, cuerpo: str) -> bool:
     if not SMTP_CORREO or not SMTP_PASSWORD:
         return False
     try:
