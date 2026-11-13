@@ -1,8 +1,10 @@
 fastapi
-uvicorn
+uvicorn[standard]
 gunicorn
 supabase
+httpx
+pydantic
+python-multipart
 python-dotenv
 firebase-admin
 twilio
-openai
