@@ -192,67 +192,67 @@ let borradorActual='';
 function mostrarFallbackVideo(){document.getElementById('videoNodo').style.display='none';document.getElementById('fallbackVideo').style.display='block';}
 function setModo(m,btn){modoActual=m;document.querySelectorAll('#modoBtns button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcular();}
 function construirCalendario(){
-  let grid=document.getElementById('calGrid');grid.innerHTML='';
-  for(let d=1;d<=31;d++){let b=document.createElement('button');b.type='button';b.textContent=d;b.onclick=()=>{if(diasIndividuales.has(d)){diasIndividuales.delete(d);b.classList.remove('sel');}else{diasIndividuales.add(d);b.classList.add('sel');}calcular();};grid.appendChild(b);}
+let grid=document.getElementById('calGrid');grid.innerHTML='';
+for(let d=1;d<=31;d++){let b=document.createElement('button');b.type='button';b.textContent=d;b.onclick=()=>{if(diasIndividuales.has(d)){diasIndividuales.delete(d);b.classList.remove('sel');}else{diasIndividuales.add(d);b.classList.add('sel');}calcular();};grid.appendChild(b);}
 }
 function contarDias(){
-  let d1=document.getElementById('fechaDesde').value;
-  let d2=document.getElementById('fechaHasta').value;
-  if(diasIndividuales.size>0) return diasIndividuales.size;
-  if(!d1||!d2) return 10;
-  let a=new Date(d1+'T12:00:00');let b=new Date(d2+'T12:00:00');
-  if(b<a) return 10;
-  let total=0;let cur=new Date(a);
-  while(cur<=b){let wd=cur.getDay();if(modoActual==='todos')total++;else if(modoActual==='lunes_viernes'&&wd>=1&&wd<=5)total++;else if(modoActual==='finde'&&(wd===0||wd===6))total++;cur.setDate(cur.getDate()+1);}
-  return total>0?total:10;
+let d1=document.getElementById('fechaDesde').value;
+let d2=document.getElementById('fechaHasta').value;
+if(diasIndividuales.size>0) return diasIndividuales.size;
+if(!d1||!d2) return 10;
+let a=new Date(d1+'T12:00:00');let b=new Date(d2+'T12:00:00');
+if(b<a) return 10;
+let total=0;let cur=new Date(a);
+while(cur<=b){let wd=cur.getDay();if(modoActual==='todos')total++;else if(modoActual==='lunes_viernes'&&wd>=1&&wd<=5)total++;else if(modoActual==='finde'&&(wd===0||wd===6))total++;cur.setDate(cur.getDate()+1);}
+return total>0?total:10;
 }
 async function calcular(){
-  let pais=document.getElementById('paisCalc').value;
-  let prod=document.getElementById('prodCalc').value;
-  let dias=contarDias();
-  document.getElementById('infoDias').textContent='Días elegidos: '+dias+(diasIndividuales.size>0?' (individuales, suman)':modoActual==='todos'?' (todos los días)':modoActual==='lunes_viernes'?' (lunes a viernes)':' (fin de semana)');
-  try{
-    let r=await fetch(`/api/cotizar?pais=${pais}&producto=${prod}&dias=${dias}`);
-    let j=await r.json();
-    document.getElementById('resultadoCalc').textContent='Total: '+j.total+' '+j.moneda+' - '+j.dias+' días - Botón: Pagar';
-    let ri=await (await fetch(`/api/cotizar?pais=${pais}&producto=impulso_10&dias=${dias}`)).json();
-    let re=await (await fetch(`/api/cotizar?pais=${pais}&producto=expansion_10&dias=${dias}`)).json();
-    document.getElementById('precioImpulsoCard').innerHTML=ri.total+' '+ri.moneda+' <small>/ '+dias+' días</small>';
-    document.getElementById('precioExpansionCard').innerHTML=re.total+' '+re.moneda+' <small>/ '+dias+' días</small>';
-  }catch(e){document.getElementById('resultadoCalc').textContent='No se pudo calcular. Intentá de nuevo.';}
+let pais=document.getElementById('paisCalc').value;
+let prod=document.getElementById('prodCalc').value;
+let dias=contarDias();
+document.getElementById('infoDias').textContent='Días elegidos: '+dias+(diasIndividuales.size>0?' (individuales, suman)':modoActual==='todos'?' (todos los días)':modoActual==='lunes_viernes'?' (lunes a viernes)':' (fin de semana)');
+try{
+let r=await fetch(`/api/cotizar?pais=${pais}&producto=${prod}&dias=${dias}`);
+let j=await r.json();
+document.getElementById('resultadoCalc').textContent='Total: '+j.total+' '+j.moneda+' - '+j.dias+' días - Botón: Pagar';
+let ri=await (await fetch(`/api/cotizar?pais=${pais}&producto=impulso_10&dias=${dias}`)).json();
+let re=await (await fetch(`/api/cotizar?pais=${pais}&producto=expansion_10&dias=${dias}`)).json();
+document.getElementById('precioImpulsoCard').innerHTML=ri.total+' '+ri.moneda+' <small>/ '+dias+' días</small>';
+document.getElementById('precioExpansionCard').innerHTML=re.total+' '+re.moneda+' <small>/ '+dias+' días</small>';
+}catch(e){document.getElementById('resultadoCalc').textContent='No se pudo calcular. Intentá de nuevo.';}
 }
 function elegirYCalcular(prod){document.getElementById('prodCalc').value=prod;calcular();document.getElementById('calculadora').scrollIntoView({behavior:'smooth'});}
 async function irAPagar(){
-  let pais=document.getElementById('paisCalc').value;let prod=document.getElementById('prodCalc').value;let dias=contarDias();let tipo=prod.includes('impulso')?'impulso':'expansion';
-  try{let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=${dias}`);let j=await r.json();let el=document.getElementById('msgCalc');el.style.display='block';el.textContent='Para pagar: '+j.total+' '+j.moneda+' - '+dias+' días - Métodos: '+j.metodos.join(', ')+' - Botón: Pagar';}catch(e){let el=document.getElementById('msgCalcErr');el.style.display='block';el.textContent='No se pudo calcular.';}
+let pais=document.getElementById('paisCalc').value;let prod=document.getElementById('prodCalc').value;let dias=contarDias();let tipo=prod.includes('impulso')?'impulso':'expansion';
+try{let r=await fetch(`/pagar/${tipo}?pais=${pais}&dias=${dias}`);let j=await r.json();let el=document.getElementById('msgCalc');el.style.display='block';el.textContent='Para pagar: '+j.total+' '+j.moneda+' - '+dias+' días - Métodos: '+j.metodos.join(', ')+' - Botón: Pagar';}catch(e){let el=document.getElementById('msgCalcErr');el.style.display='block';el.textContent='No se pudo calcular.';}
 }
 async function hablarNodo(){
-  let nombre=document.getElementById('chatNombre').value||'negocio';
-  let rubro=document.getElementById('chatRubro').value||'negocio';
-  let msg=document.getElementById('chatMsgs');msg.textContent='NODO está armando tu borrador...';
-  try{
-    let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,mensaje:document.getElementById('chatMensaje').value})});
-    let j=await r.json();
-    if(!r.ok) throw new Error(j.detail||'Error');
-    borradorActual=j.respuesta||'';
-    let r2=await fetch('/api/publicaciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,texto:borradorActual})});
-    let j2=await r2.json();
-    pubActual=j2.publicacion_id;
-    msg.textContent=borradorActual+'\n\nID: '+pubActual+' - Revisalo. Si te gusta, apretá "Me gusta, publica". Si no, pedí corrección.';
-  }catch(e){msg.textContent='No se pudo crear el borrador: '+e.message;}
+let nombre=document.getElementById('chatNombre').value||'negocio';
+let rubro=document.getElementById('chatRubro').value||'negocio';
+let msg=document.getElementById('chatMsgs');msg.textContent='NODO está armando tu borrador...';
+try{
+let r=await fetch('/api/nodo/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,mensaje:document.getElementById('chatMensaje').value})});
+let j=await r.json();
+if(!r.ok) throw new Error(j.detail||'Error');
+borradorActual=j.respuesta||'';
+let r2=await fetch('/api/publicaciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,rubro,texto:borradorActual})});
+let j2=await r2.json();
+pubActual=j2.publicacion_id;
+msg.textContent=borradorActual+'\n\nID: '+pubActual+' - Revisalo. Si te gusta, apretá "Me gusta, publica". Si no, pedí corrección.';
+}catch(e){msg.textContent='No se pudo crear el borrador: '+e.message;}
 }
 async function aprobarPublicacion(){
-  if(!pubActual){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent='Primero hablá con NODO para crear el borrador.';return;}
-  try{
-    let r=await fetch('/api/aprobar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publicacion_id:pubActual,aprobado:true})});
-    let j=await r.json();
-    if(!r.ok) throw new Error(j.detail||'Error');
-    let el=document.getElementById('msgChat');el.style.display='block';el.textContent='Aprobado con SÍ. Ahora podés pagar y publicar.';
-  }catch(e){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent=e.message;}
+if(!pubActual){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent='Primero hablá con NODO para crear el borrador.';return;}
+try{
+let r=await fetch('/api/aprobar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publicacion_id:pubActual,aprobado:true})});
+let j=await r.json();
+if(!r.ok) throw new Error(j.detail||'Error');
+let el=document.getElementById('msgChat');el.style.display='block';el.textContent='Aprobado con SÍ. Ahora podés pagar y publicar.';
+}catch(e){let el=document.getElementById('msgChatErr');el.style.display='block';el.textContent=e.message;}
 }
 async function crearCobroPublico(){
-  let data={nombre:document.getElementById('cobNombre').value,dni:document.getElementById('cobDni').value,email:document.getElementById('cobEmail').value,whatsapp:document.getElementById('cobWhatsapp').value,monto:document.getElementById('cobMonto').value,concepto:document.getElementById('cobConcepto').value};
-  try{let r=await fetch('/api/cobros',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let j=await r.json();if(!r.ok) throw new Error(j.detail||'Error');let el=document.getElementById('msgCobros');el.style.display='block';el.textContent='Cobro creado. Se va a enviar: ¿Sos vos, DNI...? Respondé SÍ';}catch(e){let el=document.getElementById('msgCobrosErr');el.style.display='block';el.textContent=e.message;}
+let data={nombre:document.getElementById('cobNombre').value,dni:document.getElementById('cobDni').value,email:document.getElementById('cobEmail').value,whatsapp:document.getElementById('cobWhatsapp').value,monto:document.getElementById('cobMonto').value,concepto:document.getElementById('cobConcepto').value};
+try{let r=await fetch('/api/cobros',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let j=await r.json();if(!r.ok) throw new Error(j.detail||'Error');let el=document.getElementById('msgCobros');el.style.display='block';el.textContent='Cobro creado. Se va a enviar: ¿Sos vos, DNI...? Respondé SÍ';}catch(e){let el=document.getElementById('msgCobrosErr');el.style.display='block';el.textContent=e.message;}
 }
 construirCalendario();
 calcular();
